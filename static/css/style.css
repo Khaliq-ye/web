@@ -848,7 +848,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
 /* ─── PAGE HERO HIGHLIGHT (profil, akademik, galeri) ──── */
 .page-hero h1 .highlight {
-    padding-top: 90px;
+    padding-top: 120px;
     background: linear-gradient(90deg, #E8561A, #F5C518, #C8102E);
     background-size: 200% 100%;
     -webkit-background-clip: text;
