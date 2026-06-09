@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Profil SMA Negeri 5 Kota X</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -44,6 +44,9 @@
                     </li>
                 </ul>
             </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Buka menu navigasi">
+    <i class="fa-solid fa-bars"></i>
+</button>
         </div>
     </header>
 
@@ -267,6 +270,24 @@
     ============================================================ -->
     <script>
     document.addEventListener('DOMContentLoaded', function () {
+
+        /* ── 5. Hamburger Toggle ── */
+const navToggle = document.getElementById('navToggle');
+const navBar = document.querySelector('.nav-bar');
+if (navToggle && navBar) {
+    navToggle.addEventListener('click', function() {
+        navBar.classList.toggle('open');
+        this.querySelector('i').className = navBar.classList.contains('open')
+            ? 'fa-solid fa-xmark'
+            : 'fa-solid fa-bars';
+    });
+    document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            navBar.classList.remove('open');
+            navToggle.querySelector('i').className = 'fa-solid fa-bars';
+        });
+    });
+}
 
         /* ── 1. Fire Particle Canvas — sama seperti index ── */
         var canvas = document.getElementById('fire-canvas');
