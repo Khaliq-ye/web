@@ -903,7 +903,17 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
     .nav-menu li { display: block !important; }
 
-    .hamburger-btn { display: flex; }
+    .hamburger-btn {
+    background: none;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--white);
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: border-color var(--t);
+}
+.hamburger-btn:hover { border-color: var(--fire-orange); color: var(--fire-orange); }
 }
 
 @media (min-width: 769px) {
