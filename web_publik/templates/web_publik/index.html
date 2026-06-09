@@ -94,15 +94,6 @@
 
             <nav class="nav-bar">
 
-                <nav class="nav-bar">
-    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu">
-        <i class="fa-solid fa-bars"></i>
-    </button>
-    <ul class="nav-menu" id="navMenu">
-        ...
-    </ul>
-</nav>
-
                 <ul class="nav-menu">
 
                     <li><a href="{% url 'web_publik:index' %}" class="active">Beranda</a></li>
@@ -786,20 +777,6 @@
    [OPT 4] visibilitychange — pause saat tab hidden
    [OPT 5] Satu clearRect per frame, no layout thrashing
 ═══════════════════════════════════════════════════════════ */
-
-const hamburgerBtn = document.getElementById('hamburgerBtn');
-const navMenu = document.getElementById('navMenu');
-if (hamburgerBtn) {
-    hamburgerBtn.addEventListener('click', () => {
-        navMenu.classList.toggle('open');
-    });
-    document.addEventListener('click', (e) => {
-        if (!hamburgerBtn.contains(e.target) && !navMenu.contains(e.target)) {
-            navMenu.classList.remove('open');
-        }
-    });
-}
-
 (function () {
     'use strict';
 
