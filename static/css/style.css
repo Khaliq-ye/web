@@ -882,8 +882,9 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     .hero-orb-1,.hero-orb-2,.hero-orb-3 { display:none; }
     .hero-text h1 { font-size:2.4rem; }
     .nav-menu { gap:6px; }
+}
     .nav-toggle {
-    display: flex;
+    display: none; /* ← INI YANG DIUBAH */
     align-items: center;
     justify-content: center;
     width: 40px; height: 40px;
@@ -924,22 +925,15 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
         border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .btn-portal-fixed { width: 100%; justify-content: center; margin-top: 8px; }
-}
-
-@media (min-width:769px) {
-    .nav-toggle { display: none; }
-}
     .btn-portal-fixed { padding:8px 16px; font-size:0.84rem; }
     .header-flex { flex-direction:column; align-items:flex-start; gap:14px; }
     .stats-grid { grid-template-columns:1fr; }
     .toast-container { top:20px; right:5%; width:90%; }
-    /* Matikan shimmer di mobile — hemat baterai */
     .logo span,
     .hero-text h1 .highlight {
         animation: none;
         background-position: 0% center;
     }
-    /* content-visibility tidak cocok di mobile viewport kecil */
     .welcome-section,
     .stats-bar,
     .ppdb-section,
@@ -948,6 +942,11 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
         content-visibility: visible;
     }
 }
+
+@media (min-width:769px) {
+    .nav-toggle { display: none; }
+}
+
 #orbit-canvas {
     position: absolute;
     top: 0; right: 0;
