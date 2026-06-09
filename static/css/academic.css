@@ -535,10 +535,34 @@
     .academic-tabs { flex-direction: column; gap: 6px; }
     .tab-btn { border-radius: 10px; justify-content: center; }
     .ekstra-grid { grid-template-columns: repeat(2, 1fr); }
+
+    .table-responsive {
+        border-radius: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .schedule-table {
+        min-width: 480px;
+    }
+    .schedule-table thead th,
+    .schedule-table tbody td {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+        white-space: nowrap;
+    }
+    .room-tag {
+        font-size: 0.68rem;
+        padding: 3px 8px;
+    }
 }
 
 @media (max-width: 480px) {
     .ekstra-grid { grid-template-columns: 1fr; }
+    .schedule-table {
+        min-width: 420px;
+    }
     .schedule-table thead th,
-    .schedule-table tbody td { padding: 10px 12px; }
+    .schedule-table tbody td {
+        padding: 8px 10px;
+        font-size: 0.78rem;
+    }
 }

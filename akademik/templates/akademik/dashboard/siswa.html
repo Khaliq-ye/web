@@ -434,6 +434,43 @@ textarea.form-input {height:85px;resize:vertical;}
 @media (max-width:600px) {
   .absen-grid {grid-template-columns:repeat(2,1fr);}
   .hero-name {font-size:1.4rem;}
+
+  /* ── TABLE RESPONSIVE FIX ── */
+  .data-table {
+    min-width: 380px;
+  }
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 8px 10px;
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+
+  /* Tabel rapor nilai — kolom lebih banyak */
+  .rapor-table {
+    min-width: 520px;
+  }
+  .rapor-table thead th,
+  .rapor-table tbody td,
+  .rapor-table tfoot td {
+    padding: 8px 8px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* Wrapper scroll horizontal */
+  .panel-card div[style*="overflow-x:auto"],
+  .panel-card div[style*="overflow-x: auto"] {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hero stats biar tidak terlalu sempit */
+  .hstat { padding: 8px 6px; }
+  .hstat-val { font-size: 1.6rem; }
+
+  /* Formula strip wrap */
+  .formula-strip { gap: 4px; }
+  .formula-item { font-size: 10.5px; }
 }
 </style>
 {% endblock %}

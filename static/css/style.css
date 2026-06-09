@@ -911,13 +911,13 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     transition: transform 0.3s ease, visibility 0.3s ease;
     z-index: 998;
     box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    visibility: hidden;        /* ← tambah ini */
-    pointer-events: none;      /* ← tambah ini */
+    visibility: hidden;
+    pointer-events: none;
 }
 .nav-bar.open {
     transform: translateY(0);
-    visibility: visible;       /* ← tambah ini */
-    pointer-events: auto;      /* ← tambah ini */
+    visibility: visible;
+    pointer-events: auto;
 }
     .nav-bar.open { transform: translateY(0); }
     .nav-menu {
