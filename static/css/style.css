@@ -884,8 +884,9 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     .hero-text h1 { font-size:2.4rem; }
     .nav-menu { gap:6px; }
 }
-    .nav-toggle {
-    display: none; /* ← INI YANG DIUBAH */
+
+.nav-toggle {
+    display: none;
     align-items: center;
     justify-content: center;
     width: 40px; height: 40px;
@@ -899,7 +900,6 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
 @media (max-width:768px) {
     .nav-toggle { display: flex; }
-
     .nav-bar {
         position: fixed;
         top: 70px; left: 0; right: 0;
@@ -908,10 +908,10 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
         padding: 20px 24px;
         transform: translateY(-110%);
         transition: transform 0.3s ease;
-        z-index: 999;
+        z-index: 998;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
     .nav-bar.open { transform: translateY(0); }
-
     .nav-menu {
         flex-direction: column;
         align-items: flex-start;
@@ -925,8 +925,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
         font-size: 1rem;
         border-bottom: 1px solid rgba(255,255,255,0.05);
     }
-    .btn-portal-fixed { width: 100%; justify-content: center; margin-top: 8px; }
-    .btn-portal-fixed { padding:8px 16px; font-size:0.84rem; }
+    .btn-portal-fixed { width: 100%; justify-content: center; margin-top: 8px; padding:8px 16px; font-size:0.84rem; }
     .header-flex { flex-direction:column; align-items:flex-start; gap:14px; }
     .stats-grid { grid-template-columns:1fr; }
     .toast-container { top:20px; right:5%; width:90%; }
