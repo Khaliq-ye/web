@@ -900,17 +900,25 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
 @media (max-width:768px) {
     .nav-toggle { display: flex; }
-    .nav-bar {
-        position: fixed;
-        top: 70px; left: 0; right: 0;
-        background: rgba(13,13,13,0.98);
-        border-bottom: var(--border-fire);
-        padding: 20px 24px;
-        transform: translateY(-110%);
-        transition: transform 0.3s ease;
-        z-index: 998;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-    }
+    /* SESUDAH */
+.nav-bar {
+    position: fixed;
+    top: 70px; left: 0; right: 0;
+    background: rgba(13,13,13,0.98);
+    border-bottom: var(--border-fire);
+    padding: 20px 24px;
+    transform: translateY(-110%);
+    transition: transform 0.3s ease, visibility 0.3s ease;
+    z-index: 998;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    visibility: hidden;        /* ← tambah ini */
+    pointer-events: none;      /* ← tambah ini */
+}
+.nav-bar.open {
+    transform: translateY(0);
+    visibility: visible;       /* ← tambah ini */
+    pointer-events: auto;      /* ← tambah ini */
+}
     .nav-bar.open { transform: translateY(0); }
     .nav-menu {
         flex-direction: column;
