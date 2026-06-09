@@ -1,0 +1,520 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Staf — SMA Negeri 5 Kota X</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --red:    #C8102E;
+  --deep:   #8B0000;
+  --orange: #E8561A;
+  --amber:  #F4731F;
+  --gold:   #F5C518;
+  --black:  #0D0D0D;
+  --dark:   #161616;
+  --mid:    #1F1F1F;
+  --card:   #2A2A2A;
+  --silver: #9E9E9E;
+  --white:  #FFFFFF;
+  --grad:   linear-gradient(135deg, #8B0000, #E8561A 55%, #F5C518);
+  --bfire:  1px solid rgba(232,86,26,.28);
+  --bdim:   1px solid rgba(255,255,255,.06);
+  --font:   'Plus Jakarta Sans', sans-serif;
+  --disp:   'Bebas Neue', sans-serif;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--black);color:var(--white);display:flex;min-height:100vh;overflow-x:hidden}
+
+/* SIDEBAR */
+.sidebar{width:260px;background:linear-gradient(180deg,#0D0500,#1A0800 50%,#0D0500);border-right:var(--bfire);display:flex;flex-direction:column;flex-shrink:0;height:100vh;position:sticky;top:0;overflow-y:auto;overflow-x:hidden;z-index:200}
+.sidebar-brand{padding:22px 18px 18px;border-bottom:var(--bfire);background:rgba(0,0,0,.4);position:relative;z-index:1;flex-shrink:0}
+.brand-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:4px}
+.brand-logo-icon{width:36px;height:36px;background:var(--grad);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.brand-name{font-family:var(--disp);font-size:1.1rem;letter-spacing:2px;color:var(--white);line-height:1.15}
+.brand-name span{color:var(--orange)}
+.brand-sub{font-size:.68rem;color:rgba(255,255,255,.3);letter-spacing:.5px;padding-left:46px}
+.sidebar-section-label{padding:18px 18px 6px;font-family:var(--disp);font-size:.72rem;letter-spacing:2.5px;color:var(--amber);text-transform:uppercase;position:relative;z-index:1}
+.sidebar-nav{flex:1;padding:0 10px;display:flex;flex-direction:column;gap:3px;position:relative;z-index:1}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 13px;border-radius:9px;text-decoration:none;color:rgba(255,255,255,.6);font-size:.86rem;font-weight:500;transition:background .15s,color .15s;position:relative}
+.nav-item:hover{background:rgba(232,86,26,.08);color:var(--gold)}
+.nav-item.active{background:rgba(232,86,26,.12);color:var(--gold);border:var(--bfire)}
+.nav-item i{width:18px;text-align:center;font-size:.9rem;flex-shrink:0}
+.nav-item-db{display:flex;align-items:center;gap:11px;padding:12px 14px;border-radius:9px;text-decoration:none;background:var(--grad);color:var(--white)!important;font-size:.88rem;font-weight:700;letter-spacing:.5px;margin:4px 0;transition:filter .15s;box-shadow:0 4px 18px rgba(200,16,46,.35)}
+.nav-item-db:hover{filter:brightness(1.12)}
+.nav-item-db i{width:18px;text-align:center;font-size:1rem}
+.sidebar-footer{padding:14px 10px;border-top:var(--bdim);position:relative;z-index:1;flex-shrink:0}
+.role-badge{background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.3);border-radius:10px;padding:10px 12px;margin-bottom:10px;display:flex;align-items:center;gap:9px}
+.role-badge i{color:var(--gold)}
+.role-badge-text{font-size:.8rem}
+.role-badge-text strong{color:var(--white);display:block;font-size:.83rem}
+.role-badge-text span{color:var(--silver);font-size:.72rem}
+.btn-logout{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;padding:10px;background:rgba(200,16,46,.12);border:1px solid rgba(200,16,46,.28);color:#ff6b6b;border-radius:9px;font-family:var(--font);font-size:.86rem;font-weight:600;cursor:pointer;transition:background .15s,color .15s}
+.btn-logout:hover{background:rgba(200,16,46,.3);color:var(--white)}
+
+/* MAIN */
+.main-wrap{flex:1;display:flex;flex-direction:column;overflow-x:hidden;min-width:0}
+.topbar{background:rgba(13,13,13,.97);border-bottom:var(--bfire);height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100}
+.topbar-left{font-family:var(--disp);font-size:1rem;letter-spacing:1.5px;color:rgba(255,255,255,.5)}
+.topbar-left strong{color:var(--orange)}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.topbar-dot{width:8px;height:8px;background:#22c55e;border-radius:50%}
+.topbar-status{font-size:.78rem;color:var(--silver)}
+
+/* PAGE */
+.page-content{padding:28px;flex:1;position:relative}
+
+/* BANNER */
+.dashboard-banner{background:var(--dark);border:var(--bfire);border-top:3px solid var(--orange);border-radius:18px;padding:30px 34px;margin-bottom:28px;position:relative;overflow:hidden}
+.banner-label{font-family:var(--disp);font-size:.75rem;letter-spacing:3px;color:var(--amber);text-transform:uppercase;margin-bottom:8px}
+.dashboard-banner h2{font-family:var(--disp);font-size:2rem;font-weight:400;letter-spacing:1.5px;line-height:1.1;margin-bottom:8px}
+.dashboard-banner h2 span{color:var(--orange)}
+.dashboard-banner p{color:rgba(255,255,255,.5);font-size:.9rem;max-width:560px;line-height:1.68}
+.dashboard-banner p strong{color:var(--gold)}
+.dashboard-banner p em{color:var(--orange);font-style:normal;font-weight:600}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:28px}
+.stat-chip{background:var(--dark);border:var(--bdim);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;transition:border-color .2s,transform .2s;contain:layout style paint}
+.stat-chip:hover{border-color:rgba(232,86,26,.3);transform:translateY(-4px)}
+.stat-chip i{color:var(--orange);font-size:1.3rem}
+.stat-chip strong{font-family:var(--disp);font-size:1.9rem;color:var(--white);line-height:1}
+.stat-chip span{font-size:.72rem;color:var(--silver);text-transform:uppercase;letter-spacing:.5px}
+
+/* SECTION */
+.section-title{font-family:var(--disp);font-size:.82rem;letter-spacing:2.5px;color:var(--orange);text-transform:uppercase;margin-bottom:16px;margin-top:8px;display:flex;align-items:center;gap:12px}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(232,86,26,.3),transparent)}
+
+/* REVIEW CARDS */
+.review-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:28px}
+.review-card{background:var(--dark);border:var(--bdim);border-radius:14px;padding:20px 16px;display:flex;flex-direction:column;gap:12px;transition:transform .2s,border-color .2s;cursor:pointer;contain:layout style paint}
+.review-card:hover{border-color:rgba(232,86,26,.35);transform:translateY(-5px)}
+.rc-head{display:flex;align-items:center;gap:10px}
+.rc-icon{width:40px;height:40px;background:rgba(232,86,26,.1);border:1px solid rgba(232,86,26,.22);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:var(--orange);flex-shrink:0;transition:background .2s,color .2s}
+.review-card:hover .rc-icon{background:var(--grad);color:var(--white);border-color:transparent}
+.rc-meta{flex:1;min-width:0}
+.rc-meta h4{font-size:.88rem;font-weight:700;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rc-count{font-family:var(--disp);font-size:1.4rem;color:var(--gold);line-height:1}
+.btn-review{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 0;background:rgba(232,86,26,.1);border:1px solid rgba(232,86,26,.25);color:var(--orange);border-radius:9px;font-size:.8rem;font-weight:600;transition:background .15s,color .15s;cursor:pointer;width:100%;font-family:var(--font)}
+.btn-review:hover{background:var(--grad);border-color:transparent;color:var(--white)}
+
+/* SOP */
+.sop-card{background:rgba(200,16,46,.06);border:1px solid rgba(200,16,46,.22);border-top:3px solid var(--red);border-radius:14px;padding:22px 26px;display:flex;gap:16px;align-items:flex-start}
+.sop-icon{width:42px;height:42px;background:rgba(200,16,46,.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#ff6b6b;flex-shrink:0}
+.sop-card h4{font-size:.92rem;font-weight:700;color:#ff6b6b;margin-bottom:6px}
+.sop-card p{color:rgba(255,255,255,.5);font-size:.83rem;line-height:1.7}
+.sop-card strong{color:var(--gold)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;justify-content:center;align-items:center;padding:20px;overflow:hidden}
+.modal-overlay.active{display:flex}
+.modal-box{background:var(--dark);border:var(--bfire);border-top:3px solid var(--orange);border-radius:18px;width:100%;max-width:980px;max-height:86vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.7)}
+.modal-box{animation:mIn .25s ease forwards}
+@keyframes mIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{padding:18px 24px;border-bottom:var(--bdim);display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.02);flex-shrink:0}
+.modal-header-left{display:flex;align-items:center;gap:12px}
+.modal-header-icon{width:36px;height:36px;background:var(--grad);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.modal-header h4{font-family:var(--disp);font-size:1rem;font-weight:400;letter-spacing:1.5px;color:var(--white);margin:0;text-transform:uppercase}
+.modal-close{background:rgba(255,255,255,.06);border:var(--bdim);width:34px;height:34px;border-radius:8px;font-size:18px;color:var(--silver);cursor:pointer;transition:color .15s,transform .15s;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{color:var(--orange);transform:rotate(90deg)}
+.modal-toolbar{padding:12px 24px;border-bottom:var(--bdim);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;flex-shrink:0}
+.modal-search{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border:var(--bdim);border-radius:9px;padding:8px 14px;flex:1;max-width:300px;transition:border-color .2s}
+.modal-search:focus-within{border-color:var(--orange)}
+.modal-search input{background:none;border:none;outline:none;color:var(--white);font-size:.83rem;font-family:var(--font);width:100%}
+.modal-search input::placeholder{color:var(--silver)}
+.modal-search i{color:var(--silver);font-size:.8rem}
+.modal-count{font-size:.78rem;color:var(--silver);background:rgba(232,86,26,.1);border:1px solid rgba(232,86,26,.2);padding:4px 14px;border-radius:50px;white-space:nowrap}
+.modal-count strong{color:var(--gold)}
+.modal-body{flex:1;overflow-y:auto;position:relative}
+.modal-body::-webkit-scrollbar{width:4px}
+.modal-body::-webkit-scrollbar-track{background:var(--dark)}
+.modal-body::-webkit-scrollbar-thumb{background:var(--orange);border-radius:2px}
+.modal-table{width:100%;border-collapse:collapse;font-size:.83rem}
+.modal-table thead tr{background:rgba(232,86,26,.1);border-bottom:1px solid rgba(232,86,26,.3);position:sticky;top:0;z-index:1}
+.modal-table thead th{padding:12px 16px;color:var(--gold);font-family:var(--disp);font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;text-align:left;font-weight:400;white-space:nowrap;background:rgba(22,22,22,.98)}
+.modal-table tbody tr{border-bottom:1px solid rgba(255,255,255,.04)}
+.modal-table tbody td{padding:10px 16px;color:rgba(255,255,255,.65);vertical-align:middle}
+.modal-table tbody td:first-child{color:var(--white);font-weight:600}
+.t-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:50px;font-size:.7rem;font-weight:700}
+.t-badge.green{background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.t-badge.red{background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.t-badge.orange{background:rgba(232,86,26,.15);color:var(--orange);border:1px solid rgba(232,86,26,.3)}
+.vscroll-spacer{background:none;pointer-events:none}
+.modal-empty{text-align:center;padding:50px 20px;color:var(--silver);font-size:.88rem}
+.modal-empty i{font-size:2.5rem;display:block;margin-bottom:14px;color:rgba(255,255,255,.1)}
+.modal-footer{padding:12px 24px;border-top:var(--bdim);display:flex;justify-content:flex-end;align-items:center;background:rgba(255,255,255,.02);flex-shrink:0}
+.modal-footer-info{font-size:.75rem;color:var(--silver)}
+
+/* RESPONSIVE */
+@media(max-width:1100px){.stats-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){body{flex-direction:column}.sidebar{width:100%;height:auto;position:static}.stats-row{grid-template-columns:repeat(2,1fr)}.review-grid{grid-template-columns:1fr 1fr}.page-content{padding:16px}}
+@media(max-width:480px){.review-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:1fr 1fr}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a href="{% url 'web_publik:index' %}" class="brand-logo">
+      <div class="brand-logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+      <div class="brand-name">SMA N 5 <span>KOTA X</span></div>
+    </a>
+    <div class="brand-sub">Sistem Informasi Akademik</div>
+  </div>
+  <div class="sidebar-section-label">Menu Staf</div>
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+    <a href="/admin/" target="_blank" class="nav-item-db">
+      <i class="fa-solid fa-database"></i>
+      <span>Kelola Database</span>
+      <i class="fa-solid fa-arrow-up-right-from-square" style="margin-left:auto;font-size:.7rem;opacity:.7"></i>
+    </a>
+    <a href="{% url 'web_publik:index' %}" class="nav-item"><i class="fa-solid fa-globe"></i> Lihat Web Publik</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="role-badge">
+      <i class="fa-solid fa-shield-halved"></i>
+      <div class="role-badge-text">
+        <strong>{{ request.user.username }}</strong>
+        <span>Staf Administrasi</span>
+      </div>
+    </div>
+    <form action="{% url 'web_publik:logout' %}" method="post" style="margin:0">
+      {% csrf_token %}
+      <button type="submit" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> Keluar / Logout</button>
+    </form>
+  </div>
+</aside>
+
+<div class="main-wrap">
+  <div class="topbar">
+    <div class="topbar-left">Panel Kendali &nbsp;|&nbsp; <strong>SMA Negeri 5 Kota X</strong></div>
+    <div class="topbar-right">
+      <div class="topbar-dot"></div>
+      <span class="topbar-status">Otoritas Staf Aktif</span>
+    </div>
+  </div>
+
+  <div class="page-content">
+
+    <div class="dashboard-banner">
+      <div class="banner-label"><i class="fa-solid fa-gauge-high"></i> &nbsp;Panel Kendali Staf</div>
+      <h2>Dashboard <span>Administrasi</span></h2>
+      <p>Selamat bertugas, <strong>{{ request.user.username }}</strong>.
+         Klik <em>Review Tabel</em> untuk memantau isi database.
+         Gunakan <em>Kelola Database</em> di sidebar untuk mengedit data langsung.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-chip"><i class="fa-solid fa-user-graduate"></i><strong>{{ total_siswa }}</strong><span>Total Siswa</span></div>
+      <div class="stat-chip"><i class="fa-solid fa-chalkboard-user"></i><strong>{{ total_guru }}</strong><span>Total Guru</span></div>
+      <div class="stat-chip"><i class="fa-solid fa-book-open"></i><strong>{{ total_mapel }}</strong><span>Mata Pelajaran</span></div>
+      <div class="stat-chip"><i class="fa-solid fa-calendar-days"></i><strong>{{ total_jadwal }}</strong><span>Slot Jadwal</span></div>
+      <div class="stat-chip"><i class="fa-solid fa-file-invoice-dollar"></i><strong>{{ tunggakan_keuangan }}</strong><span>Tunggakan</span></div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-graduation-cap"></i> Data Akademik</div>
+    <div class="review-grid">
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-calendar-week"></i></div><div class="rc-meta"><h4>Jadwal Pelajaran</h4></div></div><div class="rc-count">{{ total_jadwal }} baris</div><button class="btn-review" data-key="jadwal"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-book"></i></div><div class="rc-meta"><h4>Mata Pelajaran</h4></div></div><div class="rc-count">{{ total_mapel }} baris</div><button class="btn-review" data-key="mapel"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-star-half-stroke"></i></div><div class="rc-meta"><h4>Nilai Rapor</h4></div></div><div class="rc-count">{{ total_nilai }} baris</div><button class="btn-review" data-key="nilai"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-clipboard-check"></i></div><div class="rc-meta"><h4>Presensi</h4></div></div><div class="rc-count">{{ total_presensi }} baris</div><button class="btn-review" data-key="presensi"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-people-group"></i> Data Personalia</div>
+    <div class="review-grid">
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-chalkboard-user"></i></div><div class="rc-meta"><h4>Guru</h4></div></div><div class="rc-count">{{ total_guru }} baris</div><button class="btn-review" data-key="guru"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-people-arrows"></i></div><div class="rc-meta"><h4>Wali Murid</h4></div></div><div class="rc-count">{{ total_wali }} baris</div><button class="btn-review" data-key="wali"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-user-graduate"></i></div><div class="rc-meta"><h4>Siswa</h4></div></div><div class="rc-count">{{ total_siswa }} baris</div><button class="btn-review" data-key="siswa"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-file-pen"></i></div><div class="rc-meta"><h4>Pendaftaran Baru</h4></div></div><div class="rc-count">{{ total_pendaftaran }} baris</div><button class="btn-review" data-key="pendaftaran"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-globe"></i> Konten Web Publik</div>
+    <div class="review-grid">
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-calendar-days"></i></div><div class="rc-meta"><h4>Agenda Sekolah</h4></div></div><div class="rc-count">{{ total_agenda }} baris</div><button class="btn-review" data-key="agenda"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-newspaper"></i></div><div class="rc-meta"><h4>Berita Sekolah</h4></div></div><div class="rc-count">{{ total_berita }} baris</div><button class="btn-review" data-key="berita"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-bullhorn"></i></div><div class="rc-meta"><h4>Pengumuman</h4></div></div><div class="rc-count">{{ total_pengumuman }} baris</div><button class="btn-review" data-key="pengumuman"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-trophy"></i></div><div class="rc-meta"><h4>Prestasi Sekolah</h4></div></div><div class="rc-count">{{ total_prestasi }} baris</div><button class="btn-review" data-key="prestasi"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-images"></i></div><div class="rc-meta"><h4>Galeri Foto</h4></div></div><div class="rc-count">{{ total_galeri }} baris</div><button class="btn-review" data-key="galeri"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-basketball"></i></div><div class="rc-meta"><h4>Ekstrakurikuler</h4></div></div><div class="rc-count">{{ total_ekskul }} baris</div><button class="btn-review" data-key="ekskul"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-file-arrow-down"></i></div><div class="rc-meta"><h4>Dokumen Unduhan</h4></div></div><div class="rc-count">{{ total_dokumen }} baris</div><button class="btn-review" data-key="dokumen"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-school"></i></div><div class="rc-meta"><h4>Layanan &amp; Sarana</h4></div></div><div class="rc-count">{{ total_layanan }} baris</div><button class="btn-review" data-key="layanan"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-sliders"></i> PPDB &amp; Konfigurasi</div>
+    <div class="review-grid">
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-wave-square"></i></div><div class="rc-meta"><h4>Gelombang PPDB</h4></div></div><div class="rc-count">{{ total_gelombang }} baris</div><button class="btn-review" data-key="gelombang"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-gear"></i></div><div class="rc-meta"><h4>Pengaturan PPDB</h4></div></div><div class="rc-count">{{ total_ppdbsetting }} baris</div><button class="btn-review" data-key="ppdbsetting"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+      <div class="review-card"><div class="rc-head"><div class="rc-icon"><i class="fa-solid fa-address-card"></i></div><div class="rc-meta"><h4>Kontak Sekolah</h4></div></div><div class="rc-count">{{ total_kontak }} baris</div><button class="btn-review" data-key="kontak"><i class="fa-solid fa-table"></i> Review Tabel</button></div>
+    </div>
+
+    <div class="section-title" style="margin-top:6px"><i class="fa-solid fa-shield-halved"></i> Prosedur Keamanan</div>
+    <div class="sop-card">
+      <div class="sop-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div>
+        <h4>⚠ SOP Pengamanan Data</h4>
+        <p>Setiap perubahan data terekam otomatis oleh log sistem. Gunakan <strong>Review Tabel</strong> untuk memastikan data benar sebelum meninggalkan sesi. Selalu tekan <strong>Logout</strong> jika meninggalkan komputer kerja.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-header-left">
+        <div class="modal-header-icon" id="modalIcon"><i class="fa-solid fa-table"></i></div>
+        <div><h4 id="modalTitle">—</h4></div>
+      </div>
+      <button class="modal-close" id="modalClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-toolbar">
+      <div class="modal-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="modalSearch" placeholder="Cari data…" autocomplete="off">
+      </div>
+      <div class="modal-count">Menampilkan <strong id="modalCount">0</strong> baris</div>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <table class="modal-table" id="modalTable">
+        <thead id="modalThead"></thead>
+        <tbody id="modalTbody"></tbody>
+      </table>
+      <div class="modal-empty" id="modalEmpty" style="display:none">
+        <i class="fa-regular fa-folder-open"></i>
+        <p>Tidak ada data ditemukan</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <span class="modal-footer-info">Data langsung dari database · Gunakan sidebar untuk mengedit</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     DATABASE JSON — disinkronkan dengan kode 2 (dok 9)
+     Hanya bagian ini yang diubah dari kode 1 asli
+════════════════════════════════════════════════════════ -->
+<script id="db-data" type="application/json">
+{
+  "jadwal": {
+    "title": "Jadwal Pelajaran",
+    "icon": "fa-calendar-week",
+    "head": ["#","Mata Pelajaran","Guru","Kelas","Hari","Jam Mulai","Jam Selesai","Ruangan"],
+    "rows": [{% for j in daftar_jadwal %}["{{ forloop.counter }}","{{ j.mata_pelajaran.nama }}","{{ j.guru.nama_lengkap }}","{{ j.kelas.nama_kelas }}","{{ j.hari }}","{{ j.jam_mulai|time:'H:i' }}","{{ j.jam_selesai|time:'H:i' }}","{{ j.ruangan|default:'-' }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "mapel": {
+    "title": "Mata Pelajaran",
+    "icon": "fa-book",
+    "head": ["#","Kode","Nama Mata Pelajaran"],
+    "rows": [{% for m in daftar_mapel %}["{{ forloop.counter }}","{{ m.kode }}","{{ m.nama }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "nilai": {
+    "title": "Nilai Rapor",
+    "icon": "fa-star-half-stroke",
+    "head": ["#","Siswa","Mata Pelajaran","Tugas","UTS","UAS","Nilai Akhir"],
+    "rows": [{% for n in daftar_nilai %}["{{ forloop.counter }}","{{ n.siswa.nama_lengkap }}","{{ n.mata_pelajaran.nama }}","{{ n.nilai_tugas }}","{{ n.nilai_uts }}","{{ n.nilai_uas }}","{{ n.nilai_angka }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "presensi": {
+    "title": "Presensi Siswa",
+    "icon": "fa-clipboard-check",
+    "head": ["#","Siswa","Tanggal","Status","Keterangan"],
+    "rows": [{% for p in daftar_presensi %}["{{ forloop.counter }}","{{ p.siswa.nama_lengkap }}","{{ p.tanggal }}","{{ p.status }}","{{ p.keterangan|default:'-' }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "guru": {
+    "title": "Data Guru",
+    "icon": "fa-chalkboard-user",
+    "head": ["#","NIP","Nama Lengkap","Bidang Studi"],
+    "rows": [{% for g in daftar_guru %}["{{ forloop.counter }}","{{ g.nip }}","{{ g.nama_lengkap }}","{{ g.bidang_studi }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "wali": {
+    "title": "Wali Murid",
+    "icon": "fa-people-arrows",
+    "head": ["#","Nama Wali","No. HP","Alamat"],
+    "rows": [{% for w in daftar_wali %}["{{ forloop.counter }}","{{ w.nama_lengkap }}","{{ w.no_hp|default:'-' }}","{{ w.alamat|default:'-'|truncatechars:40 }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "siswa": {
+    "title": "Data Siswa",
+    "icon": "fa-user-graduate",
+    "head": ["#","NISN","Nama Lengkap","Kelas","Wali Murid"],
+    "rows": [{% for s in daftar_siswa %}["{{ forloop.counter }}","{{ s.nisn }}","{{ s.nama_lengkap }}","{{ s.kelas.nama_kelas|default:'-' }}","{{ s.wali.nama_lengkap|default:'-' }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "pendaftaran": {
+    "title": "Pendaftaran Siswa Baru",
+    "icon": "fa-file-pen",
+    "head": ["#","Nama","NISN","Asal Sekolah","Email","No. HP","Status"],
+    "rows": [{% for p in daftar_pendaftaran %}["{{ forloop.counter }}","{{ p.nama_lengkap }}","{{ p.nisn }}","{{ p.asal_sekolah }}","{{ p.email }}","{{ p.nomor_hp }}","{{ p.status }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "agenda": {
+    "title": "Agenda Sekolah",
+    "icon": "fa-calendar-days",
+    "head": ["#","Nama Kegiatan","Tanggal","Waktu","Lokasi"],
+    "rows": [{% for a in daftar_agenda %}["{{ forloop.counter }}","{{ a.nama_kegiatan }}","{{ a.tanggal }}","{{ a.waktu }}","{{ a.lokasi|default:'-' }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "berita": {
+    "title": "Berita Sekolah",
+    "icon": "fa-newspaper",
+    "head": ["#","Judul","Tanggal Post","Penulis"],
+    "rows": [{% for b in daftar_berita %}["{{ forloop.counter }}","{{ b.judul|truncatechars:50 }}","{{ b.tanggal_post }}","{{ b.penulis.username|default:'-' }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "pengumuman": {
+    "title": "Pengumuman",
+    "icon": "fa-bullhorn",
+    "head": ["#","Judul","Tanggal","Status"],
+    "rows": [{% for p in daftar_pengumuman %}["{{ forloop.counter }}","{{ p.judul|truncatechars:50 }}","{{ p.tanggal }}","{% if p.is_active %}Aktif{% else %}Tidak Aktif{% endif %}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "prestasi": {
+    "title": "Prestasi Sekolah",
+    "icon": "fa-trophy",
+    "head": ["#","Juara","Nama Lomba","Nama Siswa/Tim","Tingkat"],
+    "rows": [{% for p in daftar_prestasi %}["{{ forloop.counter }}","{{ p.juara }}","{{ p.nama_lomba|truncatechars:40 }}","{{ p.nama_siswa }}","{{ p.tingkat }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "galeri": {
+    "title": "Galeri Foto Kegiatan",
+    "icon": "fa-images",
+    "head": ["#","Judul","Kategori","Tanggal Kegiatan"],
+    "rows": [{% for g in daftar_galeri %}["{{ forloop.counter }}","{{ g.judul|truncatechars:40 }}","{{ g.get_kategori_display }}","{{ g.tanggal_kegiatan }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "ekskul": {
+    "title": "Ekstrakurikuler",
+    "icon": "fa-basketball",
+    "head": ["#","Nama Ekskul","Deskripsi","Urutan","Aktif"],
+    "rows": [{% for e in daftar_ekskul %}["{{ forloop.counter }}","{{ e.nama }}","{{ e.deskripsi|truncatechars:50 }}","{{ e.urutan }}","{% if e.is_aktif %}Ya{% else %}Tidak{% endif %}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "dokumen": {
+    "title": "Dokumen Unduhan",
+    "icon": "fa-file-arrow-down",
+    "head": ["#","Nama Dokumen","File"],
+    "rows": [{% for d in daftar_dokumen %}["{{ forloop.counter }}","{{ d.nama_dokumen }}","{{ d.file.name|default:'-' }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "layanan": {
+    "title": "Layanan Akademik & Sarana",
+    "icon": "fa-school",
+    "head": ["#","Jenis","Nama","Deskripsi","Urutan"],
+    "rows": [{% for l in daftar_layanan %}["{{ forloop.counter }}","{{ l.get_jenis_display }}","{{ l.nama }}","{{ l.deskripsi|truncatechars:50 }}","{{ l.urutan }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "gelombang": {
+    "title": "Gelombang Seleksi PPDB",
+    "icon": "fa-wave-square",
+    "head": ["#","Nama Gelombang","Mulai","Selesai","Biaya","Status"],
+    "rows": [{% for g in daftar_gelombang %}["{{ forloop.counter }}","{{ g.nama }}","{{ g.tanggal_mulai }}","{{ g.tanggal_selesai }}","Rp {{ g.biaya|floatformat:0 }}","{% if g.is_aktif %}Aktif{% else %}Tutup{% endif %}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "ppdbsetting": {
+    "title": "Pengaturan PPDB",
+    "icon": "fa-gear",
+    "head": ["#","Brosur PDF","Informasi Tambahan"],
+    "rows": [{% for s in daftar_ppdbsetting %}["{{ forloop.counter }}","{{ s.brosur_pdf.name|default:'-' }}","{{ s.informasi_tambahan|default:'-'|truncatechars:60 }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  },
+  "kontak": {
+    "title": "Kontak Sekolah",
+    "icon": "fa-address-card",
+    "head": ["#","Telepon","Email","Alamat","Website","WhatsApp"],
+    "rows": [{% for k in daftar_kontak %}["{{ forloop.counter }}","{{ k.telepon }}","{{ k.email }}","{{ k.alamat|truncatechars:40 }}","{{ k.website|default:'-' }}","{{ k.wa|default:'-' }}"]{% if not forloop.last %},{% endif %}{% endfor %}]
+  }
+}
+</script>
+
+<script>
+(function(){
+'use strict';
+
+const BADGES = {
+  aktif:'green',hadir:'green',lunas:'green',ya:'green',diterima:'green',
+  'tidak aktif':'red',alpa:'red',ditolak:'red',tutup:'red',tidak:'red',
+  pending:'orange',izin:'orange',sakit:'orange'
+};
+
+function badge(val){
+  const k = String(val).toLowerCase().trim();
+  const c = BADGES[k];
+  return c ? `<span class="t-badge ${c}">${val}</span>` : val;
+}
+
+let DB         = null;
+let currentRows = [];
+let currentKey  = null;
+
+const overlay  = document.getElementById('modalOverlay');
+const tbody    = document.getElementById('modalTbody');
+const thead    = document.getElementById('modalThead');
+const table    = document.getElementById('modalTable');
+const empty    = document.getElementById('modalEmpty');
+const countEl  = document.getElementById('modalCount');
+const titleEl  = document.getElementById('modalTitle');
+const iconEl   = document.getElementById('modalIcon');
+const searchEl = document.getElementById('modalSearch');
+
+function renderRows(rows){
+  if(!rows || rows.length === 0){
+    tbody.innerHTML = '';
+    table.style.display = 'none';
+    empty.style.display = 'block';
+  } else {
+    table.style.display = '';
+    empty.style.display = 'none';
+    tbody.innerHTML = rows.map(row =>
+      '<tr>' + row.map((c,j) => `<td>${j===0?c:badge(c)}</td>`).join('') + '</tr>'
+    ).join('');
+  }
+  countEl.textContent = rows ? rows.length : 0;
+}
+
+function openModal(key){
+  if(!DB) DB = JSON.parse(document.getElementById('db-data').textContent);
+  const data = DB[key];
+  if(!data) return;
+  currentKey  = key;
+  currentRows = data.rows;
+  titleEl.textContent = data.title;
+  iconEl.innerHTML    = `<i class="fa-solid ${data.icon}"></i>`;
+  searchEl.value      = '';
+  thead.innerHTML = '<tr>' + data.head.map(h=>`<th>${h}</th>`).join('') + '</tr>';
+  renderRows(currentRows);
+  overlay.style.display = 'flex';
+  requestAnimationFrame(()=> overlay.classList.add('active'));
+}
+
+function closeModal(){
+  overlay.classList.remove('active');
+  currentKey  = null;
+  currentRows = [];
+  setTimeout(()=>{
+    tbody.innerHTML = '';
+    overlay.style.display = 'none';
+  }, 250);
+}
+
+let searchTimer = 0;
+function onSearch(){
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(()=>{
+    const key = searchEl.value.toLowerCase().trim();
+    if(!key){ renderRows(currentRows); return; }
+    renderRows(currentRows.filter(r => r.some(c => String(c).toLowerCase().includes(key))));
+  }, 180);
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('[data-key]');
+  if(btn){ openModal(btn.dataset.key); return; }
+  if(e.target === overlay || e.target.closest('#modalClose')) closeModal();
+}, false);
+
+searchEl.addEventListener('input', onSearch, {passive:true});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape' && overlay.classList.contains('active')) closeModal();
+}, {passive:true});
+
+})();
+</script>
+</body>
+</html>

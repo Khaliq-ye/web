@@ -1,0 +1,129 @@
+{% extends 'akademik/base.html' %}
+
+{% block title %}E-Rapor Digital — SMA Negeri 5 Kota X{% endblock %}
+{% block topbar_label %}Akademik & Rapor{% endblock %}
+{% block topbar_sub %}E-Rapor Digital Guru{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div style="margin-bottom:24px;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+    <div style="width:40px;height:40px;background:rgba(232,86,26,.12);border:1px solid rgba(232,86,26,.28);
+                border-radius:10px;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-file-invoice" style="color:#E8561A;font-size:1rem;"></i>
+    </div>
+    <div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;
+                 color:#fff;margin:0;line-height:1.1;">Cetak & Rekap Buku Rapor</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin:0;">
+        Rekapitulasi nilai akhir semester dan capaian belajar siswa
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- TABEL -->
+<div style="background:#161616;border:1px solid rgba(255,255,255,.06);
+            border-top:3px solid #E8561A;border-radius:18px;overflow:hidden;">
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;text-align:left;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Nama Siswa</th>
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Mata Pelajaran</th>
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                     Tugas 40%</th>
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                     UTS 30%</th>
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                     UAS 30%</th>
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                     Nilai Akhir</th>
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Catatan</th>
+          <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                     Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for rapor in nilai_rapor_list %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+          <td style="padding:13px 16px;font-weight:700;color:#fff;white-space:nowrap;">
+            {{ rapor.siswa.nama_lengkap }}
+          </td>
+          <td style="padding:13px 16px;color:rgba(255,255,255,.75);">
+            {{ rapor.mata_pelajaran.nama }}
+          </td>
+          <td style="padding:13px 16px;text-align:center;color:rgba(255,255,255,.6);">
+            {{ rapor.nilai_tugas }}
+          </td>
+          <td style="padding:13px 16px;text-align:center;color:rgba(255,255,255,.6);">
+            {{ rapor.nilai_uts }}
+          </td>
+          <td style="padding:13px 16px;text-align:center;color:rgba(255,255,255,.6);">
+            {{ rapor.nilai_uas }}
+          </td>
+          <td style="padding:13px 16px;text-align:center;">
+            {% if rapor.nilai_angka >= 75 %}
+              <span style="background:rgba(34,197,94,.12);color:#4ade80;
+                           border:1px solid rgba(34,197,94,.3);padding:3px 14px;
+                           border-radius:99px;font-size:13px;font-weight:700;">
+                {{ rapor.nilai_angka }}
+              </span>
+            {% else %}
+              <span style="background:rgba(200,16,46,.1);color:#f87171;
+                           border:1px solid rgba(200,16,46,.3);padding:3px 14px;
+                           border-radius:99px;font-size:13px;font-weight:700;">
+                {{ rapor.nilai_angka }}
+              </span>
+            {% endif %}
+          </td>
+          <td style="padding:13px 16px;color:rgba(255,255,255,.35);font-size:12px;font-style:italic;">
+            {{ rapor.keterangan|default:"—" }}
+          </td>
+          <td style="padding:13px 16px;text-align:center;">
+            <div style="display:flex;flex-direction:column;gap:5px;align-items:center;">
+              <a href="{% url 'akademik:lihat_rapor_siswa' rapor.siswa.id %}" target="_blank"
+                 style="background:rgba(220,38,38,.2);color:#f87171;
+                        border:1px solid rgba(220,38,38,.35);
+                        padding:4px 12px;border-radius:6px;text-decoration:none;
+                        font-size:11px;font-weight:600;white-space:nowrap;
+                        display:inline-flex;align-items:center;gap:4px;">
+                <i class="fas fa-file-pdf"></i> PDF
+              </a>
+              <a href="{% url 'akademik:export_nilai_excel' rapor.siswa.id %}"
+                 style="background:rgba(22,163,74,.15);color:#4ade80;
+                        border:1px solid rgba(22,163,74,.3);
+                        padding:4px 12px;border-radius:6px;text-decoration:none;
+                        font-size:11px;font-weight:600;white-space:nowrap;
+                        display:inline-flex;align-items:center;gap:4px;">
+                <i class="fas fa-file-excel"></i> Excel
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8" style="text-align:center;padding:56px 20px;">
+            <i class="fas fa-folder-open" style="font-size:36px;color:rgba(255,255,255,.15);
+               display:block;margin-bottom:12px;"></i>
+            <span style="color:rgba(255,255,255,.3);font-size:13px;">
+              Data nilai rapor belum tersedia.
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

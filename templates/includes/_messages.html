@@ -1,0 +1,122 @@
+{% if messages %}
+<style>
+    /* Container utama notifikasi */
+    .toast-container {
+        position: fixed;
+        top: 25px;
+        right: 25px;
+        z-index: 999999; /* Super tinggi biar gak ketutupan elemen admin */
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .toast-item {
+        background: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
+        padding: 16px;
+        min-width: 320px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .toast-text {
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 14px;
+    }
+    .toast-text p {
+        margin: 0;
+    }
+    .toast-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #94a3b8;
+        padding: 0 5px;
+    }
+    .toast-icon {
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    /* Variasi Warna Berdasarkan Tags Django */
+    .toast-item.success { border-left: 5px solid #10b981; }
+    .toast-item.success .toast-icon { color: #10b981; }
+
+    .toast-item.warning { border-left: 5px solid #f59e0b; }
+    .toast-item.warning .toast-icon { color: #f59e0b; }
+
+    .toast-item.error { border-left: 5px solid #ef4444; }
+    .toast-item.error .toast-icon { color: #ef4444; }
+
+    .toast-item.info, .toast-item.debug { border-left: 5px solid #1e40af; }
+    .toast-item.info .toast-icon, .toast-item.debug .toast-icon { color: #1e40af; }
+    @media (max-width: 768px) {
+    .main-grid { grid-template-columns: 1fr !important; }
+    .table-responsive { overflow-x: auto; }
+    .card-header-flex { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<div class="toast-container" id="toast-wrapper">
+    {% for message in messages %}
+    <div class="toast-item {{ message.tags }}">
+        <div class="toast-content">
+            <span class="toast-icon">
+                {% if message.tags == 'success' %}✓
+                {% elif message.tags == 'warning' %}⚠
+                {% elif message.tags == 'error' %}✕
+                {% else %}!{% endif %}
+            </span>
+            <div class="toast-text">
+                <p>{{ message }}</p>
+            </div>
+        </div>
+        <button class="toast-close" onclick="removeToastElement(this.closest('.toast-item'))">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    // Fungsi titik 3: DOM Removal (Menghapus total elemen dari HTML)
+    function removeToastElement(item) {
+        if (!item) return;
+        // Efek animasi menghilang
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(-20px)';
+        
+        // Setelah animasi selesai (500ms), hapus mutlak dari DOM
+        setTimeout(() => {
+            item.remove();
+            
+            // Jika container sudah kosong melompong, hapus container-nya juga
+            const container = document.getElementById('toast-wrapper');
+            if (container && container.children.length === 0) {
+                container.remove();
+            }
+        }, 500);
+    }
+
+    // Fungsi titik 1: Logika Timer / Timeout (Otomatis picu hilangnya notif)
+    document.addEventListener('DOMContentLoaded', function() {
+        const toastItems = document.querySelectorAll('#toast-wrapper .toast-item');
+        
+        toastItems.forEach((item, index) => {
+            // Beri waktu tampil 3 detik (3000ms), ditambah delay antrean kalau notifnya banyak
+            setTimeout(() => {
+                removeToastElement(item);
+            }, 3000 + (index * 500));
+        });
+    });
+</script>
+{% endif %}

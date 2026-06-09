@@ -1,0 +1,281 @@
+{% extends 'akademik/base.html' %}
+
+{% block title %}Tugas & Kuis — SMA Negeri 5 Kota X{% endblock %}
+{% block topbar_label %}E-Learning & CBT{% endblock %}
+{% block topbar_sub %}Manajemen Tugas & Kuis{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div style="margin-bottom:24px;display:flex;align-items:center;
+            justify-content:space-between;flex-wrap:wrap;gap:12px;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:40px;height:40px;background:rgba(245,197,24,.1);border:1px solid rgba(245,197,24,.3);
+                border-radius:10px;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-laptop-code" style="color:#F5C518;font-size:1rem;"></i>
+    </div>
+    <div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;
+                 color:#fff;margin:0;line-height:1.1;">Daftar LKS Online</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin:0;">
+        Kelola penugasan digital dan pembuatan kuis online
+      </p>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button class="btn-buka-modal" data-type="Tugas"
+            style="background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border:none;
+                   padding:9px 16px;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;
+                   font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;
+                   align-items:center;gap:7px;">
+      <i class="fas fa-tasks"></i> + Buat Tugas
+    </button>
+    <button class="btn-buka-modal" data-type="Kuis"
+            style="background:linear-gradient(135deg,#166534,#16a34a);color:#fff;border:none;
+                   padding:9px 16px;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;
+                   font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;
+                   align-items:center;gap:7px;">
+      <i class="fas fa-vial"></i> + Buat Kuis
+    </button>
+  </div>
+</div>
+
+<!-- TABEL — kolom Jawaban ditambah -->
+<div style="background:#161616;border:1px solid rgba(255,255,255,.06);
+            border-top:3px solid #E8561A;border-radius:18px;overflow:hidden;">
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;text-align:left;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Judul Tugas / Kuis</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Mata Pelajaran</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Kelas</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Tipe</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;">Deadline</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;">Jawaban</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tugas in tugas_list %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+          <td style="padding:14px 18px;font-weight:700;color:#fff;">{{ tugas.judul }}</td>
+          <td style="padding:14px 18px;color:rgba(255,255,255,.7);">{{ tugas.mata_pelajaran.nama }}</td>
+          <td style="padding:14px 18px;color:rgba(255,255,255,.5);font-size:13px;">
+            {% if tugas.jadwal %}{{ tugas.jadwal.kelas }}{% else %}—{% endif %}
+          </td>
+          <td style="padding:14px 18px;">
+            {% if tugas.jenis == 'Tugas' %}
+            <span style="background:rgba(37,99,235,.15);color:#60a5fa;
+                         border:1px solid rgba(37,99,235,.3);padding:3px 10px;
+                         border-radius:99px;font-size:12px;font-weight:600;">
+              Tugas Harian
+            </span>
+            {% else %}
+            <span style="background:rgba(34,197,94,.12);color:#4ade80;
+                         border:1px solid rgba(34,197,94,.3);padding:3px 10px;
+                         border-radius:99px;font-size:12px;font-weight:600;">
+              Kuis Online
+            </span>
+            {% endif %}
+          </td>
+          <td style="padding:14px 18px;white-space:nowrap;">
+            <span style="background:rgba(200,16,46,.1);color:#f87171;
+                         border:1px solid rgba(200,16,46,.25);padding:3px 10px;
+                         border-radius:99px;font-size:12px;font-weight:600;">
+              <i class="far fa-clock" style="font-size:10px;"></i>
+              {{ tugas.batas_waktu|date:"d M Y, H:i" }}
+            </span>
+          </td>
+          <!-- KOLOM BARU: Lihat Jawaban -->
+          <td style="padding:14px 18px;">
+            <a href="{% url 'akademik:lihat_jawaban_guru' tugas.id %}"
+               style="display:inline-flex;align-items:center;gap:5px;
+                      background:rgba(240,180,41,.1);color:#fbbf24;
+                      border:1px solid rgba(240,180,41,.25);padding:5px 12px;
+                      border-radius:8px;font-size:12px;font-weight:600;
+                      text-decoration:none;white-space:nowrap;
+                      transition:background .15s;">
+              <i class="fas fa-inbox"></i>
+              Lihat Jawaban
+              {% with jumlah=tugas.jawaban_siswa.count %}
+              {% if jumlah > 0 %}
+              <span style="background:rgba(240,180,41,.25);border-radius:99px;
+                           padding:1px 7px;font-size:11px;">{{ jumlah }}</span>
+              {% endif %}
+              {% endwith %}
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" style="text-align:center;padding:56px 20px;">
+            <i class="fas fa-laptop" style="font-size:36px;color:rgba(255,255,255,.15);
+               display:block;margin-bottom:12px;"></i>
+            <span style="color:rgba(255,255,255,.3);font-size:13px;">
+              Belum ada penugasan atau kuis yang diterbitkan.
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- MODAL FORM (tidak berubah sama sekali) -->
+<div id="modalForm"
+     style="display:none;position:fixed;z-index:9999;inset:0;
+            background:rgba(0,0,0,.75);align-items:center;
+            justify-content:center;padding:16px;">
+  <div style="background:#1F1F1F;border:1px solid rgba(232,86,26,.28);
+              border-top:3px solid #E8561A;border-radius:18px;
+              width:100%;max-width:520px;max-height:90vh;overflow-y:auto;
+              box-shadow:0 24px 60px rgba(0,0,0,.7);position:relative;">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;
+                padding:18px 22px;border-bottom:1px solid rgba(255,255,255,.07);">
+      <h3 id="modalTitle" style="font-family:'Bebas Neue',sans-serif;font-size:1rem;
+                                  letter-spacing:2px;color:#fff;margin:0;
+                                  text-transform:uppercase;display:flex;
+                                  align-items:center;gap:9px;"></h3>
+      <button id="btnTutupModal"
+              style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+                     color:rgba(255,255,255,.4);width:34px;height:34px;border-radius:8px;
+                     cursor:pointer;font-size:18px;display:flex;align-items:center;
+                     justify-content:center;">&times;</button>
+    </div>
+
+    <div style="padding:22px;">
+      <form method="POST" action="{% url 'akademik:e_learning' %}"
+            style="display:flex;flex-direction:column;gap:16px;">
+        {% csrf_token %}
+        <input type="hidden" name="jenis" id="formJenis">
+
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;
+                        color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;">
+            Mata Pelajaran / Kelas *
+          </label>
+          <select name="mata_pelajaran" id="selectMapel" required
+                  style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);
+                         border:1px solid rgba(255,255,255,.1);border-radius:9px;
+                         color:#fff;font-size:13px;outline:none;">
+            <option value="" style="background:#1F1F1F;">-- Pilih Mata Pelajaran --</option>
+            {% for j in jadwal_guru %}
+            <option value="{{ j.mata_pelajaran.id }}" style="background:#1F1F1F;">
+              {{ j.mata_pelajaran.nama }} — Kelas {{ j.kelas }}
+              ({{ j.hari }}, {{ j.jam_mulai|time:"H:i" }}–{{ j.jam_selesai|time:"H:i" }})
+            </option>
+            {% empty %}
+            <option value="" disabled style="background:#1F1F1F;">Belum ada jadwal mengajar</option>
+            {% endfor %}
+          </select>
+          {% if not jadwal_guru %}
+          <p style="color:#f87171;font-size:12px;margin:6px 0 0;">
+            <i class="fas fa-exclamation-triangle"></i>
+            Anda belum memiliki jadwal mengajar. Hubungi admin.
+          </p>
+          {% endif %}
+        </div>
+
+        <div>
+          <label id="labelJudul" style="display:block;margin-bottom:6px;font-size:12px;
+                                         font-weight:600;color:rgba(255,255,255,.5);
+                                         text-transform:uppercase;letter-spacing:.5px;">
+            Judul Tugas
+          </label>
+          <input type="text" name="judul" id="inputJudul" required
+                 placeholder="Contoh: Logika Gerbang Digital Dasar"
+                 style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);
+                        border:1px solid rgba(255,255,255,.1);border-radius:9px;
+                        color:#fff;font-size:13px;outline:none;box-sizing:border-box;">
+        </div>
+
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;
+                        color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;">
+            Deskripsi <span style="color:rgba(255,255,255,.25);font-weight:400;">(Opsional)</span>
+          </label>
+          <textarea name="deskripsi" rows="3"
+                    placeholder="Petunjuk pengerjaan atau keterangan tambahan..."
+                    style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);
+                           border:1px solid rgba(255,255,255,.1);border-radius:9px;
+                           color:#fff;font-size:13px;outline:none;resize:vertical;
+                           font-family:'Plus Jakarta Sans',sans-serif;box-sizing:border-box;"></textarea>
+        </div>
+
+        <div>
+          <label style="display:block;margin-bottom:6px;font-size:12px;font-weight:600;
+                        color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;">
+            Batas Waktu (Deadline) *
+          </label>
+          <input type="datetime-local" name="batas_waktu" required
+                 style="width:100%;padding:10px 14px;background:rgba(255,255,255,.05);
+                        border:1px solid rgba(255,255,255,.1);border-radius:9px;
+                        color:#fff;font-size:13px;outline:none;box-sizing:border-box;
+                        color-scheme:dark;">
+        </div>
+
+        <div style="display:flex;gap:10px;justify-content:flex-end;
+                    padding-top:14px;border-top:1px solid rgba(255,255,255,.06);">
+          <button type="button" id="btnBatal"
+                  style="padding:9px 18px;background:rgba(255,255,255,.06);
+                         border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);
+                         border-radius:9px;cursor:pointer;font-size:13px;font-weight:600;
+                         font-family:'Plus Jakarta Sans',sans-serif;">
+            Batal
+          </button>
+          <button type="submit" id="btnSubmitForm"
+                  style="padding:9px 22px;border:none;color:#fff;border-radius:9px;
+                         cursor:pointer;font-size:13px;font-weight:700;
+                         font-family:'Plus Jakarta Sans',sans-serif;
+                         display:inline-flex;align-items:center;gap:7px;">
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+var modal      = document.getElementById('modalForm');
+var modalTitle = document.getElementById('modalTitle');
+var labelJudul = document.getElementById('labelJudul');
+var formJenis  = document.getElementById('formJenis');
+var btnSubmit  = document.getElementById('btnSubmitForm');
+
+document.querySelectorAll('.btn-buka-modal').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var tipe = this.getAttribute('data-type');
+    formJenis.value = tipe;
+    if(tipe === 'Tugas'){
+      modalTitle.innerHTML  = '<i class="fas fa-tasks" style="color:#60a5fa"></i> Tambah Tugas Siswa';
+      labelJudul.innerText  = 'Judul / Topik Tugas';
+      btnSubmit.innerHTML   = '<i class="fas fa-paper-plane"></i> Terbitkan Tugas';
+      btnSubmit.style.background = 'linear-gradient(135deg,#1d4ed8,#2563eb)';
+    } else {
+      modalTitle.innerHTML  = '<i class="fas fa-vial" style="color:#4ade80"></i> Buat Kuis CBT Baru';
+      labelJudul.innerText  = 'Nama / Judul Kuis';
+      btnSubmit.innerHTML   = '<i class="fas fa-paper-plane"></i> Terbitkan Kuis';
+      btnSubmit.style.background = 'linear-gradient(135deg,#166534,#16a34a)';
+    }
+    modal.style.display = 'flex';
+  });
+});
+
+document.getElementById('btnTutupModal').addEventListener('click', function(){ modal.style.display='none'; });
+document.getElementById('btnBatal').addEventListener('click', function(){ modal.style.display='none'; });
+window.addEventListener('click', function(e){ if(e.target===modal) modal.style.display='none'; });
+</script>
+
+<style>
+  select option{background:#1F1F1F;color:#fff;}
+  textarea::placeholder,input::placeholder{color:rgba(255,255,255,.25);}
+  select:focus,textarea:focus,input:focus{border-color:rgba(232,86,26,.5) !important;}
+  tr:hover td a[href]{background:rgba(240,180,41,.18);}
+  @media(max-width:600px){
+    div[style*="justify-content:space-between"]{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+
+{% endblock %}

@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — SMA Negeri 5 Kota X</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style-login.css' %}?v=5.1">
+</head>
+<body class="login-body">
+
+    <!-- Fire particle canvas — dimatikan di mobile lewat CSS -->
+    <canvas id="fire-canvas"></canvas>
+
+    <!-- Static ambient orbs -->
+    <div class="login-orb login-orb-1"></div>
+    <div class="login-orb login-orb-2"></div>
+    <div class="login-orb login-orb-3"></div>
+
+    <!-- Static grid overlay -->
+    <div class="login-grid-overlay"></div>
+
+    <!-- Notifikasi Django Messages -->
+    {% if messages %}
+    <div id="notification-area" class="notif-wrapper">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {% if message.tags == 'success' %}
+                <i class="fa-solid fa-circle-check"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}
+                <i class="fa-solid fa-circle-exclamation"></i>
+            {% elif message.tags == 'warning' %}
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            {% else %}
+                <i class="fa-solid fa-circle-info"></i>
+            {% endif %}
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- LOGIN CARD -->
+    <div class="login-card" id="loginCard">
+
+        <div class="card-fire-bar"></div>
+
+        <div class="login-header">
+            <div class="login-logo-wrap">
+                <img src="{% static 'images/logo-profil-sekolah.png' %}"
+                     alt="Logo SMA Negeri 5 Kota X"
+                     class="login-logo-img">
+            </div>
+            <h2>SMA <span>NEGERI 5</span></h2>
+            <p>Portal Sistem Informasi Akademik</p>
+        </div>
+
+        <form method="POST" action="{% url 'web_publik:login_portal' %}" class="login-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="username">
+                    <i class="fa-solid fa-user"></i> Username
+                </label>
+                <div class="input-wrap">
+                    <input type="text" id="username" name="username"
+                           placeholder="Masukkan username Anda"
+                           required autocomplete="username">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    <i class="fa-solid fa-lock"></i> Password
+                </label>
+                <div class="input-wrap">
+                    <input type="password" id="password" name="password"
+                           placeholder="Masukkan password Anda"
+                           required autocomplete="current-password">
+                    <button type="button" class="toggle-password" aria-label="Tampilkan password">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <span>Masuk Sekarang</span>
+                <i class="fa-solid fa-right-to-bracket"></i>
+            </button>
+        </form>
+
+        <div class="footer-link">
+            <a href="{% url 'web_publik:index' %}" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+            </a>
+        </div>
+
+    </div><!-- /login-card -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* ═══════════════════════════════════════════════════════
+       1. FIRE CANVAS — ultra-light
+       - Max 15 partikel (bukan unlimited)
+       - Spawn 1 partikel per 4 frame (bukan setiap frame)
+       - Opacity canvas dikurangi ke 0.08 via CSS
+       - Mati total di mobile (display:none via CSS)
+       - Pause otomatis saat tab tidak aktif (rAF native)
+    ════════════════════════════════════════════════════════ */
+    var canvas = document.getElementById('fire-canvas');
+    if (canvas && window.innerWidth > 768) {
+        var ctx    = canvas.getContext('2d');
+        var W      = canvas.width  = window.innerWidth;
+        var H      = canvas.height = window.innerHeight;
+
+        /* Throttle resize agar tidak terus-terusan recalculate */
+        var resizeTimer;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                W = canvas.width  = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }, 200);
+        }, { passive: true });
+
+        var MAX_P  = 15;
+        var colors = ['#F5C518', '#E8561A', '#C8102E', '#F4731F'];
+        var pts    = [];
+        var frame  = 0;
+
+        function spawn() {
+            if (pts.length >= MAX_P) return;
+            pts.push({
+                x: Math.random() * W,
+                y: H + 8,
+                vx: (Math.random() - 0.5) * 0.55,
+                vy: -(Math.random() * 0.85 + 0.4),
+                r: Math.random() * 2 + 1,
+                life: 0,
+                max: 95 + Math.random() * 55,
+                c: colors[Math.floor(Math.random() * colors.length)]
+            });
+        }
+
+        function loop() {
+            frame++;
+            ctx.clearRect(0, 0, W, H);
+
+            /* Spawn 1 partikel setiap 4 frame = ~15fps spawn rate */
+            if (frame % 4 === 0) spawn();
+
+            for (var i = pts.length - 1; i >= 0; i--) {
+                var p = pts[i];
+                p.x  += p.vx;
+                p.y  += p.vy;
+                p.life++;
+                var t = p.life / p.max;
+                if (t >= 1) { pts.splice(i, 1); continue; }
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r * (1 - t * 0.35), 0, Math.PI * 2);
+                ctx.fillStyle = p.c;
+                ctx.globalAlpha = 0.48 * (1 - t);
+                ctx.fill();
+            }
+            ctx.globalAlpha = 1;
+            requestAnimationFrame(loop);
+        }
+        loop();
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       2. Hapus will-change setelah card animation selesai
+       Mencegah card terus memakan VRAM setelah render
+    ════════════════════════════════════════════════════════ */
+    var card = document.getElementById('loginCard');
+    if (card) {
+        /* animasi cardIn = 0.55s, tunggu 100ms buffer */
+        setTimeout(function () {
+            card.style.willChange = 'auto';
+        }, 650);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       3. Auto-dismiss notification — pakai transform (GPU)
+    ════════════════════════════════════════════════════════ */
+    var notif = document.getElementById('notification-area');
+    if (notif) {
+        setTimeout(function () {
+            notif.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            notif.style.opacity    = '0';
+            /* translateY (GPU) bukan top */
+            notif.style.transform  = 'translateX(-50%) translateY(-14px)';
+            setTimeout(function () { notif.style.display = 'none'; }, 500);
+        }, 3500);
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       4. Toggle password
+    ════════════════════════════════════════════════════════ */
+    var toggleBtn     = document.querySelector('.toggle-password');
+    var passwordInput = document.getElementById('password');
+    if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', function () {
+            var isPass = passwordInput.type === 'password';
+            passwordInput.type = isPass ? 'text' : 'password';
+            this.querySelector('i').className = isPass
+                ? 'fa-regular fa-eye-slash'
+                : 'fa-regular fa-eye';
+        });
+    }
+
+    /* ═══════════════════════════════════════════════════════
+       5. Input focus — pasang will-change saat focused,
+       lepas saat blur agar tidak terus menggunakan VRAM
+    ════════════════════════════════════════════════════════ */
+    document.querySelectorAll('.input-wrap input').forEach(function (input) {
+        var wrap = input.closest('.input-wrap');
+        input.addEventListener('focus', function () {
+            wrap.classList.add('focused');
+            /* Beritahu GPU bahwa elemen ini akan berubah */
+            wrap.style.willChange = 'transform';
+        });
+        input.addEventListener('blur', function () {
+            wrap.classList.remove('focused');
+            /* Lepas setelah transisi selesai (0.35s) */
+            setTimeout(function () {
+                wrap.style.willChange = 'auto';
+            }, 400);
+        });
+    });
+
+});
+</script>
+
+</body>
+</html>

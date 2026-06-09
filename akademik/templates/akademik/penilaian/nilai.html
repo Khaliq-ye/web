@@ -1,0 +1,214 @@
+{% extends 'akademik/base.html' %}
+
+{% block title %}Input Nilai — SMA Negeri 5 Kota X{% endblock %}
+{% block topbar_label %}Akademik{% endblock %}
+{% block topbar_sub %}Input Nilai Komponen Siswa{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div style="margin-bottom:24px;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:40px;height:40px;background:rgba(232,86,26,.12);border:1px solid rgba(232,86,26,.28);
+                border-radius:10px;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-pen-nib" style="color:#E8561A;font-size:1rem;"></i>
+    </div>
+    <div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;
+                 color:#fff;margin:0;line-height:1.1;">Manajemen Pengisian Nilai</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin:0;">
+        Kelola nilai tugas harian, UTS, UAS, dan catatan guru sebelum dikunci ke E-Rapor
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PILIH ROMBEL -->
+<div style="background:rgba(232,86,26,.06);border:1px solid rgba(232,86,26,.2);
+            border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+  <div style="font-size:13px;font-weight:700;color:#F4731F;margin-bottom:12px;">
+    Pilih Rombel / Sesi Kelas Mengajar Anda:
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
+    {% for j in jadwal_guru %}
+    <a href="?jadwal={{ j.id }}"
+       class="btn-rombel {% if request.GET.jadwal == j.id|stringformat:'i' %}btn-rombel-aktif{% endif %}">
+      Kelas {{ j.kelas }} — {{ j.mata_pelajaran.nama }}
+    </a>
+    {% empty %}
+    <p style="font-size:13px;color:rgba(255,255,255,.35);">
+      Belum ada data rombel kelas mengajar aktif untuk Anda.
+    </p>
+    {% endfor %}
+
+    {% if jadwal_terpilih and siswa_nilai_list %}
+    <button type="submit" form="form-input-nilai-siswa"
+            style="background:linear-gradient(135deg,#166534,#16a34a);color:#fff;border:none;
+                   padding:9px 18px;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;
+                   font-size:13px;font-weight:700;cursor:pointer;margin-left:auto;
+                   display:inline-flex;align-items:center;gap:7px;white-space:nowrap;">
+      <i class="fas fa-save"></i> Simpan Nilai
+    </button>
+    {% endif %}
+  </div>
+</div>
+
+{% if jadwal_terpilih %}
+
+<!-- INFO KELAS -->
+<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+            border-left:3px solid #E8561A;border-radius:9px;
+            padding:10px 16px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,.6);">
+  Kelas: <strong style="color:#F4731F;">{{ jadwal_terpilih.kelas }}</strong>
+  &nbsp;|&nbsp;
+  Mata Pelajaran: <strong style="color:#F4731F;">{{ jadwal_terpilih.mata_pelajaran.nama }}</strong>
+</div>
+
+<form method="POST" action="" id="form-input-nilai-siswa">
+  {% csrf_token %}
+  <input type="hidden" name="jadwal_id" value="{{ jadwal_terpilih.id }}">
+
+  <div style="background:#161616;border:1px solid rgba(255,255,255,.06);
+              border-top:3px solid #E8561A;border-radius:18px;overflow:hidden;">
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;text-align:left;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;width:46px;text-align:center;">No</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;">Nama Siswa</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;text-align:center;">NISN</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                       Tugas (40%)</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                       UTS (30%)</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                       UAS (30%)</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;white-space:nowrap;">
+                       Catatan Guru</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in siswa_nilai_list %}
+          <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+            <td style="padding:13px 16px;text-align:center;color:rgba(255,255,255,.35);font-size:13px;">
+              {{ forloop.counter }}
+            </td>
+            <td style="padding:13px 16px;font-weight:700;color:#fff;">
+              {{ item.siswa.nama_lengkap }}
+            </td>
+            <td style="padding:13px 16px;text-align:center;color:rgba(255,255,255,.35);font-size:13px;">
+              {{ item.siswa.nisn|default:"—" }}
+            </td>
+            <td style="padding:13px 16px;text-align:center;">
+              <input type="text" inputmode="decimal" name="tugas_{{ item.siswa.pk }}"
+                     value="{{ item.tugas }}" placeholder="0" class="input-nilai">
+            </td>
+            <td style="padding:13px 16px;text-align:center;">
+              <input type="text" inputmode="decimal" name="uts_{{ item.siswa.pk }}"
+                     value="{{ item.uts }}" placeholder="0" class="input-nilai">
+            </td>
+            <td style="padding:13px 16px;text-align:center;">
+              <input type="text" inputmode="decimal" name="uas_{{ item.siswa.pk }}"
+                     value="{{ item.uas }}" placeholder="0" class="input-nilai">
+            </td>
+            <!-- KOLOM KETERANGAN — field sudah ada di model NilaiRapor -->
+            <td style="padding:13px 16px;">
+              <input type="text" name="keterangan_{{ item.siswa.pk }}"
+                     value="{{ item.keterangan }}" placeholder="Misal: Perlu remedial..."
+                     class="input-keterangan">
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" style="text-align:center;padding:48px 20px;">
+              <i class="fas fa-database" style="font-size:32px;color:rgba(255,255,255,.15);
+                 display:block;margin-bottom:10px;"></i>
+              <span style="color:rgba(255,255,255,.3);font-size:13px;">
+                Tidak ada siswa terdaftar di kelas {{ jadwal_terpilih.kelas }}.
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
+
+{% else %}
+<div style="text-align:center;padding:60px 20px;border:2px dashed rgba(255,255,255,.08);
+            border-radius:18px;">
+  <i class="fas fa-database" style="font-size:44px;color:rgba(255,255,255,.1);
+     display:block;margin-bottom:14px;"></i>
+  <h4 style="color:rgba(255,255,255,.5);font-weight:700;margin-bottom:6px;">
+    Sistem Sinkronisasi Nilai Siap
+  </h4>
+  <p style="font-size:13px;color:rgba(255,255,255,.25);max-width:460px;margin:0 auto;">
+    Pilih tombol rombel kelas di atas untuk memuat form isian nilai Tugas, UTS, dan UAS.
+  </p>
+</div>
+{% endif %}
+
+<style>
+  .btn-rombel {
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid rgba(232,86,26,.35);
+    background: rgba(232,86,26,.08);
+    color: #F4731F;
+    white-space: nowrap;
+    display: inline-block;
+    transition: filter .15s;
+  }
+  .btn-rombel:hover { filter: brightness(1.15); }
+  .btn-rombel-aktif {
+    background: linear-gradient(135deg,#8B0000,#E8561A 55%,#F5C518) !important;
+    color: #fff !important;
+    border-color: transparent !important;
+  }
+  .input-nilai {
+    width: 72px;
+    padding: 7px 8px;
+    text-align: center;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    outline: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .input-keterangan {
+    width: 100%;
+    min-width: 160px;
+    padding: 7px 10px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 12px;
+    outline: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    box-sizing: border-box;
+  }
+  .input-nilai:focus,
+  .input-keterangan:focus { border-color: rgba(232,86,26,.5); }
+  .input-nilai::placeholder,
+  .input-keterangan::placeholder { color: rgba(255,255,255,.2); }
+  @media(max-width:600px) {
+    button[style*="margin-left:auto"] { margin-left:0 !important; width:100%; }
+  }
+</style>
+
+{% endblock %}

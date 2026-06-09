@@ -1,0 +1,278 @@
+<!-- ── MODAL LIHAT MATERI ─────────────────────────────────── -->
+<div id="modalLihatMateri"
+     style="display:none;position:fixed;z-index:99999;left:0;top:0;
+            width:100%;height:100%;background:rgba(0,0,0,.7);
+            justify-content:center;align-items:flex-start;
+            padding:20px 12px;overflow-y:auto;">
+  <div style="background:#1F1F1F;border:1px solid rgba(232,86,26,.28);border-top:3px solid #E8561A;
+              border-radius:14px;width:100%;max-width:640px;
+              margin:0 auto;box-shadow:0 8px 40px rgba(0,0,0,.6);overflow:hidden;min-height:200px;">
+    <!-- Header -->
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;
+                padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,.07);gap:12px;">
+      <div style="flex:1;">
+        <div id="lblMateriJudul" style="font-size:15px;font-weight:700;color:#fff;line-height:1.3;margin-bottom:4px;"></div>
+        <div id="lblMateriMapel" style="font-size:12px;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:6px;"></div>
+      </div>
+      <button id="btnTutupModalMateri"
+              style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);
+                     font-size:18px;cursor:pointer;color:rgba(255,255,255,.4);
+                     width:32px;height:32px;border-radius:8px;line-height:1;
+                     display:flex;align-items:center;justify-content:center;flex-shrink:0;">&times;</button>
+    </div>
+    <!-- Konten viewer -->
+    <div id="materiKontenArea" style="padding:0;"></div>
+    <!-- Footer -->
+    <div style="padding:14px 20px;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:flex-start;">
+      <button id="btnKembaliModalMateri"
+              style="background:rgba(255,255,255,.07);color:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.1);
+                     padding:8px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;
+                     display:inline-flex;align-items:center;gap:6px;">
+        <i class="fas fa-arrow-left"></i> Kembali
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ── MATERI AJAR ─────────────────────────────────────────── -->
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+  <span style="width:3px;height:18px;background:linear-gradient(135deg,#8B0000,#E8561A);border-radius:2px;display:inline-block;"></span>
+  <h4 style="margin:0;color:#F4731F;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;">Materi Ajar Guru</h4>
+</div>
+
+<div class="table-responsive" style="margin-bottom:28px;">
+  <table style="width:100%;border-collapse:collapse;text-align:left;">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Mata Pelajaran</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Judul Materi</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;min-width:150px;">Aksi</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for materi in materi_list %}
+      <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+        <td style="padding:12px 14px;">
+          <div style="font-weight:600;color:#fff;">{{ materi.mata_pelajaran.nama }}</div>
+          <div style="font-size:11.5px;color:rgba(255,255,255,.4);margin-top:2px;">{{ materi.guru.nama_lengkap }}</div>
+        </td>
+        <td style="padding:12px 14px;color:rgba(255,255,255,.75);">{{ materi.judul }}</td>
+        <td style="padding:12px 14px;">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            {% if materi.file_materi %}
+              <a href="{{ materi.file_materi.url }}" download
+                 style="background:rgba(37,99,235,.2);color:#60a5fa;border:1px solid rgba(37,99,235,.35);
+                        padding:4px 11px;border-radius:6px;text-decoration:none;font-size:12px;
+                        font-weight:600;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;">
+                <i class="fas fa-download"></i> Unduh
+              </a>
+              <a href="{% url 'akademik:lihat_materi_siswa' %}?url={{ materi.file_materi.url }}&judul={{ materi.judul|urlencode }}"
+                 style="background:rgba(14,165,233,.15);color:#38bdf8;border:1px solid rgba(14,165,233,.3);
+                        padding:4px 11px;border-radius:6px;text-decoration:none;font-size:12px;
+                        font-weight:600;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;">
+                <i class="fas fa-eye"></i> Lihat
+              </a>
+            {% elif materi.link_external %}
+              <a href="{{ materi.link_external }}" target="_blank"
+                 style="background:rgba(232,86,26,.15);color:#F4731F;border:1px solid rgba(232,86,26,.3);
+                        padding:4px 11px;border-radius:6px;text-decoration:none;font-size:12px;
+                        font-weight:600;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;">
+                <i class="fas fa-external-link-alt"></i> Buka Link
+              </a>
+            {% else %}
+              <span style="color:rgba(255,255,255,.25);font-size:12px;font-style:italic;">Tidak ada file</span>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" style="text-align:center;color:rgba(255,255,255,.3);padding:32px;font-size:13px;">
+          Belum ada materi dibagikan guru.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ── TUGAS & EVALUASI ────────────────────────────────────── -->
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+  <span style="width:3px;height:18px;background:linear-gradient(135deg,#b45309,#F5C518);border-radius:2px;display:inline-block;"></span>
+  <h4 style="margin:0;color:#F5C518;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;">Tugas & Evaluasi Siswa</h4>
+</div>
+
+<div class="table-responsive">
+  <table style="width:100%;border-collapse:collapse;text-align:left;">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Tugas / Soal</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Batas Waktu</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Pengumpulan</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for tugas in tugas_list %}
+      <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+        <td style="padding:12px 14px;">
+          <div style="font-weight:700;color:#fff;">{{ tugas.judul }}</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px;">
+            {% if tugas.jadwal %}{{ tugas.jadwal.mata_pelajaran.nama }}{% else %}{{ tugas.mata_pelajaran.nama }}{% endif %}
+          </div>
+        </td>
+        <td style="padding:12px 14px;">
+          <span style="background:rgba(200,16,46,.1);color:#f87171;border:1px solid rgba(200,16,46,.25);
+                       padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;">
+            <i class="fas fa-clock" style="font-size:9px;"></i> {{ tugas.batas_waktu|date:"d M Y, H:i" }}
+          </span>
+        </td>
+        <td style="padding:12px 14px;">
+          <div class="notif-kirim-tugas" style="display:none;margin-bottom:6px;"></div>
+          <form class="form-kirim-tugas"
+                action="{% url 'akademik:kirim_jawaban_siswa' %}"
+                method="POST" enctype="multipart/form-data"
+                style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">
+            {% csrf_token %}
+            <input type="hidden" name="tugas_id" value="{{ tugas.id }}">
+            <input type="file" name="file_jawaban" required
+                   style="font-size:11px;width:130px;color:rgba(255,255,255,.6);
+                          background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+                          border-radius:6px;padding:3px 6px;">
+            <button type="submit"
+                    style="background:linear-gradient(135deg,#166534,#16a34a);color:#fff;border:none;
+                           padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600;
+                           cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;">
+              <i class="fas fa-paper-plane"></i> Kirim
+            </button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" style="text-align:center;color:rgba(255,255,255,.3);padding:32px;font-size:13px;">
+          Tidak ada tugas aktif di kelasmu.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!-- ── SCRIPT (tidak berubah) ─────────────────────────────── -->
+<script>
+var modalLihatMateri = document.getElementById('modalLihatMateri');
+var lblMateriJudul   = document.getElementById('lblMateriJudul');
+var lblMateriMapel   = document.getElementById('lblMateriMapel');
+var materiKontenArea = document.getElementById('materiKontenArea');
+
+var EXT_GAMBAR = ['jpg','jpeg','png','gif','webp','bmp','svg'];
+var EXT_PDF    = ['pdf'];
+var EXT_VIDEO  = ['mp4','webm','ogg'];
+
+function getEkst(url){ return url.split('?')[0].split('.').pop().toLowerCase(); }
+function htmlEsc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function bukaMateriModal(judul,mapel,guru,deskripsi,url,tipe){
+  lblMateriJudul.innerText = judul;
+  lblMateriMapel.innerHTML =
+    '<i class="fas fa-book" style="color:rgba(255,255,255,.3);font-size:11px;"></i> ' + mapel +
+    ' &nbsp;·&nbsp; ' +
+    '<i class="fas fa-user-tie" style="color:rgba(255,255,255,.3);font-size:11px;"></i> ' + guru;
+
+  var ext = url ? getEkst(url) : '';
+  var blokDesk = '';
+  if (deskripsi && deskripsi.trim() !== '') {
+    blokDesk =
+      '<div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07);">' +
+        '<div style="font-size:11px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px;">Deskripsi Materi</div>' +
+        '<div style="font-size:13.5px;color:rgba(255,255,255,.7);line-height:1.75;white-space:pre-wrap;">' + htmlEsc(deskripsi) + '</div>' +
+      '</div>';
+  }
+
+  var html = '';
+  if (tipe==='teks'||!url) {
+    html = blokDesk || '<div style="padding:32px 20px;text-align:center;color:rgba(255,255,255,.3);font-size:13px;">Tidak ada konten untuk ditampilkan.</div>';
+  } else if (tipe==='link') {
+    html = blokDesk + '<iframe src="'+url+'" style="width:100%;height:380px;border:none;display:block;" allowfullscreen></iframe>';
+  } else if (EXT_PDF.indexOf(ext)!==-1) {
+    html = blokDesk + '<iframe src="'+url+'" style="width:100%;height:420px;border:none;display:block;"></iframe>';
+  } else if (EXT_GAMBAR.indexOf(ext)!==-1) {
+    html = '<div style="background:rgba(255,255,255,.03);padding:16px 20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.07);">' +
+      '<img src="'+url+'" style="max-width:100%;max-height:360px;border-radius:8px;object-fit:contain;" /></div>' + blokDesk;
+  } else if (EXT_VIDEO.indexOf(ext)!==-1) {
+    html = blokDesk + '<video controls style="width:100%;max-height:380px;display:block;"><source src="'+url+'"></video>';
+  } else {
+    html = blokDesk +
+      '<div style="padding:36px 20px;text-align:center;color:rgba(255,255,255,.5);">' +
+        '<div style="font-size:44px;margin-bottom:10px;">📄</div>' +
+        '<div style="font-size:13.5px;font-weight:600;margin-bottom:4px;color:#fff;">'+htmlEsc(judul)+'</div>' +
+        '<div style="font-size:12px;color:rgba(255,255,255,.35);margin-bottom:18px;">Format <strong>'+ext.toUpperCase()+'</strong> tidak dapat dipreview.<br>Silakan unduh file.</div>' +
+        '<a href="'+url+'" download style="background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;padding:9px 20px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px;">'+
+          '<i class="fas fa-download"></i> Unduh File</a>' +
+      '</div>';
+  }
+
+  materiKontenArea.innerHTML = html;
+  modalLihatMateri.style.display = 'flex';
+  modalLihatMateri.scrollTop = 0;
+}
+
+function tutupModalMateri(){
+  modalLihatMateri.style.display = 'none';
+  materiKontenArea.innerHTML = '';
+}
+
+document.getElementById('btnTutupModalMateri').addEventListener('click', tutupModalMateri);
+document.getElementById('btnKembaliModalMateri').addEventListener('click', tutupModalMateri);
+modalLihatMateri.addEventListener('click', function(e){ if(e.target===modalLihatMateri) tutupModalMateri(); });
+
+document.addEventListener('submit', function(e){
+  var form = e.target.closest('.form-kirim-tugas');
+  if (!form) return;
+  e.preventDefault();
+  var notif = form.closest('td').querySelector('.notif-kirim-tugas');
+  var btn   = form.querySelector('button[type="submit"]');
+  var fd    = new FormData(form);
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  fetch(form.action, { method:'POST', body:fd, headers:{'X-Requested-With':'XMLHttpRequest'} })
+    .then(function(r){
+      if (r.ok) {
+        notif.style.cssText = 'display:block;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#4ade80;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;';
+        notif.innerHTML = '<i class="fas fa-check-circle"></i> Terkirim!';
+        form.style.display = 'none';
+      } else {
+        notif.style.cssText = 'display:block;background:rgba(200,16,46,.1);border:1px solid rgba(200,16,46,.3);color:#f87171;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;';
+        notif.innerHTML = '<i class="fas fa-exclamation-circle"></i> Gagal, coba lagi.';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim';
+      }
+    })
+    .catch(function(){
+      notif.style.cssText = 'display:block;background:rgba(200,16,46,.1);border:1px solid rgba(200,16,46,.3);color:#f87171;padding:6px 10px;border-radius:6px;font-size:12px;font-weight:600;';
+      notif.innerHTML = '<i class="fas fa-exclamation-circle"></i> Kesalahan jaringan.';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Kirim';
+    });
+});
+
+document.addEventListener('click', function(e){
+  var bm = e.target.closest('.btn-lihat-materi');
+  if (bm) {
+    bukaMateriModal(
+      bm.getAttribute('data-judul'), bm.getAttribute('data-mapel'),
+      bm.getAttribute('data-guru'),  bm.getAttribute('data-deskripsi'),
+      bm.getAttribute('data-url'),   bm.getAttribute('data-tipe')
+    );
+  }
+});
+</script>
+
+<style>
+@media(max-width:600px){
+  .table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+}
+</style>

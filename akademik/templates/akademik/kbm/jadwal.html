@@ -1,0 +1,86 @@
+{% extends 'akademik/base.html' %}
+
+{% block title %}Jadwal Mengajar — SMA Negeri 5 Kota X{% endblock %}
+{% block topbar_label %}Manajemen KBM{% endblock %}
+{% block topbar_sub %}Jadwal & Agenda Mengajar{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div style="margin-bottom:24px;">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+    <div style="width:40px;height:40px;background:rgba(232,86,26,.12);border:1px solid rgba(232,86,26,.28);
+                border-radius:10px;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-calendar-alt" style="color:#E8561A;font-size:1rem;"></i>
+    </div>
+    <div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;
+                 color:#fff;margin:0;line-height:1.1;">Kalender Mingguan Mengajar</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin:0;">
+        Daftar kelas dan waktu tatap muka KBM Anda semester ini
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- TABEL -->
+<div style="background:#161616;border:1px solid rgba(255,255,255,.06);
+            border-top:3px solid #E8561A;border-radius:18px;overflow:hidden;">
+  <div style="overflow-x:auto;">
+    <table style="width:100%;border-collapse:collapse;text-align:left;">
+      <thead>
+        <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Hari</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Waktu</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Mata Pelajaran</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Kelas</th>
+          <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                     text-transform:uppercase;font-weight:600;white-space:nowrap;">Ruangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for jadwal in jadwal_list %}
+        <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+          <td style="padding:14px 18px;font-weight:700;color:#fff;">{{ jadwal.hari }}</td>
+          <td style="padding:14px 18px;">
+            <span style="background:rgba(34,197,94,.12);color:#4ade80;
+                         border:1px solid rgba(34,197,94,.3);padding:3px 12px;
+                         border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;">
+              {{ jadwal.jam_mulai|time:"H:i" }} – {{ jadwal.jam_selesai|time:"H:i" }}
+            </span>
+          </td>
+          <td style="padding:14px 18px;color:rgba(255,255,255,.85);font-weight:500;">
+            {{ jadwal.mata_pelajaran.nama }}
+          </td>
+          <td style="padding:14px 18px;">
+            <span style="background:rgba(232,86,26,.1);color:#F4731F;
+                         border:1px solid rgba(232,86,26,.28);padding:3px 12px;
+                         border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;">
+              {{ jadwal.kelas }}
+            </span>
+          </td>
+          <td style="padding:14px 18px;color:rgba(255,255,255,.45);font-size:13px;">
+            {{ jadwal.ruangan|default:"—" }}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" style="text-align:center;padding:56px 20px;">
+            <i class="fas fa-calendar-times" style="font-size:36px;color:rgba(255,255,255,.15);
+               display:block;margin-bottom:12px;"></i>
+            <span style="color:rgba(255,255,255,.3);font-size:13px;">
+              Belum ada jadwal mengajar yang diinput untuk Anda.
+            </span>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

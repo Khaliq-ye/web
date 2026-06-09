@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapor — {{ siswa.nama_lengkap }}</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; font-family: 'Segoe UI', sans-serif; height: 100vh; display: flex; flex-direction: column; }
+
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #1e293b;
+    height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    gap: 12px;
+  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .btn-kembali {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #334155; color: #e2e8f0; border: none;
+    padding: 7px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    white-space: nowrap; transition: background .15s; flex-shrink: 0;
+    text-decoration: none;
+  }
+  .btn-kembali:hover { background: #475569; color: #fff; }
+  .topbar-title { font-size: 13.5px; font-weight: 600; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .topbar-subtitle { font-size: 11px; color: #64748b; white-space: nowrap; }
+  .topbar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+  .btn-unduh {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #dc2626; color: #fff; border: none;
+    padding: 7px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    text-decoration: none; white-space: nowrap; transition: background .15s;
+  }
+  .btn-unduh:hover { background: #b91c1c; color: #fff; }
+  .badge-nama {
+    background: #1e3a8a; color: #93c5fd;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 11.5px; font-weight: 600; white-space: nowrap;
+  }
+  .pdf-frame {
+    margin-top: 52px; flex: 1;
+    width: 100%; height: calc(100vh - 52px);
+    border: none; display: block; background: #525659;
+  }
+  /* Fallback — tampil default, sembunyikan jika iframe berhasil */
+  .pdf-fallback {
+    margin-top: 52px; flex: 1;
+    display: flex;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+    color: #94a3b8; text-align: center; padding: 40px;
+  }
+  .pdf-fallback i { font-size: 56px; color: #475569; }
+  .pdf-fallback h3 { font-size: 16px; color: #e2e8f0; margin-top: 8px; }
+  .pdf-fallback p { font-size: 13px; max-width: 400px; line-height: 1.6; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <button onclick="kembali()" class="btn-kembali">
+        <i class="fas fa-arrow-left"></i> Kembali
+      </button>
+      <div>
+        <div class="topbar-title">Rapor Digital — {{ siswa.nama_lengkap }}</div>
+        <div class="topbar-subtitle">
+          NISN: {{ siswa.nisn }} &nbsp;·&nbsp;
+          Kelas: {{ siswa.kelas.nama_kelas|default:"—" }} &nbsp;·&nbsp;
+          TA 2025/2026 Ganjil
+        </div>
+      </div>
+    </div>
+    <div class="topbar-right">
+  <span class="badge-nama">
+    <i class="fas fa-user-graduate" style="font-size:10px;"></i>
+    {{ siswa.nama_lengkap }}
+  </span>
+</div>
+  </div>
+
+  <iframe
+    class="pdf-frame hidden"
+    id="pdfFrame"
+    src="{% url 'akademik:export_rapor_pdf' siswa.id %}"
+    title="Rapor {{ siswa.nama_lengkap }}">
+  </iframe>
+
+  <div class="pdf-fallback" id="pdfFallback">
+    <i class="fas fa-file-pdf"></i>
+    <h3>Memuat rapor…</h3>
+    <p>Jika PDF tidak muncul dalam beberapa detik, gunakan tombol <strong>Unduh PDF</strong> di atas.</p>
+    <a href="{% url 'akademik:export_rapor_pdf' siswa.id %}?download=1" class="btn-unduh" style="margin-top:8px;">
+      <i class="fas fa-download"></i> Unduh PDF Sekarang
+    </a>
+  </div>
+
+  <script>
+    function kembali() {
+      if (window.history.length > 1) window.history.back();
+      else window.close();
+    }
+
+    var frame   = document.getElementById('pdfFrame');
+    var fallback = document.getElementById('pdfFallback');
+
+    // Deteksi via event load — lebih andal dari setTimeout + contentDocument
+    frame.addEventListener('load', function () {
+      // Kalau load berhasil, tampilkan iframe & sembunyikan fallback
+      frame.classList.remove('hidden');
+      fallback.classList.add('hidden');
+    });
+
+    // Jika setelah 8 detik iframe belum fire 'load', anggap gagal
+    var timer = setTimeout(function () {
+      if (frame.classList.contains('hidden')) {
+        // iframe masih tersembunyi → load belum terjadi → tetap tampilkan fallback
+        fallback.querySelector('h3').textContent = 'PDF tidak dapat ditampilkan langsung';
+      }
+    }, 8000);
+  </script>
+
+</body>
+</html>

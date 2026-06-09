@@ -1,0 +1,38 @@
+<div class="table-responsive">
+  <table style="width:100%;border-collapse:collapse;text-align:left;">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Hari</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Mata Pelajaran</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Jam</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Guru Pengampu</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for jadwal in jadwal_list %}
+      <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+        <td style="padding:12px 14px;font-weight:700;color:#fff;">{{ jadwal.hari }}</td>
+        <td style="padding:12px 14px;color:rgba(255,255,255,.85);">{{ jadwal.mata_pelajaran.nama }}</td>
+        <td style="padding:12px 14px;">
+          <span style="background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.3);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;white-space:nowrap;">
+            {{ jadwal.jam_mulai|time:"H:i" }} – {{ jadwal.jam_selesai|time:"H:i" }}
+          </span>
+        </td>
+        <td style="padding:12px 14px;color:rgba(255,255,255,.55);font-size:13px;">{{ jadwal.guru.nama_lengkap }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" style="text-align:center;color:rgba(255,255,255,.3);padding:32px;font-size:13px;">
+          Jadwal pelajaran belum dirilis untuk kelasmu.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<style>
+@media(max-width:600px){
+  .table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+}
+</style>

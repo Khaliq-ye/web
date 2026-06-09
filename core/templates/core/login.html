@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login SMK POWER SUPPLY</title>
+    <style>
+        /* Kode Responsif HP */
+        @media (max-width: 768px) {
+            body { flex-direction: column !important; }
+            
+            /* Sembunyikan atau kecilkan sidebar */
+            div[style*="width: 260px"] { 
+                width: 100% !important; 
+                flex-shrink: 1 !important; 
+            }
+            
+            /* Jadikan grid 1 kolom saja */
+            div[style*="display: grid"] { 
+                grid-template-columns: 1fr !important; 
+            }
+            
+            /* Kurangi padding agar tidak terlihat sempit */
+            div[style*="padding: 25px"] { 
+                padding: 15px !important; 
+            }
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-600">SIAKAD</h1>
+            <p class="text-gray-500">Silahkan masuk ke akun Anda</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4 text-sm text-center">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-semibold mb-2">Username</label>
+                <input type="text" name="username" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan username" required>
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 text-sm font-semibold mb-2">Password</label>
+                <input type="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded-lg transition duration-300">
+                Login
+            </button>
+        </form>
+    </div>
+</body>
+</html>

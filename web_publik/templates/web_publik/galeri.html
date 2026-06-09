@@ -1,0 +1,375 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Kegiatan & Fasilitas — SMA Negeri 5 Kota X</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}?v=5.0">
+    <link rel="stylesheet" href="{% static 'css/galeri.css' %}?v=5.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5.0">
+    
+</head>
+<body>
+
+{% if messages %}
+<div class="toast-container">
+    {% for message in messages %}
+    <div class="toast-item {{ message.tags }}">
+        <div class="toast-content">
+            <div class="toast-icon">
+                {% if message.tags == 'success' %}<i class="fa-solid fa-check"></i>
+                {% elif message.tags == 'error' or message.tags == 'danger' %}<i class="fa-solid fa-exclamation"></i>
+                {% elif message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation"></i>
+                {% else %}<i class="fa-solid fa-info"></i>
+                {% endif %}
+            </div>
+            <div class="toast-text"><p>{{ message }}</p></div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════ -->
+<header class="main-header" id="mainHeader">
+    <div class="container header-wrapper">
+        <a href="{% url 'web_publik:index' %}" class="logo" style="display:flex;align-items:center;gap:12px;">
+            <img src="{% static 'images/logo-profil-sekolah.png' %}" alt="Logo SMA Negeri 5 Kota X"
+     style="height:36px;width:auto;object-fit:contain;">
+            SMA<span> Negeri 5 Kota X</span>
+        </a>
+        <nav class="nav-bar">
+            <ul class="nav-menu">
+                <li><a href="{% url 'web_publik:index' %}">Beranda</a></li>
+                <li><a href="{% url 'web_publik:profil' %}">Profil</a></li>
+                <li><a href="{% url 'web_publik:akademik_info' %}">Akademik</a></li>
+                <li><a href="{% url 'web_publik:galeri' %}" class="active">Galeri</a></li>
+                <li><a href="{% url 'web_publik:index' %}#news-section" class="scroll-link">Berita</a></li>
+                <li>
+                    <a href="{% url 'web_publik:login_portal' %}" class="btn-portal-fixed">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Login</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     PAGE HERO  ← SEMUA ELEMEN WAJIB ADA
+═══════════════════════════════════════════ -->
+<section class="page-hero">
+
+ 
+    <div class="page-hero-grid-overlay"></div>
+
+  
+    <div class="orb orb-hero-1"></div>
+    <div class="orb orb-hero-2"></div>
+    <div class="orb orb-hero-3"></div>
+
+
+
+
+    <div class="container page-hero-inner">
+        <span class="page-hero-label">
+            <i class="fa-solid fa-images"></i> Dokumentasi Resmi
+        </span>
+        <h1>Galeri Kegiatan <span class="highlight">&amp; Fasilitas</span></h1>
+        <div class="breadcrumb">
+            <a href="{% url 'web_publik:index' %}">Beranda</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span class="current-page">Galeri</span>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════ -->
+<main class="sub-layout">
+    <div class="container">
+        <div class="sub-grid">
+
+            <!-- MAIN -->
+            <div class="sub-main">
+                <div class="content-card">
+                    <h3>
+                        <i class="fa-solid fa-images"></i>
+                        Manajemen Dokumentasi &amp; Sarana
+                    </h3>
+                    <p class="card-desc">Gunakan sistem filter interaktif di bawah ini untuk melihat arsip dokumentasi resmi infrastruktur dan efektivitas kegiatan belajar mengajar.</p>
+
+                    <!-- FILTER TABS -->
+                    <div class="filter-container">
+                        <div class="filter-tabs">
+                            <button class="filter-btn active" onclick="filterGaleri(event, 'all')">
+                                <i class="fa-solid fa-layer-group"></i> Semua
+                            </button>
+                            <button class="filter-btn" onclick="filterGaleri(event, 'fasilitas')">
+                                <i class="fa-solid fa-laptop-code"></i> Fasilitas &amp; Lab
+                            </button>
+                            <button class="filter-btn" onclick="filterGaleri(event, 'kegiatan')">
+                                <i class="fa-solid fa-graduation-cap"></i> Kegiatan Belajar
+                            </button>
+                            <button class="filter-btn" onclick="filterGaleri(event, 'ekstra')">
+                                <i class="fa-solid fa-basketball"></i> Ekstrakurikuler
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- GALLERY GRID -->
+                    <div class="galeri-grid">
+                        {% for foto in daftar_galeri %}
+                        <div class="galeri-card" data-category="{{ foto.kategori }}">
+                            <div class="galeri-frame">
+                                {% if foto.gambar %}
+                                    <img src="{{ foto.gambar.url }}" alt="{{ foto.judul }}">
+                                {% endif %}
+                                <div class="galeri-overlay">
+                                    <span class="kat-badge">
+                                        <i class="fa-solid fa-bookmark"></i> {{ foto.get_kategori_display }}
+                                    </span>
+                                    <button type="button" class="zoom-btn"
+                                        onclick="bukaPreview('{{ foto.gambar.url }}', '{{ foto.judul }}')"
+                                        title="Perbesar">
+                                        <i class="fa-solid fa-expand"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="galeri-info">
+                                <h4>{{ foto.judul }}</h4>
+                                <div class="galeri-meta">
+                                    <span class="galeri-date">
+                                        <i class="fa-regular fa-calendar"></i> {{ foto.tanggal_kegiatan|date:"d F Y" }}
+                                    </span>
+                                    <span class="verified-tag">
+                                        <i class="fa-solid fa-circle-check"></i> Verified
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="empty-box" style="grid-column:1/-1">
+                            <i class="fa-regular fa-images"></i>
+                            <p>Belum Ada Dokumentasi</p>
+                            <span>Foto kegiatan atau fasilitas belum di-upload ke dalam database oleh admin sekolah.</span>
+                        </div>
+                        {% endfor %}
+
+                        <div id="js-empty-alert" class="empty-box" style="display:none; grid-column:1/-1">
+                            <i class="fa-solid fa-folder-open"></i>
+                            <p>Kategori Tidak Ditemukan</p>
+                            <span>Belum ada berkas dokumentasi resmi yang di-upload untuk kategori ini.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIDEBAR -->
+            <aside class="sub-sidebar">
+                <div class="sidebar-widget">
+                    <h4><i class="fa-solid fa-chart-pie"></i> Arsip Dokumentasi</h4>
+                    <ul class="stat-list">
+                        <li>
+                            <span class="stat-label">Fasilitas &amp; Lab</span>
+                            <span class="stat-val">{{ jumlah_fasilitas }} Berkas</span>
+                        </li>
+                        <li>
+                            <span class="stat-label">Kegiatan Belajar</span>
+                            <span class="stat-val">{{ jumlah_kegiatan }} Berkas</span>
+                        </li>
+                        <li>
+                            <span class="stat-label">Ekstrakurikuler</span>
+                            <span class="stat-val">{{ jumlah_ekstra }} Berkas</span>
+                        </li>
+                        <li class="stat-total">
+                            <span class="stat-label">Total Asset Media</span>
+                            <span class="stat-val fire">{{ total_semua }} Foto</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="sidebar-widget">
+    <h4><i class="fa-solid fa-address-book"></i> Kontak Utama</h4>
+    {% if kontak %}
+    <table class="info-table">
+        <tr><td>Telp</td><td>{{ kontak.telepon }}</td></tr>
+        <tr><td>Email</td><td>{{ kontak.email }}</td></tr>
+        <tr><td>Alamat</td><td>{{ kontak.alamat }}</td></tr>
+        {% if kontak.website %}
+        <tr><td>Website</td><td><a href="{{ kontak.website }}" target="_blank" style="color:inherit;">{{ kontak.website }}</a></td></tr>
+        {% endif %}
+        {% if kontak.wa %}
+        <tr><td>WhatsApp</td><td>+{{ kontak.wa }}</td></tr>
+        {% endif %}
+    </table>
+    {% else %}
+    {# Fallback statis jika database belum diisi #}
+    <table class="info-table">
+        <tr><td>Telp</td><td>(0376) 23456</td></tr>
+        <tr><td>Email</td><td>info@siakadpro.sch.id</td></tr>
+        <tr><td>Alamat</td><td>Jl. Pendidikan No. 123, Lombok Timur, NTB</td></tr>
+    </table>
+    {% endif %}
+</div>
+
+                <div class="sidebar-widget sidebar-cta">
+                    <h4><i class="fa-solid fa-graduation-cap"></i> PPDB 2026/2027</h4>
+                    <p>Pendaftaran jalur online telah dibuka. Daftarkan diri sekarang!</p>
+                    <a href="{% url 'web_publik:ppdb_online' %}" class="btn btn-ppdb"
+                       style="width:100%;justify-content:center;margin-top:16px;text-decoration:none;">
+                        Daftar Sekarang <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+</main>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════ -->
+<footer class="main-footer">
+    <div class="footer-fire-top"></div>
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-info">
+                <a href="{% url 'web_publik:index' %}" class="footer-logo">
+                    <i class="fa-solid fa-graduation-cap"></i> SMA <span>NEGERI 5 KOTA X</span>
+                </a>
+                <p class="footer-desc">Sistem Informasi Akademik profesional yang berfokus pada efisiensi manajemen data sekolah serta keterbukaan informasi publik bagi seluruh warga SMA Negeri 5 Kota X.</p>
+                <p class="footer-address">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Jl. Pendidikan No. 123, Lombok Timur<br>Nusa Tenggara Barat, Indonesia
+                </p>
+            </div>
+            <div class="footer-links">
+                <h4>Tautan Cepat</h4>
+                <ul>
+                    <li><a href="{% url 'web_publik:profil' %}"><i class="fa-solid fa-chevron-right"></i> Profil Sekolah</a></li>
+                    <li><a href="{% url 'web_publik:akademik_info' %}"><i class="fa-solid fa-chevron-right"></i> Akademik</a></li>
+                    <li><a href="{% url 'web_publik:galeri' %}"><i class="fa-solid fa-chevron-right"></i> Galeri</a></li>
+                    <li><a href="{% url 'web_publik:ppdb_online' %}"><i class="fa-solid fa-chevron-right"></i> PPDB Online</a></li>
+                </ul>
+            </div>
+            <div class="footer-social">
+                <h4>Media Sosial Resmi</h4>
+                <p>Ikuti akun resmi kami untuk konten edukatif dan informasi terkini:</p>
+                <div class="social-icons">
+                    <a href="https://www.instagram.com/alleeqyoouu?igsh=cjZhZjdnMXAyMXRu"
+                       target="_blank" class="social-btn instagram" title="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2026 <strong>SMA Negeri 5</strong> · Powered by <strong>Kota X</strong>. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     LIGHTBOX MODAL
+═══════════════════════════════════════════ -->
+<div id="galeriModal" class="lightbox-overlay" onclick="if(event.target===this)tutupPreview()">
+    <button class="lightbox-close" onclick="tutupPreview()">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="lightbox-inner">
+        <img id="imgPreview" src="" alt="">
+        <div id="captionPreview" class="lightbox-caption"></div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════ -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    /* 1. Header shadow on scroll */
+    const header = document.getElementById('mainHeader');
+    window.addEventListener('scroll', () => {
+        header.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    /* 2. Auto-dismiss toast */
+    setTimeout(() => {
+        document.querySelectorAll('.toast-item').forEach(t => {
+            t.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            t.style.opacity = '0';
+            t.style.transform = 'translateX(100%)';
+            setTimeout(() => t.remove(), 500);
+        });
+    }, 5000);
+
+    /* 3. Stagger animate gallery cards on load */
+    const cards = document.querySelectorAll('.galeri-card');
+    cards.forEach((card, i) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(28px)';
+        setTimeout(() => {
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 75 * i);
+    });
+});
+
+/* 4. Filter gallery */
+function filterGaleri(event, category) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+
+    const items = document.querySelectorAll('.galeri-card');
+    let visible = 0;
+    items.forEach(item => {
+        const cat = item.getAttribute('data-category').toLowerCase();
+        const show = category === 'all' || cat.includes(category);
+        item.style.display = show ? 'block' : 'none';
+        if (show) {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(18px)';
+            setTimeout(() => {
+                item.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+            }, 55 * visible);
+            visible++;
+        }
+    });
+
+    const alert = document.getElementById('js-empty-alert');
+    if (alert) alert.style.display = visible === 0 ? 'block' : 'none';
+}
+
+/* 5. Lightbox */
+function bukaPreview(imgUrl, judul) {
+    document.getElementById('imgPreview').src    = imgUrl;
+    document.getElementById('captionPreview').textContent = judul;
+    document.getElementById('galeriModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+function tutupPreview() {
+    document.getElementById('galeriModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') tutupPreview(); });
+</script>
+</body>
+</html>

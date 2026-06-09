@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard SMK POWER SUPPLY</title>
+    <style>
+        /* Kode Responsif HP */
+        @media (max-width: 768px) {
+            body { flex-direction: column !important; }
+            
+            /* Sembunyikan atau kecilkan sidebar */
+            div[style*="width: 260px"] { 
+                width: 100% !important; 
+                flex-shrink: 1 !important; 
+            }
+            
+            /* Jadikan grid 1 kolom saja */
+            div[style*="display: grid"] { 
+                grid-template-columns: 1fr !important; 
+            }
+            
+            /* Kurangi padding agar tidak terlihat sempit */
+            div[style*="padding: 25px"] { 
+                padding: 15px !important; 
+            }
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background-color: #f0f2f5; display: flex; min-height: 100vh;">
+
+    <div style="width: 260px; background-color: #1e3a8a; color: white; display: flex; flex-direction: column; box-shadow: 2px 0 5px rgba(0,0,0,0.1);">
+        <div style="padding: 25px; font-size: 1.4rem; font-weight: bold; border-bottom: 1px solid #3b82f6; text-align: center; background-color: #172554;">
+            SIAKAD SISTEM
+        </div>
+        <div style="padding: 20px; font-size: 0.8rem; color: #93c5fd; text-transform: uppercase; font-weight: bold;">
+            Menu Utama
+        </div>
+        <div style="flex: 1; padding: 0 10px;">
+            <a href="#" style="display: block; padding: 12px 15px; color: white; text-decoration: none; border-radius: 8px; background-color: #3b82f6; font-weight: 500;">
+                🏠 Dashboard Wali
+            </a>
+        </div>
+        <div style="padding: 15px; background-color: #1e3a8a; border-top: 1px solid #3b82f6; text-align: center; font-size: 0.85rem;">
+            Wali Murid Mode
+        </div>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column;">
+        <div style="background-color: white; height: 65px; display: flex; align-items: center; justify-content: flex-end; padding: 0 30px; border-bottom: 1px solid #e5e7eb;">
+            <div style="color: #4b5563; font-weight: 500; font-size: 0.9rem;">
+                Portal Akademik Resmi &nbsp; <span style="color: #3b82f6;">●</span> Online
+            </div>
+        </div>
+
+        <div style="flex: 1;">
+            {% block isi_konten %}
+            {% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

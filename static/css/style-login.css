@@ -1,0 +1,485 @@
+/* ============================================================
+   SMA NEGERI 5 KOTA X — style-login.css v5.2 LIGHTWEIGHT
+   GPU-first: transform + opacity only, no layout thrashing
+   Canvas: max 15 partikel, spawn 1/4 frame, mati di mobile
+   FIX v5.2:
+   - Hapus filter:blur() dari orb → ganti pure radial-gradient (seperti index)
+   - Shimmer animasi "NEGERI 5" identik dengan index highlight
+   - Kurangi box-shadow berlapis di card
+   - aspect-ratio dikunci lebih awal agar tidak recalculate saat animasi
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ============================================================
+   1. VARIABLES
+============================================================ */
+:root {
+    --fire-red:      #C8102E;
+    --fire-red-deep: #8B0000;
+    --fire-orange:   #E8561A;
+    --fire-amber:    #F4731F;
+    --fire-gold:     #F5C518;
+    --coal-black:    #0D0D0D;
+    --coal-dark:     #161616;
+    --coal-mid:      #1F1F1F;
+    --coal-card:     #2A2A2A;
+    --silver:        #9E9E9E;
+    --white:         #FFFFFF;
+    --gradient-fire: linear-gradient(135deg, #8B0000 0%, #E8561A 50%, #F5C518 100%);
+    --gradient-text: linear-gradient(90deg, #E8561A, #F5C518, #C8102E);
+    --font-display:  'Bebas Neue', sans-serif;
+    --font-body:     'Plus Jakarta Sans', sans-serif;
+    --shadow-fire:   0 0 32px rgba(200,16,46,0.22);
+    --border-fire:   1px solid rgba(232,86,26,0.26);
+    --border-dim:    1px solid rgba(255,255,255,0.06);
+    --radius-md:     14px;
+    --radius-lg:     18px;
+    --radius-xl:     22px;
+}
+
+/* ============================================================
+   2. RESET & BASE
+============================================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.65;
+    overflow-x: hidden;
+}
+
+::selection { background: var(--fire-red); color: var(--white); }
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--coal-dark); }
+::-webkit-scrollbar-thumb { background: var(--fire-orange); border-radius: 3px; }
+
+/* ============================================================
+   3. BODY
+============================================================ */
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--coal-black);
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Static ambient glow — identik pola dengan index hero::before */
+.login-body::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(ellipse at 8% 40%,  rgba(200,16,46,0.18)  0%, transparent 50%),
+        radial-gradient(ellipse at 90% 65%, rgba(232,86,26,0.12)  0%, transparent 48%),
+        radial-gradient(ellipse at 50% 95%, rgba(245,197,24,0.06) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Static grid */
+.login-grid-overlay {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Bottom line */
+.login-body::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-fire);
+    z-index: 10;
+}
+
+/* Canvas */
+#fire-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.08;
+}
+@media (max-width: 768px) { #fire-canvas { display: none; } }
+
+/* ============================================================
+   ORBS — FIX v5.2: HAPUS filter:blur() sepenuhnya
+   Ganti dengan radial-gradient langsung (sama seperti hero di index)
+   filter:blur() pada elemen besar adalah penyebab utama lag/berat
+   karena memaksa browser membuat offscreen compositing layer besar.
+   radial-gradient dengan transparent edge memberikan efek blur visual
+   yang sama tanpa biaya GPU.
+============================================================ */
+.login-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    /* Tidak ada filter:blur(), tidak ada animasi */
+}
+.login-orb-1 {
+    width: 500px; height: 500px;
+    /* Radius gradient lebih besar untuk kompensasi hilangnya blur */
+    background: radial-gradient(circle, rgba(200,16,46,0.15) 0%, rgba(200,16,46,0.05) 40%, transparent 70%);
+    top: -150px; left: -150px;
+    /* DIHAPUS: filter: blur(75px) */
+}
+.login-orb-2 {
+    width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(232,86,26,0.11) 0%, rgba(232,86,26,0.04) 40%, transparent 70%);
+    bottom: -90px; right: 8%;
+    /* DIHAPUS: filter: blur(65px) */
+}
+.login-orb-3 {
+    width: 280px; height: 280px;
+    background: radial-gradient(circle, rgba(245,197,24,0.09) 0%, rgba(245,197,24,0.03) 40%, transparent 70%);
+    top: 28%; right: 4%;
+    /* DIHAPUS: filter: blur(55px) */
+}
+@media (max-width: 480px) {
+    .login-orb { display: none; }
+}
+
+/* ============================================================
+   4. LOGIN CARD
+   FIX v5.2: box-shadow disederhanakan (1 layer, bukan 2)
+   will-change hanya saat animasi berlangsung (dilepas via JS)
+============================================================ */
+.login-card {
+    background: var(--coal-dark);
+    border: var(--border-fire);
+    border-radius: var(--radius-xl);
+    width: 100%;
+    max-width: 440px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 40px 38px;
+    position: relative;
+    overflow: hidden;
+    z-index: 5;
+    /* FIX: satu box-shadow saja, bukan dua berlapis */
+    box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+
+    will-change: transform, opacity;
+    animation: cardIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translate3d(0, 32px, 0) scale(0.96); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.login-card:hover {
+    border-color: rgba(232,86,26,0.42);
+    box-shadow: 0 32px 56px rgba(0,0,0,0.55);
+    transform: translate3d(0, -3px, 0);
+}
+
+/* Fire top bar */
+.card-fire-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-fire);
+}
+
+/* ============================================================
+   5. HEADER
+   FIX v5.2: "NEGERI 5" sekarang pakai shimmer animasi
+   identik dengan .hero-text h1 .highlight di index
+============================================================ */
+.login-header {
+    text-align: center;
+    margin-bottom: 26px;
+    flex-shrink: 0;
+}
+.login-logo-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.login-logo-img {
+    height: 54px; width: auto; object-fit: contain;
+    filter: brightness(1.1) drop-shadow(0 0 8px rgba(245,197,24,0.35));
+}
+.login-header h2 {
+    font-family: var(--font-display);
+    font-size: 1.85rem;
+    font-weight: 400; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--white); line-height: 1.05; margin-bottom: 5px;
+}
+/* FIX v5.2: shimmer animasi — identik dengan index .highlight */
+.login-header h2 span {
+    background: linear-gradient(90deg, #E8561A 0%, #F5C518 50%, #C8102E 100%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+    will-change: background-position;
+}
+@keyframes shimmer {
+    from { background-position: 0% 50%; }
+    to   { background-position: 200% 50%; }
+}
+.login-header p {
+    font-size: 0.83rem;
+    color: rgba(255,255,255,0.38);
+}
+
+/* ============================================================
+   6. FORM
+============================================================ */
+.login-form { width: 100%; flex-shrink: 0; }
+
+.form-group { margin-bottom: 15px; width: 100%; }
+
+.form-group label {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 0.78rem; font-weight: 700;
+    color: rgba(255,255,255,0.48);
+    margin-bottom: 7px;
+    text-transform: uppercase; letter-spacing: 0.08em;
+}
+.form-group label i { color: var(--fire-orange); font-size: 0.75rem; }
+
+.input-wrap {
+    position: relative;
+}
+.input-wrap input {
+    width: 100%;
+    padding: 13px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-md);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    caret-color: var(--fire-orange);
+}
+.input-wrap input::placeholder { color: rgba(255,255,255,0.2); }
+
+.input-wrap.focused input,
+.input-wrap input:focus {
+    background: rgba(232,86,26,0.06);
+    border-color: var(--fire-orange);
+    box-shadow: 0 0 0 3px rgba(232,86,26,0.12);
+}
+
+.input-wrap::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--gradient-fire);
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+    will-change: transform;
+}
+.input-wrap.focused::after { transform: scaleX(1); }
+
+.toggle-password {
+    position: absolute; right: 13px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    color: rgba(255,255,255,0.28);
+    cursor: pointer; font-size: 0.88rem;
+    transition: color 0.2s ease;
+    padding: 6px;
+    display: flex; align-items: center; justify-content: center;
+    min-width: 36px; min-height: 36px;
+}
+.toggle-password:hover { color: var(--fire-orange); }
+
+/* ============================================================
+   7. LOGIN BUTTON
+============================================================ */
+.btn-login {
+    width: 100%;
+    padding: 14px 24px; margin-top: 6px;
+    background: var(--gradient-fire);
+    color: var(--white); border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-size: 0.97rem; font-weight: 700;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    box-shadow: 0 6px 20px rgba(200,16,46,0.3);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    position: relative; overflow: hidden;
+    min-height: 50px;
+    -webkit-tap-highlight-color: transparent;
+    will-change: transform;
+}
+
+.btn-login::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+    transform: translateX(-100%);
+    transition: transform 0.45s ease;
+    will-change: transform;
+}
+.btn-login:hover::before { transform: translateX(100%); }
+.btn-login:hover {
+    transform: translate3d(0, -3px, 0);
+    box-shadow: 0 12px 32px rgba(200,16,46,0.48);
+}
+.btn-login:active {
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 4px 12px rgba(200,16,46,0.28);
+}
+
+/* ============================================================
+   8. BACK LINK
+============================================================ */
+.footer-link { text-align: center; margin-top: 16px; flex-shrink: 0; }
+.back-link {
+    display: inline-flex; align-items: center; gap: 7px;
+    color: rgba(255,255,255,0.3); text-decoration: none;
+    font-size: 0.85rem; font-weight: 500;
+    transition: color 0.2s ease, gap 0.2s ease;
+    padding: 8px 4px;
+    -webkit-tap-highlight-color: transparent;
+}
+.back-link i { font-size: 0.78rem; transition: transform 0.2s ease; }
+.back-link:hover { color: var(--fire-orange); gap: 10px; }
+.back-link:hover i { transform: translateX(-3px); }
+
+/* ============================================================
+   9. NOTIFIKASI
+============================================================ */
+.notif-wrapper {
+    position: fixed;
+    top: 20px; left: 50%;
+    transform: translateX(-50%);
+    width: 92%; max-width: 420px;
+    z-index: 9999;
+    display: flex; flex-direction: column; gap: 10px;
+    will-change: transform, opacity;
+}
+.alert {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 16px;
+    border-radius: var(--radius-md);
+    font-size: 0.87rem; font-weight: 600;
+    background: var(--coal-dark);
+    color: rgba(255,255,255,0.85);
+    border: var(--border-fire);
+    border-left: 4px solid var(--fire-orange);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+    animation: toastIn 0.35s ease forwards;
+    will-change: transform, opacity;
+}
+@keyframes toastIn {
+    from { opacity: 0; transform: translate3d(0, -14px, 0); }
+    to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.alert i { color: var(--fire-orange); flex-shrink: 0; }
+.alert-success    { border-left-color: #22c55e; }
+.alert-success i  { color: #22c55e; }
+.alert-error,
+.alert-danger     { border-left-color: var(--fire-red); }
+.alert-warning    { border-left-color: var(--fire-gold); }
+.alert-warning i  { color: var(--fire-gold); }
+.alert-info       { border-left-color: #3b82f6; }
+.alert-info i     { color: #60a5fa; }
+
+/* ============================================================
+   10. REDUCED MOTION
+============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    #fire-canvas { display: none; }
+    .login-orb   { display: none; }
+    /* Shimmer juga dimatikan */
+    .login-header h2 span {
+        animation: none;
+        background-position: 0% center;
+    }
+}
+
+/* ============================================================
+   11. RESPONSIVE
+============================================================ */
+@media (max-height: 700px), (max-width: 480px) {
+    .login-card {
+        aspect-ratio: auto;
+        padding: 28px 24px;
+        border-radius: var(--radius-lg);
+        max-width: 100%;
+    }
+    .login-header { margin-bottom: 18px; }
+    .login-logo-img { height: 44px; }
+    .login-header h2 { font-size: 1.5rem; letter-spacing: 2px; }
+    .form-group { margin-bottom: 12px; }
+    .btn-login { padding: 13px 20px; }
+    .footer-link { margin-top: 12px; }
+}
+@media (max-height: 500px) {
+    .login-card { padding: 20px 24px; }
+    .login-logo-wrap { display: none; }
+    .login-header { margin-bottom: 12px; }
+}
+@media (min-width: 481px) and (min-height: 701px) {
+    .login-card { aspect-ratio: 1 / 1; max-width: 440px; }
+}
+@media (min-width: 768px) and (min-height: 701px) {
+    .login-card { max-width: 490px; }
+}
+
+/* ============================================================
+   12. MOBILE KEYBOARD FIX
+============================================================ */
+@media (max-width: 768px) {
+    .login-body {
+        min-height: 100dvh;
+        align-items: flex-start;
+        padding-top: max(40px, env(safe-area-inset-top));
+        padding-bottom: max(40px, env(safe-area-inset-bottom));
+        padding-left:  max(16px, env(safe-area-inset-left));
+        padding-right: max(16px, env(safe-area-inset-right));
+        overflow-y: auto;
+    }
+    .login-card {
+        aspect-ratio: auto !important;
+        margin: auto;
+        max-height: none;
+    }
+    .login-orb { display: none; }
+    .login-grid-overlay { display: none; }
+    /* Shimmer dimatikan di mobile — hemat baterai, identik dengan index */
+    .login-header h2 span {
+        animation: none;
+        background-position: 0% center;
+    }
+}
+
+@supports (padding: max(0px)) {
+    .login-body {
+        padding-left:  max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+    }
+}

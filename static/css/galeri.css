@@ -1,0 +1,481 @@
+/* ============================================================
+   galeri.css — KHUSUS HALAMAN GALERI
+   SMA Negeri 5 Kota X — Tema Api
+   Requires: style.css + profile.css dimuat lebih dulu
+============================================================ */
+
+/* --- FILTER TABS --- */
+.filter-container {
+    margin-bottom: 30px;
+    width: 100%;
+    /* FIX: overflow-x scroll tapi overflow-y visible agar tombol
+       yang naik saat hover tidak terpotong di bagian atas */
+    overflow-x: auto;
+    overflow-y: visible;
+    padding-bottom: 6px;
+    /* FIX: angkat filter container di atas ::before card (fire stripe) */
+    position: relative;
+    z-index: 10;
+}
+.filter-container::-webkit-scrollbar { height: 3px; }
+.filter-container::-webkit-scrollbar-thumb {
+    background: rgba(232,82,26,0.3);
+    border-radius: 4px;
+}
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: max-content;
+    /* FIX: pastikan area tabs juga overflow visible ke atas */
+    overflow: visible;
+    padding-top: 4px; /* ruang agar shadow tombol tidak terpotong */
+}
+.filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 20px;
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.55);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 30px;
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
+    white-space: nowrap;
+    /* FIX: z-index tinggi agar selalu di atas ::before card */
+    position: relative;
+    z-index: 10;
+    /* FIX: will-change memaksa browser buat compositing layer
+       tersendiri sehingga tidak tersembunyi di bawah elemen lain */
+    will-change: transform;
+}
+.filter-btn i { font-size: 0.95rem; transition: color 0.25s; }
+.filter-btn:hover {
+    background: rgba(232,82,26,0.1);
+    color: var(--fire-orange);
+    border-color: rgba(232,82,26,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(232,82,26,0.15);
+    /* FIX: saat hover z-index naik lagi memastikan berada paling atas */
+    z-index: 11;
+}
+.filter-btn:hover i { color: var(--fire-orange); }
+.filter-btn.active {
+    background: var(--gradient-fire);
+    color: var(--white);
+    border-color: transparent;
+    box-shadow: 0 6px 20px rgba(192,57,43,0.35);
+    z-index: 10;
+}
+.filter-btn.active i { color: var(--white); }
+.filter-btn:active { transform: scale(0.97); }
+
+/* --- GALLERY GRID --- */
+.galeri-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 4px;
+}
+
+/* --- GALLERY CARD --- */
+.galeri-card {
+    background: var(--coal-mid);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    /* FIX: stacking context agar overlay tidak bocor keluar kartu */
+    position: relative;
+    isolation: isolate;
+}
+.galeri-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(232,82,26,0.4);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 20px rgba(232,82,26,0.12);
+}
+
+/* Frame gambar */
+.galeri-frame {
+    position: relative;
+    width: 100%;
+    height: 175px;
+    background: var(--coal-dark);
+    /* FIX: clip agar overlay tidak meluber */
+    overflow: hidden;
+}
+.galeri-frame img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    /* FIX: pointer-events none supaya klik tidak nyangkut di img */
+    pointer-events: none;
+    display: block;
+}
+.galeri-card:hover .galeri-frame img { transform: scale(1.07); }
+
+/* Overlay saat hover — FIX utama */
+.galeri-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        to top,
+        rgba(13,13,13,0.88) 0%,
+        rgba(13,13,13,0.2) 55%,
+        transparent 100%
+    );
+    /* FIX: gunakan visibility + opacity agar pointer-events bisa aktif saat visible */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 12px;
+    /* FIX: pastikan overlay berada di atas img tapi di bawah tombol */
+    z-index: 1;
+    /* FIX: nonaktifkan pointer saat tersembunyi */
+    pointer-events: none;
+}
+.galeri-card:hover .galeri-overlay {
+    opacity: 1;
+    visibility: visible;
+    /* FIX: aktifkan pointer-events saat overlay terlihat */
+    pointer-events: auto;
+}
+
+.kat-badge {
+    background: var(--gradient-fire);
+    color: var(--white);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    /* FIX: badge tidak boleh kena klik zoom */
+    pointer-events: none;
+}
+
+/* FIX UTAMA tombol zoom */
+.zoom-btn {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* FIX: tombol harus selalu bisa diklik saat overlay aktif */
+    position: relative;
+    z-index: 3;
+    /* FIX: pointer-events eksplisit */
+    pointer-events: auto;
+    /* FIX: pastikan tidak ada konflik dengan elemen lain */
+    flex-shrink: 0;
+}
+.zoom-btn:hover {
+    background: var(--gradient-fire);
+    border-color: transparent;
+    transform: scale(1.12);
+    box-shadow: 0 4px 14px rgba(192,57,43,0.5);
+}
+.zoom-btn:active {
+    transform: scale(0.95);
+}
+
+/* Info bawah kartu */
+.galeri-info {
+    padding: 14px 16px;
+    position: relative;
+    z-index: 0;
+}
+.galeri-info h4 {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    max-height: 2.8em;
+    overflow: hidden;
+}
+.galeri-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 10px;
+}
+.galeri-date {
+    font-size: 0.75rem;
+    color: var(--silver);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.galeri-date i { color: var(--fire-orange); }
+.verified-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #22c55e;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.2);
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+/* --- EMPTY STATE --- */
+.empty-box {
+    text-align: center;
+    padding: 60px 20px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 14px;
+    border: 2px dashed rgba(255,255,255,0.08);
+    color: var(--silver);
+}
+.empty-box i {
+    font-size: 3.5rem;
+    color: rgba(255,255,255,0.12);
+    margin-bottom: 16px;
+    display: block;
+}
+.empty-box p {
+    font-weight: 700;
+    color: var(--white);
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+.empty-box span {
+    font-size: 0.9rem;
+    color: var(--silver);
+}
+
+/* --- LIGHTBOX / MODAL PREVIEW --- */
+/* FIX: gunakan display grid agar layout tidak collapse */
+.lightbox-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    /* FIX: z-index lebih tinggi dari semua elemen */
+    z-index: 99999;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(14px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 40px 20px;
+    /* FIX: overflow hidden agar konten tidak keluar layar */
+    overflow: hidden;
+}
+.lightbox-overlay.active {
+    display: flex;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 22px;
+    right: 28px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--white);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    z-index: 100001;
+    /* FIX: pastikan tombol close selalu bisa diklik */
+    pointer-events: auto;
+}
+.lightbox-close:hover {
+    background: var(--gradient-fire);
+    border-color: transparent;
+    transform: rotate(90deg) scale(1.1);
+}
+
+.lightbox-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: lightboxIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    /* FIX: batas lebar agar gambar tidak overflow */
+    max-width: 100%;
+    width: 100%;
+}
+@keyframes lightboxIn {
+    from { opacity: 0; transform: scale(0.88) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+#imgPreview {
+    max-width: 88vw;
+    max-height: 72vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px rgba(232,82,26,0.15);
+    border: 1px solid rgba(232,82,26,0.2);
+    display: block;
+    /* FIX: cegah img meregang aneh di safari */
+    flex-shrink: 0;
+}
+.lightbox-caption {
+    margin-top: 18px;
+    color: rgba(255,255,255,0.8);
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    max-width: 600px;
+    line-height: 1.5;
+}
+
+/* --- CURSOR DOT (deduplication dari style.css) --- */
+.cursor-dot {
+    position: fixed;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    mix-blend-mode: screen;
+    transition: transform 0.1s ease;
+}
+
+/* --- RESPONSIVE GALERI --- */
+@media (max-width: 768px) {
+    .galeri-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 14px;
+    }
+    .galeri-frame { height: 140px; }
+    .lightbox-close {
+        top: 12px;
+        right: 12px;
+    }
+}
+@media (max-width: 480px) {
+    .galeri-grid { grid-template-columns: 1fr 1fr; }
+    #imgPreview {
+        max-width: 95vw;
+        max-height: 60vh;
+    }
+}
+
+
+/* ============================================================
+   FIX GLOBAL — Tombol tertutup / terhalang di area konten
+   Root cause: elemen positioned (::before/::after, page-hero,
+   orb, deco-text) tidak punya z-index → mengambang di atas
+   konten halaman dan mencegat klik tombol.
+============================================================ */
+
+/* Pastikan page-hero dan dekorasinya tidak meluber ke bawah */
+.page-hero {
+    position: relative;
+    z-index: 0;
+    /* Isolasi agar stacking context tidak bocor ke .sub-layout */
+    isolation: isolate;
+}
+.page-hero-grid-overlay,
+.orb,
+.orb-hero-1,
+.orb-hero-2,
+.orb-hero-3,
+.page-hero-deco-text {
+    /* Semua dekorasi hero tetap di dalam hero, tidak meluber */
+    z-index: 0;
+    pointer-events: none;
+}
+.page-hero-inner {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+/* Sub-layout dan konten utama harus di atas hero */
+.sub-layout {
+    position: relative;
+    z-index: 2;
+}
+.sub-grid {
+    position: relative;
+    z-index: 2;
+}
+
+/* content-card: pastikan pseudo-element tidak menutupi konten */
+.content-card {
+    position: relative;
+    z-index: 1;
+    /* Isolasi stacking context internal kartu */
+    isolation: isolate;
+    overflow: visible;
+}
+.content-card::before,
+.content-card::after {
+    /* Pseudo-element dekoratif harus di belakang konten */
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* Semua konten interaktif di dalam content-card harus di atas pseudo */
+.content-card > *,
+.content-card h3,
+.content-card p,
+.content-card .card-desc,
+.filter-container,
+.filter-tabs,
+.filter-btn,
+.galeri-grid {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+/* Sidebar juga harus di atas dekorasi */
+.sub-sidebar {
+    position: relative;
+    z-index: 2;
+}
+.sidebar-widget {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+}
+.sidebar-widget::before,
+.sidebar-widget::after {
+    z-index: 0;
+    pointer-events: none;
+}
+.sidebar-cta .btn {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+/* Header tetap di paling atas */
+.main-header {
+    z-index: 1000 !important;
+}
+
+/* Toast di atas semua */
+.toast-container {
+    z-index: 9999 !important;
+}

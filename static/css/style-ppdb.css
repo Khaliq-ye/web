@@ -1,0 +1,525 @@
+/* ============================================================
+   SMA NEGERI 5 KOTA X — style-ppdb.css v10.0 OPTIMIZED
+   Layout  : Split screen fullscreen (no scroll)
+   Tema    : Fire Dark — Bebas Neue + Plus Jakarta Sans
+
+   DIHAPUS (overhead):
+   ✗ gridSlide         → grid statis
+   ✗ orbFloat1/2       → orb statis + filter:blur dihapus
+   ✗ decoFloat         → deco statis
+   ✗ badgePulse        → border statis
+   ✗ underlineShimmer  → garis statis
+   ✗ firebarVertical   → divider statis gradient
+   ✗ firebar di ::before split-left/right → gradient statis
+   ✗ firebar di .form-section::before → gradient statis
+   ✗ canvas particles  → DIHAPUS TOTAL (lihat ppdb_online.html)
+
+   DIPERTAHANKAN:
+   ✓ textShimmer — hanya background-position, zero reflow
+   ✓ toastIn     — one-shot
+   ✓ hover transition ringan
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+    --fire-red:       #C8102E;
+    --fire-red-deep:  #8B0000;
+    --fire-orange:    #E8561A;
+    --fire-amber:     #F4731F;
+    --fire-gold:      #F5C518;
+    --coal-black:     #0D0D0D;
+    --coal-dark:      #161616;
+    --coal-mid:       #1F1F1F;
+    --ash-gray:       #3D3D3D;
+    --silver:         #9E9E9E;
+    --white:          #FFFFFF;
+    --gradient-fire:  linear-gradient(135deg, #8B0000 0%, #E8561A 50%, #F5C518 100%);
+    --gradient-text:  linear-gradient(90deg, #E8561A, #F5C518, #C8102E);
+    --font-display:   'Bebas Neue', sans-serif;
+    --font-body:      'Plus Jakarta Sans', sans-serif;
+    --shadow-fire:    0 0 40px rgba(200,16,46,0.30);
+    --border-fire:    1px solid rgba(232,86,26,0.28);
+    --radius-sm:      8px;
+    --radius-md:      14px;
+    --success:        #22c55e;
+    --error:          #ef4444;
+    --warning:        #f59e0b;
+    --info:           #3b82f6;
+    --t:              0.25s ease;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* ── FULLSCREEN NO-SCROLL ── */
+html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: var(--font-body);
+    background: var(--coal-black);
+    color: var(--white);
+}
+
+/* Canvas DIHAPUS TOTAL — tambahkan #fire-canvas { display:none } di HTML juga */
+#fire-canvas { display: none !important; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--coal-dark); }
+::-webkit-scrollbar-thumb { background: var(--fire-orange); border-radius: 3px; }
+::selection { background: var(--fire-red); color: var(--white); }
+
+/* ── Keyframes — hanya yang dipakai ── */
+
+/* shimmer: background-position saja — zero reflow, zero repaint */
+@keyframes shimmer {
+    0%   { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+/* toastIn: one-shot */
+@keyframes toastIn {
+    from { opacity: 0; transform: translateX(120%); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ============================================================
+   SPLIT LAYOUT
+============================================================ */
+.page-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+/* Satu garis horizontal full-width di atas — menggantikan
+   .fire-top (kiri) dan .split-right::before (kanan) yang terpisah */
+.page-split::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-fire);
+    box-shadow: 0 0 12px rgba(200,16,46,0.35);
+    z-index: 100;
+}
+
+/* ============================================================
+   LEFT PANEL
+============================================================ */
+.split-left {
+    background: var(--coal-black);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 48px 52px;
+    height: 100vh;
+}
+
+/* Grid STATIS — gridSlide dihapus */
+.split-left-grid {
+    position: absolute; inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 56px 56px;
+    pointer-events: none; z-index: 0;
+}
+
+/* Ambient glow STATIS */
+.split-left::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+        radial-gradient(ellipse at 10% 30%, rgba(200,16,46,0.20) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(232,86,26,0.10) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+/* Divider kanan — STATIS, firebarVertical dihapus */
+.split-left::after {
+    content: '';
+    position: absolute; top: 0; right: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg,
+        #8B0000 0%, #C8102E 20%, #E8561A 40%,
+        #F5C518 50%, #E8561A 60%, #C8102E 80%, #8B0000 100%
+    );
+    box-shadow: 0 0 14px rgba(200,16,46,0.35);
+}
+
+/* fire-top DIHAPUS — digantikan .page-split::before yang full-width */
+.split-left .fire-top { display: none; }
+
+/* Orbs — filter:blur DIHAPUS, orbFloat DIHAPUS, statis */
+.split-orb-1 {
+    position: absolute;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,16,46,0.16) 0%, transparent 70%);
+    top: -140px; left: -140px;
+    pointer-events: none; z-index: 0;
+}
+.split-orb-2 {
+    position: absolute;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(245,197,24,0.09) 0%, transparent 70%);
+    bottom: -60px; right: 0;
+    pointer-events: none; z-index: 0;
+}
+
+/* Deco text — decoFloat DIHAPUS, statis */
+.split-deco-text {
+    position: absolute; bottom: -20px; right: -10px;
+    font-family: var(--font-display);
+    font-size: clamp(100px, 12vw, 200px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+    pointer-events: none; user-select: none;
+    z-index: 0; letter-spacing: -4px;
+    opacity: 0.7;
+}
+
+/* Content */
+.split-left-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; gap: 28px;
+    width: 100%;
+}
+
+/* Logo */
+.split-logo {
+    display: inline-flex; align-items: center; gap: 12px;
+    text-decoration: none;
+}
+.split-logo img {
+    width: 42px; height: 42px; object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(245,197,24,0.3));
+}
+.split-logo-name {
+    font-family: var(--font-display);
+    font-size: 1.4rem; letter-spacing: 2px; color: var(--white);
+    line-height: 1;
+}
+/* shimmer ringan — hanya background-position */
+.split-logo-name em {
+    font-style: normal;
+    background: var(--gradient-text);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+    will-change: background-position;
+}
+
+/* Eyebrow badge — badgePulse DIHAPUS, border statis */
+.split-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(245,197,24,0.10);
+    border: 1px solid rgba(245,197,24,0.35);
+    box-shadow: 0 0 14px rgba(245,197,24,0.15);
+    color: var(--fire-gold);
+    padding: 6px 16px; border-radius: 50px;
+    font-family: var(--font-display);
+    font-size: 0.75rem; letter-spacing: 0.18em;
+    width: fit-content;
+}
+
+/* H1 */
+.split-headline { display: flex; flex-direction: column; gap: 10px; }
+.split-headline h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 4.5vw, 4.5rem);
+    font-weight: 400; letter-spacing: 2px; text-transform: uppercase;
+    line-height: 1; color: var(--white);
+}
+/* shimmer — textShimmer asli dipertahankan */
+.split-highlight {
+    background: var(--gradient-text);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s linear infinite;
+    will-change: background-position;
+    display: inline-block;
+}
+/* garis bawah DIHAPUS */
+.split-highlight::after { display: none; }
+.split-headline p {
+    font-family: var(--font-body);
+    font-size: 0.9rem; color: rgba(255,255,255,0.50);
+    line-height: 1.75; max-width: 380px;
+}
+
+/* Feature list */
+.split-features { display: flex; flex-direction: column; gap: 10px; }
+.split-feature {
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--font-body);
+    font-size: 0.88rem; font-weight: 500;
+    color: rgba(255,255,255,0.65);
+}
+.split-feature i { color: var(--fire-gold); font-size: 0.9rem; }
+
+/* ============================================================
+   RIGHT PANEL
+============================================================ */
+.split-right {
+    background: var(--coal-dark);
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px 48px;
+    position: relative;
+    height: 100vh;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.split-right::-webkit-scrollbar { display: none; }
+
+/* Top fire line kanan DIHAPUS — sudah digantikan .page-split::before */
+
+/* Ambient glow right — STATIS */
+.split-right::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 80% 10%, rgba(232,86,26,0.06) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.split-right-inner {
+    width: 100%; max-width: 480px;
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column; gap: 20px;
+}
+
+/* Form heading */
+.form-heading h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 400; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--white); margin-bottom: 6px;
+}
+.form-heading p {
+    font-family: var(--font-body);
+    font-size: 0.84rem; color: rgba(255,255,255,0.40); line-height: 1.6;
+}
+
+/* ============================================================
+   FORM
+============================================================ */
+.ppdb-form {
+    display: flex; flex-direction: column; gap: 16px;
+}
+
+/* Section card — firebar DIHAPUS, border statis */
+.form-section {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(232,86,26,0.20);
+    border-radius: var(--radius-md);
+    padding: 22px 24px;
+    position: relative; overflow: hidden;
+    transition: border-color var(--t);
+}
+/* Top bar STATIS — firebar dihapus */
+.form-section::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gradient-fire);
+    box-shadow: 0 0 10px rgba(200,16,46,0.25);
+}
+.form-section:focus-within { border-color: rgba(232,86,26,0.45); }
+
+/* Section title */
+.section-title {
+    font-family: var(--font-display);
+    font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--white);
+    display: flex; align-items: center; gap: 10px;
+    padding-bottom: 14px; margin-bottom: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.section-title i { color: var(--fire-orange); }
+
+/* Input grid */
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.input-group.full-width { grid-column: 1 / -1; }
+
+/* Label */
+.input-group label {
+    font-family: var(--font-body);
+    font-size: 0.76rem; font-weight: 700;
+    color: rgba(255,255,255,0.55);
+    display: block; margin-bottom: 7px; letter-spacing: 0.02em;
+}
+
+/* Input */
+.input-group input {
+    width: 100%;
+    padding: 11px 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.9rem; font-weight: 500;
+    color: var(--white); outline: none;
+    transition: border-color var(--t), background var(--t), box-shadow var(--t);
+    appearance: textfield;
+}
+.input-group input::-webkit-inner-spin-button,
+.input-group input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.input-group input::placeholder { color: rgba(255,255,255,0.20); font-weight: 400; }
+.input-group input:focus {
+    border-color: var(--fire-orange);
+    background: rgba(232,86,26,0.07);
+    box-shadow: 0 0 0 3px rgba(232,86,26,0.10);
+}
+.input-group input:not(:placeholder-shown) {
+    border-color: rgba(232,86,26,0.30);
+}
+
+/* Form footer */
+.form-footer {
+    display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+    justify-content: space-between; margin-right: 50px;
+    gap: 20px; flex-wrap: wrap; padding-top: 4px;
+}
+
+/* Submit button */
+.btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 13px 30px;
+    background: var(--gradient-fire);
+    color: var(--white); border: none; border-radius: var(--radius-sm);
+    font-family: var(--font-body); font-size: 0.95rem; font-weight: 700;
+    cursor: pointer;
+    transition: transform var(--t), box-shadow var(--t);
+    position: relative; overflow: hidden;
+    box-shadow: 0 6px 24px rgba(200,16,46,0.35);
+    text-decoration: none;
+}
+/* Shimmer hover effect — transform:translateX saja, GPU only */
+.btn-primary::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+    transition: left 0.45s ease;
+}
+.btn-primary:hover::before { left: 100%; }
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(200,16,46,0.5);
+}
+
+/* Back link */
+.btn-link {
+    font-family: var(--font-body);
+    color: rgba(255,255,255,0.40); font-size: 0.88rem; font-weight: 500;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    transition: color var(--t);
+}
+.btn-link:hover { color: var(--fire-orange); }
+
+/* ============================================================
+   TOAST
+============================================================ */
+.toast-container {
+    position: fixed; top: 20px; right: 20px;
+    z-index: 9999;
+    display: flex; flex-direction: column; gap: 12px;
+    width: 340px; max-width: 90%;
+    pointer-events: none;
+}
+.toast-item {
+    pointer-events: auto;
+    background: var(--coal-dark);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-left: 4px solid var(--fire-orange);
+    padding: 14px 16px; border-radius: var(--radius-md);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.55);
+    display: flex; justify-content: space-between; align-items: center;
+    animation: toastIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) forwards;
+}
+.toast-item.success { border-left-color: var(--success) !important; }
+.toast-item.error,
+.toast-item.danger  { border-left-color: var(--error)   !important; }
+.toast-item.warning { border-left-color: var(--warning) !important; }
+.toast-item.info    { border-left-color: var(--info)    !important; }
+
+.toast-content { display: flex; align-items: center; gap: 12px; }
+.toast-icon {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--gradient-fire);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0; color: var(--white);
+}
+.toast-item.success .toast-icon { background: #16a34a; }
+.toast-item.error   .toast-icon,
+.toast-item.danger  .toast-icon { background: #dc2626; }
+.toast-item.warning .toast-icon { background: #d97706; }
+.toast-item.info    .toast-icon { background: #2563eb; }
+.toast-text p {
+    font-family: var(--font-body);
+    font-size: 0.87rem; font-weight: 600; color: var(--white); margin: 0;
+}
+.toast-close {
+    background: none; border: none; font-size: 18px;
+    cursor: pointer; color: var(--silver);
+}
+.toast-close:hover { color: var(--white); }
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 960px) {
+    html, body { height: auto; overflow-x: hidden; overflow-y: auto; }
+    .page-split { grid-template-columns: 1fr; height: auto; overflow: visible; }
+    .split-left {
+        height: auto; overflow: hidden;
+        padding: 44px 28px 52px;
+        border-right: none; border-bottom: var(--border-fire);
+    }
+    /* Divider jadi horizontal di mobile */
+    .split-left::after {
+        top: auto; right: 0; bottom: 0; left: 0;
+        width: 100%; height: 3px;
+        background: var(--gradient-fire);
+    }
+    .split-right { height: auto; overflow-y: visible; padding: 44px 28px 60px; }
+    .split-deco-text { font-size: 110px; }
+    .split-headline h1 { font-size: 3rem; }
+    /* Matikan shimmer di mobile — hemat baterai */
+    .split-logo-name em,
+    .split-highlight { animation: none; background-position: 0% 50%; }
+}
+
+@media (max-width: 540px) {
+    .split-left  { padding: 36px 20px 48px; }
+    .split-right { padding: 36px 20px 52px; }
+    .input-grid  { grid-template-columns: 1fr; }
+    .input-group.full-width { grid-column: 1; }
+    .form-footer { flex-direction: column; align-items: stretch; }
+    .btn-primary { justify-content: center; }
+    .btn-link    { justify-content: center; }
+    .form-section { padding: 18px 16px; }
+    .split-headline h1 { font-size: 2.6rem; }
+}

@@ -1,0 +1,375 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil SMA Negeri 5 Kota X</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}?v=5.1">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5.1">
+</head>
+<body>
+
+    <!-- Fire particle canvas — sama seperti index -->
+    <canvas id="fire-canvas"></canvas>
+
+    <!-- ============================================================
+         HEADER — identik dengan index.html
+    ============================================================ -->
+    <header class="main-header" id="mainHeader">
+        <div class="container header-wrapper">
+            <a href="{% url 'web_publik:index' %}" class="logo" style="display:flex;align-items:center;gap:12px;">
+                <img src="{% static 'images/logo-profil-sekolah.png' %}" alt="Logo SMA Negeri 5 Kota X"
+                     style="height:36px;width:auto;object-fit:contain;">
+                SMA<span> Negeri 5 Kota X</span>
+            </a>
+            <nav class="nav-bar">
+                <ul class="nav-menu">
+                    <li><a href="{% url 'web_publik:index' %}">Beranda</a></li>
+                    <li><a href="{% url 'web_publik:profil' %}" class="active">Profil</a></li>
+                    <li><a href="{% url 'web_publik:akademik_info' %}">Akademik</a></li>
+                    <li><a href="{% url 'web_publik:galeri' %}">Galeri</a></li>
+                    <li><a href="{% url 'web_publik:index' %}#news-section" class="scroll-link">Berita</a></li>
+                    <li>
+                        <a href="{% url 'web_publik:login_portal' %}" class="btn-portal-fixed">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         PAGE HERO
+    ============================================================ -->
+    <section class="page-hero">
+        <div class="page-hero-grid-overlay"></div>
+        <div class="orb orb-hero-1"></div>
+        <div class="orb orb-hero-2"></div>
+        <div class="orb orb-hero-3"></div>
+
+        <div class="container page-hero-inner">
+            <span class="page-hero-label">
+                <i class="fa-solid fa-landmark"></i> Informasi Resmi Sekolah
+            </span>
+            <h1>Profil Resmi <span class="highlight">Lembaga</span></h1>
+            <div class="breadcrumb">
+                <a href="{% url 'web_publik:index' %}">Beranda</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span class="current-page">Profil</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         MAIN CONTENT
+    ============================================================ -->
+    <main class="sub-layout">
+        <div class="container">
+            <div class="sub-grid">
+
+                <!-- ── KONTEN UTAMA ── -->
+                <div class="sub-main">
+
+                    <!-- Sejarah -->
+                    <div class="content-card reveal">
+                        <h3><i class="fa-solid fa-landmark"></i> Sejarah Singkat</h3>
+                        <div class="rich-text-content">
+                            <p>SMA NEGERI 5 KOTA X didirikan pada tahun 2026 berawal dari sebuah komitmen besar untuk menghadirkan institusi pendidikan modern yang adaptif terhadap perkembangan teknologi informasi. Bermula dengan fasilitas yang sederhana di pusat kota, institusi ini terus tumbuh secara konsisten berkat kepercayaan masyarakat yang tinggi serta dedikasi tanpa henti dari para perintisnya.</p>
+                            <p>Memasuki tahun 2026, kami melakukan transformasi digital besar-besaran dengan mengintegrasikan sistem tata kelola administrasi dan akademik berbasis cloud. Hingga saat ini, SMA Negeri 5 Kota X telah melahirkan ribuan alumni berprestasi yang tersebar di berbagai sektor industri, universitas terkemuka, hingga kancah wirausaha nasional.</p>
+                        </div>
+                    </div>
+
+                    <!-- Visi & Misi -->
+                    <div class="content-card reveal reveal-delay-1">
+                        <h3><i class="fa-solid fa-eye"></i> Visi &amp; Misi</h3>
+                        <div class="vision-block">
+                            <strong>Visi Utama</strong>
+                            <p>"Menjadi lembaga pendidikan unggulan bertaraf nasional yang menghasilkan generasi cerdas, berkarakter mulia, serta kompeten di bidang teknologi global pada tahun 2030."</p>
+                        </div>
+                        <div class="mission-container">
+                            <strong class="section-sub-title">Misi Institusi:</strong>
+                            <ol class="misi-list">
+                                <li>Menyelenggarakan sistem pembelajaran yang adaptif, inovatif, dan berbasis teknologi mutakhir.</li>
+                                <li>Membentuk ekosistem pendidikan yang menjunjung tinggi nilai moral, etika, dan integritas karakter.</li>
+                                <li>Mengembangkan potensi bakat akademik dan non-akademik siswa melalui fasilitas dan ekstrakurikuler yang representatif.</li>
+                                <li>Membangun kerja sama strategis dengan dunia usaha, industri, dan instansi global demi memperluas penyerapan lulusan.</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <!-- Kepemimpinan -->
+                    <div class="content-card reveal reveal-delay-2">
+                        <h3><i class="fa-solid fa-user-tie"></i> Kepemimpinan Lembaga</h3>
+                        <div class="principal-flex-container">
+                            <div class="principal-photo-box">
+                                {% if kepsek and kepsek.foto %}
+                                    <img src="{{ kepsek.foto.url }}" alt="{{ kepsek.nama }}">
+                                {% else %}
+                                    <img src="{% static 'images/principal-placeholder.jpg' %}" alt="Placeholder Kepala Sekolah">
+                                {% endif %}
+                            </div>
+                            <div class="principal-text-box">
+                                <h4>{{ kepsek.nama|default:"Nama Kepala Sekolah Belum Diatur" }}</h4>
+                                <span class="role-badge"><i class="fa-solid fa-star"></i> Kepala Sekolah</span>
+                                <div class="principal-speech">
+                                    {% if kepsek and kepsek.sambutan %}
+                                        <p>{{ kepsek.sambutan|linebreaksbr }}</p>
+                                    {% else %}
+                                        <p>"Sambutan kepala sekolah khusus profil belum dikonfigurasi di database."</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Layanan Akademik & Sarana -->
+                    <div class="content-card reveal reveal-delay-3">
+                        <h3><i class="fa-solid fa-layer-group"></i> Layanan Akademik &amp; Sarana</h3>
+
+                        <strong class="section-sub-title">
+                            <i class="fa-solid fa-graduation-cap"></i> Program Unggulan / Jurusan
+                        </strong>
+                        <div class="program-list">
+                            {% for item in program_list %}
+                            <div class="program-badge">
+                                <strong>{{ item.nama }}</strong> — {{ item.deskripsi }}
+                            </div>
+                            {% empty %}
+                            <div class="program-badge">
+                                <strong>Teknik Komputer &amp; Jaringan (TKJ)</strong> — Berfokus pada perancangan arsitektur jaringan lokal/global, administrasi server cloud, cyber security, serta troubleshooting perangkat keras.
+                            </div>
+                            <div class="program-badge">
+                                <strong>Rekayasa Perangkat Lunak (RPL)</strong> — Program keahlian pembuatan aplikasi web, pengembangan sistem informasi dengan framework modern, mobile apps development, serta penguasaan manajemen database.
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <strong class="section-sub-title" style="margin-top:25px;display:block;">
+                            <i class="fa-solid fa-school"></i> Fasilitas Utama
+                        </strong>
+                        <ul class="facility-bullets">
+                            {% for item in fasilitas_list %}
+                            <li><strong>{{ item.nama }}</strong> — {{ item.deskripsi }}</li>
+                            {% empty %}
+                            <li><strong>Laboratorium Komputer Modern</strong> — Full AC, dilengkapi unit komputer spesifikasi tinggi untuk programming dan server, serta jaringan internet dedicated fiber optic.</li>
+                            <li><strong>Perpustakaan Digital (E-Library)</strong> — Menyediakan ribuan akses modul jurnal ilmiah, buku mata pelajaran, dan fiksi yang dapat diakses lewat perangkat mobile.</li>
+                            <li><strong>Smart Classroom</strong> — Ruang kelas interaktif yang ditunjang proyektor digital berteknologi mutakhir serta sistem sound terintegrasi untuk kenyamanan belajar.</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- ── SIDEBAR ── -->
+                <aside class="sub-sidebar">
+
+                    <div class="sidebar-widget reveal">
+                        <h4><i class="fa-solid fa-passport"></i> Legalitas Instansi</h4>
+                        <table class="info-table">
+                            <tr><td>NPSN</td><td>20261109</td></tr>
+                            <tr><td>Akreditasi</td><td>A (Unggul)</td></tr>
+                            <tr><td>Kurikulum</td><td>Kurikulum Merdeka Belajar</td></tr>
+                            <tr><td>Jam Kerja</td><td>Senin - Sabtu (07:30 - 14:00)</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="sidebar-widget reveal reveal-delay-1">
+                        <h4><i class="fa-solid fa-address-book"></i> Kontak Utama</h4>
+                        {% if kontak %}
+                        <table class="info-table">
+                            <tr><td>Telp</td><td>{{ kontak.telepon }}</td></tr>
+                            <tr><td>Email</td><td>{{ kontak.email }}</td></tr>
+                            <tr><td>Alamat</td><td>{{ kontak.alamat }}</td></tr>
+                            {% if kontak.website %}
+                            <tr><td>Website</td><td><a href="{{ kontak.website }}" target="_blank" style="color:var(--fire-orange);text-decoration:none;">{{ kontak.website }}</a></td></tr>
+                            {% endif %}
+                            {% if kontak.wa %}
+                            <tr><td>WhatsApp</td><td>+{{ kontak.wa }}</td></tr>
+                            {% endif %}
+                        </table>
+                        {% else %}
+                        <table class="info-table">
+                            <tr><td>Telp</td><td>(0376) 23456</td></tr>
+                            <tr><td>Email</td><td>info@siakadpro.sch.id</td></tr>
+                            <tr><td>Alamat</td><td>Jl. Pendidikan No. 123, Lombok Timur, NTB</td></tr>
+                        </table>
+                        {% endif %}
+                    </div>
+
+                    <div class="sidebar-widget sidebar-cta reveal reveal-delay-2">
+                        <h4><i class="fa-solid fa-graduation-cap"></i> PPDB 2026/2027</h4>
+                        <p>Pendaftaran jalur online telah dibuka. Segera daftarkan diri!</p>
+                        <a href="{% url 'web_publik:ppdb_online' %}" class="btn btn-ppdb"
+                           style="width:100%;justify-content:center;margin-top:16px;text-decoration:none;display:inline-flex;">
+                            Daftar Sekarang <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                </aside>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================================
+         FOOTER — identik dengan index.html
+    ============================================================ -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="{% url 'web_publik:index' %}" class="footer-logo">
+                        <i class="fa-solid fa-graduation-cap"></i> SMA NEGERI 5<span> KOTA X</span>
+                    </a>
+                    <p class="footer-desc">Sistem Informasi Akademik profesional yang berfokus pada efisiensi manajemen data sekolah serta keterbukaan informasi publik bagi seluruh warga SMA Negeri 5 Kota X.</p>
+                    <p class="footer-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Jl. Pendidikan No. 123, Lombok Timur<br>Nusa Tenggara Barat, Indonesia
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Tautan Cepat</h4>
+                    <ul>
+                        <li><a href="{% url 'web_publik:profil' %}"><i class="fa-solid fa-chevron-right"></i> Profil Sekolah</a></li>
+                        <li><a href="{% url 'web_publik:akademik_info' %}"><i class="fa-solid fa-chevron-right"></i> Akademik</a></li>
+                        <li><a href="{% url 'web_publik:galeri' %}"><i class="fa-solid fa-chevron-right"></i> Galeri</a></li>
+                        <li><a href="{% url 'web_publik:ppdb_online' %}"><i class="fa-solid fa-chevron-right"></i> PPDB Online</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Media Sosial Resmi</h4>
+                    <p>Ikuti akun resmi kami untuk konten edukatif dan informasi terkini:</p>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/alleeqyoouu?igsh=cjZhZjdnMXAyMXRu"
+                           target="_blank" class="social-btn instagram" title="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 <strong>SMA Negeri 5 </strong> · Powered by <strong>Kota X</strong>. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+         SCRIPTS — sama persis seperti index.html
+    ============================================================ -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        /* ── 1. Fire Particle Canvas — sama seperti index ── */
+        var canvas = document.getElementById('fire-canvas');
+        if (canvas && window.innerWidth > 768) {
+            var ctx = canvas.getContext('2d');
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            var resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    canvas.width  = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                }, 300);
+            });
+
+            var particles = [];
+            var MAX_PARTICLES = 25;
+            var colors = ['#F5C518', '#E8561A', '#C8102E', '#F4731F'];
+
+            function spawnParticle() {
+                if (particles.length >= MAX_PARTICLES) return;
+                particles.push({
+                    x:       Math.random() * canvas.width,
+                    y:       canvas.height + 10,
+                    vx:      (Math.random() - 0.5) * 0.6,
+                    vy:      -(Math.random() * 1.0 + 0.5),
+                    size:    Math.random() * 1.5 + 0.5,
+                    alpha:   0.7 + Math.random() * 0.2,
+                    color:   colors[Math.floor(Math.random() * colors.length)],
+                    life:    0,
+                    maxLife: 100 + Math.random() * 80
+                });
+            }
+
+            var frameCount = 0;
+            function animateCanvas() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                frameCount++;
+                if (frameCount % 5 === 0 && Math.random() < 0.15) spawnParticle();
+                for (var i = particles.length - 1; i >= 0; i--) {
+                    var p = particles[i];
+                    p.x += p.vx; p.y += p.vy; p.life++;
+                    var progress = p.life / p.maxLife;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * (1 - progress * 0.4), 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = p.alpha * (1 - progress);
+                    ctx.fill();
+                    if (p.life >= p.maxLife) particles.splice(i, 1);
+                }
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(animateCanvas);
+            }
+            animateCanvas();
+        }
+
+        /* ── 2. Header scrolled class — sama seperti index ── */
+        var header = document.getElementById('mainHeader');
+        if (header) {
+            window.addEventListener('scroll', function () {
+                header.classList.toggle('scrolled', window.scrollY > 30);
+            }, { passive: true });
+        }
+
+        /* ── 3. Scroll Reveal — sama seperti index ── */
+        var revealEls = document.querySelectorAll('.reveal');
+        if ('IntersectionObserver' in window) {
+            var revealObserver = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal-visible');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            revealEls.forEach(function (el) { revealObserver.observe(el); });
+        } else {
+            /* Fallback untuk browser lama */
+            revealEls.forEach(function (el) { el.classList.add('reveal-visible'); });
+        }
+
+        /* ── 4. Smooth scroll untuk link anchor ── */
+        document.querySelectorAll('.scroll-link').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                var href = this.getAttribute('href');
+                /* Hanya handle jika anchor di halaman yang sama */
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    var target = document.querySelector(href);
+                    if (target) {
+                        window.scrollTo({
+                            top: target.getBoundingClientRect().top + window.pageYOffset - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        });
+
+    });
+    </script>
+
+</body>
+</html>

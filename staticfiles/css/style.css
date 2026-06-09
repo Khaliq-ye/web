@@ -1,0 +1,1415 @@
+/* --- 1. CORE & VARIABLES --- */
+:root {
+    --primary: #1e40af; 
+    --primary-light: #3b82f6;
+    --primary-bg: #eff6ff;
+    --accent: #f59e0b;  
+    --accent-hover: #d97706;
+    --text-dark: #0f172a;
+    --text-light: #64748b;
+    --white: #ffffff;
+    --bg-alt: #f8fafc;
+    --border-color: #e2e8f0;
+    
+    /* Variables untuk Toast & Alert */
+    --success: #22c55e;
+    --error: #ef4444;
+    --warning: #f59e0b;
+    --info: #3b82f6;
+}
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--text-dark);
+    background-color: var(--white);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- 2. HEADER & NAVIGATION --- */
+.main-header {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logo i {
+    color: var(--primary);
+    font-size: 1.8rem;
+}
+
+.logo span {
+    color: var(--primary);
+}
+
+.nav-bar { 
+    display: flex; 
+    align-items: center; 
+}
+
+.nav-menu { 
+    display: flex; 
+    list-style: none; 
+    gap: 30px; 
+    align-items: center;
+}
+
+.nav-menu a { 
+    text-decoration: none; 
+    color: var(--text-dark); 
+    font-weight: 600; 
+    font-size: 0.95rem; 
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-menu a:not(.btn-portal-fixed)::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.nav-menu a:not(.btn-portal-fixed):hover::after {
+    width: 100%;
+}
+
+.nav-menu a:hover { 
+    color: var(--primary); 
+}
+
+/* --- 3. PORTAL LOGIN BUTTON --- */
+.btn-portal-fixed {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    border: 2px solid var(--primary);
+    color: var(--primary) !important;
+    background: transparent;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.btn-portal-fixed:hover {
+    background: var(--primary);
+    color: white !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
+}
+
+/* --- 3.1 TICKER ANNOUNCEMENT (Running Text) --- */
+.ticker-wrapper {
+    background: #0f172a; 
+    color: var(--white); 
+    display: flex; 
+    align-items: center;
+    font-size: 0.88rem; 
+    font-weight: 600; 
+    border-bottom: 2px solid var(--accent);
+}
+
+.ticker-title {
+    background: var(--accent); 
+    color: var(--white); 
+    padding: 10px 20px;
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    white-space: nowrap;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.ticker-text { 
+    width: 100%; 
+    padding: 0 15px; 
+    overflow: hidden; 
+}
+
+.ticker-text marquee {
+    display: flex;
+    align-items: center;
+}
+
+/* --- 4. HERO SECTION (Split Grid Layout) --- */
+.hero {
+    padding: 80px 0;
+    background: radial-gradient(100% 100% at 0% 0%, #f0f6ff 0%, #ffffff 100%);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 40px;
+    align-items: center;
+}
+
+.hero-text { 
+    max-width: 100%; 
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-bg);
+    color: var(--primary);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border: 1px solid #dbeafe;
+}
+
+.hero-text h1 { 
+    font-size: 3.5rem; 
+    font-weight: 800; 
+    line-height: 1.15; 
+    margin: 1.5rem 0; 
+    color: var(--text-dark);
+    letter-spacing: -1px;
+}
+
+.hero-text p { 
+    font-size: 1.2rem; 
+    color: var(--text-light); 
+    margin-bottom: 2.5rem; 
+    max-width: 620px;
+}
+
+.hero-image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-img-fluid {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    filter: drop-shadow(0 20px 30px rgba(30, 64, 175, 0.08));
+    animation: floatAnimation 6s ease-in-out infinite;
+}
+
+@keyframes floatAnimation {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+/* --- 5. BUTTONS SYSTEMS --- */
+.cta-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn {
+    padding: 14px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.btn-ppdb { 
+    background: var(--accent); 
+    color: white; 
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.3); 
+    border: none;
+}
+
+.btn-ppdb:hover {
+    background: var(--accent-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.4);
+}
+
+.btn-outline { 
+    border: 2px solid var(--border-color); 
+    color: var(--text-dark); 
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: var(--bg-alt);
+    border-color: var(--text-light);
+    transform: translateY(-3px);
+}
+
+/* --- 5.1 SAMBUTAN KEPALA SEKOLAH --- */
+.welcome-section { 
+    padding: 90px 0; 
+    background: var(--bg-alt); 
+}
+
+.welcome-grid { 
+    display: grid; 
+    grid-template-columns: 0.8fr 1.2fr; 
+    gap: 60px; 
+    align-items: center; 
+}
+
+.welcome-img-box { 
+    position: relative; 
+    text-align: center; 
+}
+
+.principal-img { 
+    width: 100%; 
+    max-width: 320px; 
+    border-radius: 20px; 
+    box-shadow: 0 15px 35px rgba(15, 23, 42, 0.08); 
+    border: 8px solid var(--white); 
+}
+
+.principal-badge {
+    background: var(--white); 
+    padding: 15px 25px; 
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05); 
+    display: inline-block;
+    position: absolute; 
+    bottom: -20px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    width: 85%;
+    border: 1px solid var(--border-color);
+}
+
+.principal-badge strong { 
+    display: block; 
+    color: var(--text-dark); 
+    font-size: 1rem; 
+}
+
+.principal-badge span { 
+    color: var(--primary); 
+    font-size: 0.85rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px;
+}
+
+.welcome-text-box h3 { 
+    font-size: 2.3rem; 
+    font-weight: 800; 
+    margin: 10px 0 20px; 
+    color: var(--text-dark);
+    letter-spacing: -0.5px;
+}
+
+.welcome-message p { 
+    color: var(--text-light); 
+    margin-bottom: 15px; 
+    font-size: 1.05rem; 
+    line-height: 1.7;
+}
+
+.digital-signature { 
+    max-width: 150px; 
+    margin-top: 20px; 
+    filter: grayscale(1) contrast(0.9); 
+    opacity: 0.7; 
+}
+
+/* --- 6. STATS BAR SECTION --- */
+.stats-bar {
+    background: var(--bg-alt);
+    padding: 40px 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.stat-item {
+    background: var(--white);
+    padding: 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    border: 1px solid var(--border-color);
+}
+
+.stat-icon {
+    width: 54px;
+    height: 54px;
+    background: var(--primary-bg);
+    color: var(--primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+}
+
+.stat-info strong {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    display: block;
+    line-height: 1.2;
+}
+
+.stat-info p {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* --- 6.1 INFORMASI PPDB TIMELINE & GELOMBANG --- */
+.ppdb-section { 
+    padding: 100px 0; 
+    background: var(--white); 
+}
+
+.ppdb-banner-grid { 
+    display: grid; 
+    grid-template-columns: 1.1fr 0.9fr; 
+    gap: 60px; 
+    align-items: center; 
+}
+
+.ppdb-info-content h2 { 
+    font-size: 2.5rem; 
+    font-weight: 800; 
+    margin: 15px 0; 
+    color: var(--text-dark);
+    letter-spacing: -0.5px;
+}
+
+.ppdb-info-content p { 
+    color: var(--text-light); 
+    font-size: 1.1rem; 
+    margin-bottom: 25px; 
+}
+
+.ppdb-features { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 14px; 
+}
+
+.p-feature { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    font-weight: 600; 
+    color: var(--text-dark); 
+    font-size: 0.98rem;
+}
+
+.p-feature i { 
+    color: var(--success); 
+    font-size: 1.1rem;
+}
+
+.ppdb-waves-box { 
+    background: var(--bg-alt); 
+    padding: 35px; 
+    border-radius: 16px; 
+    border: 1px solid var(--border-color); 
+}
+
+.ppdb-waves-box h4 { 
+    font-size: 1.2rem; 
+    font-weight: 800; 
+    margin-bottom: 20px; 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    color: var(--text-dark);
+}
+
+.wave-timeline { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.wave-card { 
+    background: var(--white); 
+    padding: 20px; 
+    border-radius: 12px; 
+    border: 1px solid var(--border-color); 
+    transition: all 0.3s ease; 
+}
+
+.wave-card.active { 
+    border-left: 5px solid var(--accent); 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03); 
+}
+
+.wave-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    margin-bottom: 8px; 
+}
+
+.wave-header h5 { 
+    font-size: 1.05rem; 
+    font-weight: 700; 
+    color: var(--text-dark);
+}
+
+.status-live { 
+    background: #dcfce7; 
+    color: #15803d; 
+    padding: 4px 12px; 
+    border-radius: 50px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+}
+
+.status-closed { 
+    background: #fee2e2; 
+    color: #b91c1c; 
+    padding: 4px 12px; 
+    border-radius: 50px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+}
+
+.wave-date { 
+    font-size: 0.88rem; 
+    color: var(--text-light); 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+    margin-bottom: 8px; 
+}
+
+.wave-fee { 
+    font-size: 0.85rem; 
+    font-weight: 700; 
+    color: var(--primary); 
+}
+
+/* --- 6.2 FITUR AKADEMIK (KALENDER & PRESTASI) --- */
+.academic-features { 
+    padding: 100px 0; 
+    background: var(--bg-alt); 
+    border-top: 1px solid var(--border-color); 
+}
+
+.academic-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 60px; 
+}
+
+.academic-left h3, .academic-right h3 { 
+    font-size: 2rem; 
+    font-weight: 800; 
+    margin: 5px 0 15px; 
+    color: var(--text-dark);
+    letter-spacing: -0.5px;
+}
+
+.section-desc { 
+    color: var(--text-light); 
+    margin-bottom: 30px; 
+    font-size: 0.98rem;
+}
+
+.agenda-list { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.agenda-item { 
+    background: var(--white); 
+    padding: 18px; 
+    border-radius: 12px; 
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
+    border: 1px solid var(--border-color); 
+}
+
+.agenda-date-box { 
+    background: var(--primary-bg); 
+    color: var(--primary); 
+    width: 60px; 
+    height: 60px; 
+    border-radius: 10px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    text-align: center; 
+}
+
+.agenda-date-box strong { 
+    font-size: 1.4rem; 
+    font-weight: 800; 
+    line-height: 1; 
+}
+
+.agenda-date-box span { 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+}
+
+.agenda-details h5 { 
+    font-size: 1.05rem; 
+    font-weight: 700; 
+    margin-bottom: 4px; 
+    color: var(--text-dark); 
+}
+
+.agenda-details p { 
+    font-size: 0.85rem; 
+    color: var(--text-light); 
+}
+
+.achievement-grid-mini { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+}
+
+.achievement-card { 
+    background: var(--white); 
+    padding: 20px; 
+    border-radius: 12px; 
+    border: 1px solid var(--border-color); 
+    position: relative; 
+}
+
+.ach-badge { 
+    position: absolute; 
+    top: 18px; 
+    right: 20px; 
+    background: #fef3c7; 
+    color: #b45309; 
+    padding: 4px 12px; 
+    border-radius: 50px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    display: flex; 
+    align-items: center; 
+    gap: 6px; 
+}
+
+.achievement-card h5 { 
+    font-size: 1.1rem; 
+    font-weight: 700; 
+    margin-bottom: 6px; 
+    max-width: 70%; 
+    color: var(--text-dark);
+}
+
+.achievement-card p { 
+    font-size: 0.9rem; 
+    color: var(--text-light); 
+}
+
+/* --- 7. NEWS & ANNOUNCEMENT SECTION --- */
+.news { 
+    padding: 100px 0; 
+    background: var(--white); 
+}
+
+.header-flex { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: flex-end; 
+    margin-bottom: 50px; 
+    border-left: 4px solid var(--primary); 
+    padding-left: 20px; 
+}
+
+.sub-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--primary-light);
+    letter-spacing: 1.5px;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.header-flex h3 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.view-all {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
+}
+
+.view-all:hover {
+    gap: 14px;
+}
+
+.news-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+    gap: 30px; 
+}
+
+.news-item { 
+    background: var(--white); 
+    border-radius: 16px; 
+    overflow: hidden; 
+    border: 1px solid var(--border-color); 
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.news-item:hover { 
+    transform: translateY(-8px); 
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02); 
+    border-color: #cbd5e1;
+}
+
+.news-img {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+    background-color: var(--bg-alt);
+}
+
+.news-img img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform 0.5s ease;
+}
+
+.news-item:hover .news-img img {
+    transform: scale(1.06);
+}
+
+.news-content { 
+    padding: 24px; 
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.news-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    font-weight: 600;
+    margin-bottom: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.news-content h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    color: var(--text-dark);
+}
+
+.news-content p {
+    color: var(--text-light);
+    font-size: 0.92rem;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.read-more {
+    margin-top: auto;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s ease;
+}
+
+.read-more:hover {
+    gap: 8px;
+}
+
+.empty-news-box {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--bg-alt);
+    border-radius: 12px;
+    border: 2px dashed var(--border-color);
+    color: var(--text-light);
+}
+
+.empty-news-box i {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: #cbd5e1;
+}
+
+/* --- 8. FOOTER SECTION --- */
+.main-footer { 
+    background: var(--text-dark); 
+    color: rgba(255, 255, 255, 0.85); 
+    padding: 80px 0 0; 
+    margin-top: 100px; 
+}
+
+.footer-grid { 
+    display: grid; 
+    grid-template-columns: 1.5fr 1fr 1fr; 
+    gap: 60px; 
+    margin-bottom: 50px;
+}
+
+.footer-logo {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--white);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.footer-logo i { color: var(--primary-light); }
+.footer-logo span { color: var(--primary-light); }
+
+.footer-desc {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin-bottom: 24px;
+}
+
+.footer-address {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #cbd5e1;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.footer-address i {
+    color: var(--primary-light);
+    margin-top: 4px;
+}
+
+.footer-links h4, .footer-social h4 {
+    color: var(--white);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+.footer-links ul { 
+    list-style: none; 
+    padding: 0; 
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a { 
+    color: #94a3b8; 
+    text-decoration: none; 
+    font-size: 0.92rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.footer-links a i {
+    font-size: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.footer-links a:hover { 
+    color: var(--white); 
+}
+
+.footer-links a:hover i {
+    transform: translateX(4px);
+}
+
+.footer-social p {
+    font-size: 0.92rem;
+    color: #94a3b8;
+    margin-bottom: 20px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+}
+
+.social-btn {
+    width: 40px;
+    height: 40px;
+    background: #1e293b;
+    color: #cbd5e1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: translateY(-4px);
+    color: var(--white);
+}
+
+.social-btn.instagram:hover { background: #e1306c; }
+.social-btn.youtube:hover { background: #ff0000; }
+.social-btn.facebook:hover { background: #1877f2; }
+/* FIX: Disamakan dengan class FontAwesome v6 'fa-x-twitter' di HTML */
+.social-btn.twitter:hover, .social-btn.instagram:hover + .social-btn { background: #0f172a; } 
+
+.copyright { 
+    text-align: center; 
+    padding: 30px 0; 
+    border-top: 1px solid #1e293b; 
+    font-size: 0.88rem; 
+    color: #64748b; 
+}
+
+.copyright strong {
+    color: #94a3b8;
+}
+
+/* --- 9. TOAST NOTIFICATIONS (FIXED & ANIMATED) --- */
+.toast-container {
+    position: fixed; 
+    top: 95px;      
+    right: 20px;     
+    z-index: 9999;   
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 340px;    
+    max-width: 90%;
+    pointer-events: none; 
+}
+
+.toast-item {
+    pointer-events: auto; 
+    background: var(--white);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 6px solid #cbd5e1;
+    animation: slideInToast 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.toast-content { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+}
+
+.toast-icon { 
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 13px; 
+    font-weight: bold;
+}
+
+.toast-text p { 
+    margin: 0; 
+    font-size: 0.88rem; 
+    font-weight: 600; 
+    color: #1e293b; 
+}
+
+.toast-close { 
+    background: none; 
+    border: none; 
+    font-size: 18px; 
+    cursor: pointer; 
+    color: #94a3b8; 
+    transition: color 0.2s;
+}
+
+.toast-close:hover { color: var(--text-dark); }
+
+/* System Toast Variant Colors */
+.toast-item.success { border-left-color: var(--success) !important; }
+.toast-item.success .toast-icon { background: #dcfce7; color: #15803d; }
+
+.toast-item.error, .toast-item.danger { border-left-color: var(--error) !important; }
+.toast-item.error .toast-icon, .toast-item.danger .toast-icon { background: #fee2e2; color: #b91c1c; }
+
+.toast-item.warning { border-left-color: var(--warning) !important; }
+.toast-item.warning .toast-icon { background: #fef9c3; color: #a16207; }
+
+.toast-item.info { border-left-color: var(--info) !important; }
+.toast-item.info .toast-icon { background: #dbeafe; color: #1d4ed8; }
+
+@keyframes slideInToast {
+    from { opacity: 0; transform: translateX(120%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* --- 10. RESPONSIVE MEDIA QUERIES --- */
+@media (max-width: 992px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 50px;
+    }
+    .hero-text p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .cta-group {
+        justify-content: center;
+    }
+    .hero-image-container {
+        grid-row: 1; 
+    }
+    .hero-img-fluid {
+        max-width: 380px;
+    }
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .footer-grid {
+        grid-template-columns: 1.2fr 1fr;
+        gap: 40px;
+    }
+    
+    /* Tambahan Responsif untuk Grid Baru */
+    .welcome-grid, .ppdb-banner-grid, .academic-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
+    .welcome-img-box {
+        grid-row: 2;
+    }
+    .principal-badge {
+        width: 100%;
+        max-width: 290px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* OPTIMALISASI: Navigasi menu disesuaikan agar rapi secara vertikal di HP (tidak hilang total) */
+    .nav-menu {
+        gap: 12px;
+    }
+    .nav-menu li:not(:last-child) {
+        display: none; /* Menyembunyikan menu teks biasa, menghemat ruang di layar HP */
+    }
+    .btn-portal-fixed {
+        padding: 8px 16px;
+        font-size: 0.85rem; /* Tombol portal diusahakan tetap tampil demi user experience */
+    }
+    .hero-text h1 { 
+        font-size: 2.4rem; 
+    }
+    .header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+    .toast-container {
+        top: 20px; /* Di HP ditaruh paling atas agar tidak menutupi header */
+        right: 5%;
+        width: 90%;
+    }
+}
+
+/* ==========================================================================
+   NAVIGATOR ACTIVE CLASS COUPLING
+   ========================================================================== */
+.nav-menu a.active,
+.nav-bar ul li a.active {
+    color: #2563eb !important; /* Ganti dengan kode warna active navigasi aslimu jika bukan biru */
+    font-weight: 700 !important;
+    position: relative;
+}
+
+/* Jika navigasi kamu menggunakan garis bawah/indicator saat aktif, tambahkan ini */
+.nav-menu a.active::after,
+.nav-bar ul li a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #2563eb !important; /* Samakan dengan warna teks active */
+    border-radius: 2px;
+}
+
+
+/* ==========================================================================
+   11. FITUR TAMBAHAN: JENDELA MENGAMBANG BERITA (MODAL)
+   ========================================================================== */
+.news-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6); /* Backdrop buram gelap */
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    padding: 20px;
+}
+
+.news-modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content-box {
+    background: var(--white);
+    width: 100%;
+    max-width: 700px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transform: translateY(-30px);
+    transition: transform 0.4s ease;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-color);
+}
+
+.news-modal.show .modal-content-box {
+    transform: translateY(0);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(15, 23, 42, 0.5);
+    color: var(--white);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.modal-close-btn:hover {
+    background: var(--error);
+    color: var(--white);
+}
+
+.modal-img-container {
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    background: var(--bg-alt);
+}
+
+.modal-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.modal-body-padding {
+    padding: 32px;
+    overflow-y: auto;
+}
+
+.modal-news-date {
+    color: var(--accent);
+    font-size: 14px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 12px;
+}
+
+.modal-body-padding h3 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-dark);
+    line-height: 1.4;
+    margin-bottom: 16px;
+}
+
+.modal-text-full {
+    color: var(--text-light);
+    font-size: 1px;
+    line-height: 1.7;
+    font-size: 0.95rem;
+    white-space: pre-line; /* Menjaga jeda paragraf dari template tags */
+}
+
+/* Responsive khusus modal untuk layar kecil */
+@media (max-width: 768px) {
+    .modal-body-padding {
+        padding: 20px;
+    }
+    .modal-img-container {
+        height: 200px;
+    }
+    .modal-body-padding h3 {
+        font-size: 1.25rem;
+    }
+}
+
+/* ==========================================================================
+   STYLE KHUSUS JENDELA MENGAMBANG (MODAL) BERITA - SIAKAD PRO
+   ========================================================================== */
+
+.custom-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.custom-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.custom-modal-container {
+    background: #ffffff;
+    width: 90%;
+    max-width: 750px;
+    max-height: 85vh;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.custom-modal-overlay.active .custom-modal-container {
+    transform: scale(1);
+}
+
+.custom-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+}
+
+.custom-modal-header h4 {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.25rem;
+    line-height: 1.4;
+    padding-right: 20px;
+}
+
+.custom-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #64748b;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+
+.custom-modal-close:hover {
+    color: #0f172a;
+}
+
+.custom-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.custom-modal-img-wrapper {
+    text-align: center;
+    margin-bottom: 20px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.custom-modal-img {
+    max-height: 380px;
+    max-width: 100%;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+}
+
+.custom-modal-text {
+    color: #334155;
+    font-size: 1rem;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+.custom-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: flex-end;
+    background: #f8fafc;
+}
+
+.btn-modal-close {
+    background: #64748b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: background 0.2s;
+}
+
+.btn-modal-close:hover {
+    background: #475569;
+}
+
+/* Style tombol baca selengkapnya bawaan agar bertindak sebagai button clicky */
+.btn-read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: #0284c7;
+    font-weight: 600;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    cursor: pointer;
+    padding: 0;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.btn-read-more:hover {
+    color: #0369a1;
+}

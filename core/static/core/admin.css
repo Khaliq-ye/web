@@ -1,0 +1,187 @@
+/* Reset & Variabel */
+:root {
+    --primary: #1e40af;
+    --secondary: #64748b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --bg-light: #f8fafc;
+    --white: #ffffff;
+    --sidebar-width: 260px;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-light);
+    display: flex;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background-color: #0f172a;
+    color: var(--white);
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #1e293b;
+}
+
+.menu {
+    flex-grow: 1;
+    padding: 1rem 0;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px 25px;
+    color: #cbd5e1;
+    text-decoration: none;
+    transition: 0.3s;
+    gap: 15px;
+}
+
+.menu a:hover, .menu a.active {
+    background-color: var(--primary);
+    color: white;
+}
+
+.sidebar-footer {
+    padding: 1.5rem;
+    border-top: 1px solid #334155;
+}
+
+.btn-logout {
+    color: #fca5a5;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Main Content Area */
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex-grow: 1;
+    min-height: 100vh;
+}
+
+.top-bar {
+    background: var(--white);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.content-body {
+    padding: 40px;
+}
+
+.welcome-banner h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #1e293b;
+}
+
+.welcome-banner p {
+    color: var(--secondary);
+}
+
+/* Stats Cards */
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    margin: 30px 0;
+}
+
+.stat-card {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+.stat-icon {
+    font-size: 2rem;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.stat-data .label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+.stat-data .number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* Warna Varian Cards */
+.blue .stat-icon { background: #dbeafe; color: var(--primary); }
+.green .stat-icon { background: #d1fae5; color: var(--success); }
+.purple .stat-icon { background: #ede9fe; color: #7c3aed; }
+
+/* Quick Access Section */
+.quick-access h2 {
+    font-size: 1.2rem;
+    color: #334155;
+    margin-bottom: 20px;
+}
+
+.action-grid {
+    display: flex;
+    gap: 20px;
+}
+
+.action-item {
+    background: var(--white);
+    padding: 20px 30px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #1e293b;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid #e2e8f0;
+    transition: 0.2s;
+}
+
+.action-item:hover:not(.disabled) {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.action-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .main-grid { grid-template-columns: 1fr !important; }
+    .table-responsive { overflow-x: auto; }
+    .card-header-flex { flex-direction: column; align-items: flex-start; }
+}

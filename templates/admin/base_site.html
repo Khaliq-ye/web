@@ -1,0 +1,63 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<div id="site-name" style="display: inline-block; vertical-align: middle;">
+    <h1 id="site-name-text" style="margin: 0; display: inline-block; vertical-align: middle;">
+        <a href="{% url 'admin:index' %}">Sistem Manajemen Academic</a>
+    </h1>
+</div>
+
+<div class="user-navigation-buttons" style="display: inline-block; vertical-align: middle; margin-left: 20px;">
+    {% if user.is_authenticated %}
+        
+        {# 1. JIKA DIA KEPSEK (KHALIQ) #}
+        {% if user.username == "khaliq" or request.user.kepsek_core_user %}
+            <a href="{% url 'akademik:dashboard_kepsek' %}" style="background-color: #10b981; color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold; margin-right: 12px; text-decoration: none; display: inline-block; vertical-align: middle; font-size: 13px;">
+                ← Ke Dashboard Kepsek
+            </a>
+
+        {# 2. JIKA DIA STAF KEUANGAN (Dicek apakah user punya grup keuangan) #}
+        {% elif user.is_staff and not user.is_superuser and user.groups.all.0.name.lower == "staf_keuangan" or user.groups.all.0.name.lower == "staf keuangan" or user.groups.all.0.name.lower == "staff keuangan" %}
+            <a href="/akademik/manajemen-keuangan/" style="background-color: #2563eb; color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold; margin-right: 12px; text-decoration: none; display: inline-block; vertical-align: middle; font-size: 13px;">
+                ← Ke Dashboard Keuangan
+            </a>
+
+        {# 3. JIKA DIA STAF BIASA (Staff, Bukan Superuser, dan Bukan Staf Keuangan) #}
+        {% elif user.is_staff and not user.is_superuser %}
+            <a href="/akademik/dashboard/staf/" style="background-color: #f59e0b; color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold; margin-right: 12px; text-decoration: none; display: inline-block; vertical-align: middle; font-size: 13px;">
+                ← Ke Dashboard Staf
+            </a>
+
+        {# 4. JIKA DIA SUPERUSER UTAMA / ADMIN PUSAT #}
+        {% else %}
+            <a href="{% url 'web_publik:profil' %}" target="_blank" style="background-color: #3b82f6; color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold; text-decoration: none; display: inline-block; vertical-align: middle; font-size: 13px;">
+                Lihat Profil Sekolah ↗
+            </a>
+        {% endif %}
+
+    {% endif %}
+</div>
+
+<style>
+    /* CSS Responsif untuk HP */
+    @media (max-width: 768px) {
+        .card-header-flex {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 15px !important;
+        }
+        .btn-buka-modal {
+            width: 100% !important;
+            text-align: center !important;
+        }
+        .table-responsive {
+            overflow-x: auto !important;
+            width: 100% !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

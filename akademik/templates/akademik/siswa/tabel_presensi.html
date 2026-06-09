@@ -1,0 +1,44 @@
+<div class="table-responsive">
+  <table style="width:100%;border-collapse:collapse;text-align:left;">
+    <thead>
+      <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Tanggal</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Mata Pelajaran</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Status</th>
+        <th style="padding:10px 14px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Keterangan</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for presensi in riwayat_presensi %}
+      <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+        <td style="padding:12px 14px;color:rgba(255,255,255,.7);font-size:13px;">{{ presensi.tanggal|date:"d F Y" }}</td>
+        <td style="padding:12px 14px;font-weight:600;color:#fff;">{{ presensi.jadwal.mata_pelajaran.nama }}</td>
+        <td style="padding:12px 14px;">
+          {% if presensi.status == 'Hadir' %}
+            <span style="background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.3);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;">Hadir</span>
+          {% elif presensi.status == 'Izin' %}
+            <span style="background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.3);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;">Izin</span>
+          {% elif presensi.status == 'Sakit' %}
+            <span style="background:rgba(245,197,24,.1);color:#F5C518;border:1px solid rgba(245,197,24,.3);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;">Sakit</span>
+          {% else %}
+            <span style="background:rgba(200,16,46,.1);color:#f87171;border:1px solid rgba(200,16,46,.3);padding:3px 10px;border-radius:99px;font-size:12px;font-weight:600;">Alfa</span>
+          {% endif %}
+        </td>
+        <td style="padding:12px 14px;color:rgba(255,255,255,.4);font-size:13px;font-style:italic;">{{ presensi.keterangan|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" style="text-align:center;color:rgba(255,255,255,.3);padding:32px;font-size:13px;">
+          Belum ada riwayat absensi di sistem.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<style>
+@media(max-width:600px){
+  .table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+}
+</style>

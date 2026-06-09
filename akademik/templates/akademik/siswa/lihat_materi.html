@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ judul }}</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #f1f5f9; font-family: sans-serif; }
+
+  .viewer-topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+    background: #1e293b;
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    height: 52px;
+  }
+  .btn-kembali {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #334155; color: #fff; border: none;
+    padding: 7px 16px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    text-decoration: none; white-space: nowrap;
+    transition: background .15s;
+  }
+  .btn-kembali:hover { background: #475569; color: #fff; }
+  .viewer-judul {
+    font-size: 13.5px; font-weight: 600; color: #e2e8f0;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    flex: 1;
+  }
+  .ext-badge {
+    background: #475569; color: #94a3b8;
+    font-size: 11px; font-weight: 700; padding: 3px 8px;
+    border-radius: 5px; text-transform: uppercase; flex-shrink: 0;
+  }
+
+  .viewer-body {
+    padding-top: 52px;
+    min-height: 100vh;
+  }
+
+  /* Full-height iframe (PDF, Office via GDocs) */
+  .viewer-iframe {
+    width: 100%;
+    height: calc(100vh - 52px);
+    border: none;
+    display: block;
+  }
+
+  /* Gambar */
+  .viewer-img-wrap {
+    display: flex; align-items: center; justify-content: center;
+    min-height: calc(100vh - 52px);
+    padding: 20px;
+  }
+  .viewer-img {
+    max-width: 100%; max-height: calc(100vh - 92px);
+    object-fit: contain; border-radius: 8px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  }
+
+  /* Tidak bisa ditampilkan */
+  .viewer-unsupported {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    min-height: calc(100vh - 52px);
+    text-align: center; padding: 40px 20px; color: #475569;
+  }
+  .unsupported-icon { font-size: 56px; margin-bottom: 16px; }
+  .unsupported-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: #1e293b; }
+  .unsupported-note { font-size: 13px; color: #94a3b8; margin-bottom: 24px; line-height: 1.6; }
+  .btn-unduh {
+    background: #2563eb; color: #fff; padding: 10px 24px;
+    border-radius: 8px; text-decoration: none; font-size: 14px;
+    font-weight: 600; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn-unduh:hover { background: #1d4ed8; }
+</style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <div class="viewer-topbar">
+    <a href="javascript:history.back()" class="btn-kembali">
+      <i class="fas fa-arrow-left"></i> Kembali
+    </a>
+    <div class="viewer-judul">{{ judul }}</div>
+    <span class="ext-badge" id="extBadge"></span>
+  </div>
+
+  <!-- Konten -->
+  <div class="viewer-body" id="viewerBody"></div>
+
+  <script>
+    var url   = "{{ url }}";
+    var judul = "{{ judul }}";
+
+    /* Ambil ekstensi dari URL (buang query string dulu) */
+    var bersih = url.split('?')[0];
+    var ext    = bersih.split('.').pop().toLowerCase();
+
+    document.getElementById('extBadge').innerText = ext;
+
+    var body = document.getElementById('viewerBody');
+
+    var EXT_GAMBAR  = ['jpg','jpeg','png','gif','webp','bmp','svg'];
+    var EXT_VIDEO   = ['mp4','webm','ogg','mov'];
+    var EXT_AUDIO   = ['mp3','wav','ogg','aac'];
+    var EXT_PDF     = ['pdf'];
+    /* File Office — tampilkan via Google Docs Viewer */
+    var EXT_OFFICE  = ['ppt','pptx','doc','docx','xls','xlsx'];
+
+    if (EXT_GAMBAR.indexOf(ext) !== -1) {
+      /* ── Gambar ── */
+      body.innerHTML =
+        '<div class="viewer-img-wrap">' +
+          '<img src="' + url + '" alt="' + judul + '" class="viewer-img">' +
+        '</div>';
+
+    } else if (EXT_PDF.indexOf(ext) !== -1) {
+      /* ── PDF ── */
+      body.innerHTML =
+        '<iframe src="' + url + '" class="viewer-iframe"></iframe>';
+
+    } else if (EXT_OFFICE.indexOf(ext) !== -1) {
+      /* ── Office (PPT, PPTX, DOC, DOCX, XLS, XLSX) via Google Docs Viewer ── */
+      /*
+       * Google Docs Viewer butuh URL yang bisa diakses publik.
+       * Jika file ada di localhost, viewer ini tidak akan bisa membacanya.
+       * Untuk production (domain publik) ini akan berjalan normal.
+       * Sebagai fallback, ditampilkan juga tombol Unduh.
+       */
+      var gdocsUrl = 'https://docs.google.com/viewer?embedded=true&url=' + encodeURIComponent(window.location.origin + url);
+      body.innerHTML =
+        '<iframe src="' + gdocsUrl + '" class="viewer-iframe" ' +
+        'onerror="this.style.display=\'none\';document.getElementById(\'fallbackUnduh\').style.display=\'flex\';">' +
+        '</iframe>' +
+        '<div id="fallbackUnduh" class="viewer-unsupported" style="display:none;">' +
+          '<div class="unsupported-icon">📎</div>' +
+          '<div class="unsupported-title">' + judul + '</div>' +
+          '<div class="unsupported-note">Preview tidak tersedia. Silakan unduh filenya.</div>' +
+          '<a href="' + url + '" download class="btn-unduh"><i class="fas fa-download"></i> Unduh File</a>' +
+        '</div>';
+
+    } else if (EXT_VIDEO.indexOf(ext) !== -1) {
+      /* ── Video ── */
+      body.innerHTML =
+        '<div class="viewer-img-wrap">' +
+          '<video controls style="max-width:100%;max-height:calc(100vh - 92px);border-radius:8px;">' +
+            '<source src="' + url + '">' +
+          '</video>' +
+        '</div>';
+
+    } else if (EXT_AUDIO.indexOf(ext) !== -1) {
+      /* ── Audio ── */
+      body.innerHTML =
+        '<div class="viewer-img-wrap">' +
+          '<div style="text-align:center;">' +
+            '<div style="font-size:56px;margin-bottom:16px;">🎵</div>' +
+            '<div style="font-size:15px;font-weight:600;color:#1e293b;margin-bottom:16px;">' + judul + '</div>' +
+            '<audio controls style="width:300px;max-width:100%;">' +
+              '<source src="' + url + '">' +
+            '</audio>' +
+          '</div>' +
+        '</div>';
+
+    } else {
+      /* ── Format tidak dikenal — tawarkan unduh ── */
+      body.innerHTML =
+        '<div class="viewer-unsupported">' +
+          '<div class="unsupported-icon">📄</div>' +
+          '<div class="unsupported-title">' + judul + '</div>' +
+          '<div class="unsupported-note">' +
+            'Format <strong>.' + ext.toUpperCase() + '</strong> tidak dapat ditampilkan di browser.<br>' +
+            'Silakan unduh file untuk membukanya.' +
+          '</div>' +
+          '<a href="' + url + '" download class="btn-unduh"><i class="fas fa-download"></i> Unduh File</a>' +
+        '</div>';
+    }
+  </script>
+
+</body>
+</html>

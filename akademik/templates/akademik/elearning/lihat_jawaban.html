@@ -1,0 +1,413 @@
+{% extends 'akademik/base.html' %}
+{% block title %}Jawaban Siswa — {{ tugas.judul }}{% endblock %}
+{% block topbar_label %}E-Learning & CBT{% endblock %}
+{% block topbar_sub %}Daftar Jawaban Siswa{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+  <div class="notif-wrap">
+    {% for msg in messages %}
+      <div class="notif {% if 'success' in msg.tags %}notif--ok{% else %}notif--err{% endif %}">
+        <i class="fas fa-{% if 'success' in msg.tags %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+        {{ msg }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- ── KEMBALI ───────────────────────────────────────────── -->
+<a href="{% url 'akademik:e_learning' %}" class="btn-back">
+  <i class="fas fa-arrow-left"></i> Kembali ke Daftar LKS
+</a>
+
+<!-- ── HEADER KARTU TUGAS ────────────────────────────────── -->
+<div class="card-tugas card-tugas--{% if tugas.jenis == 'Tugas' %}biru{% else %}hijau{% endif %}">
+  <div class="card-tugas__body">
+
+    <!-- Badge jenis -->
+    <span class="badge-jenis badge-jenis--{% if tugas.jenis == 'Tugas' %}biru{% else %}hijau{% endif %}">
+      <i class="fas fa-{% if tugas.jenis == 'Tugas' %}tasks{% else %}vial{% endif %}"></i>
+      {{ tugas.get_jenis_display }}
+    </span>
+
+    <h2 class="tugas-judul">{{ tugas.judul }}</h2>
+
+    <div class="tugas-meta">
+      <span><i class="fas fa-book"></i> {{ tugas.mata_pelajaran.nama }}</span>
+      {% if tugas.jadwal %}
+        <span><i class="fas fa-users"></i> Kelas {{ tugas.jadwal.kelas }}</span>
+      {% endif %}
+      <span class="tugas-meta__deadline">
+        <i class="far fa-clock"></i>
+        Deadline: {{ tugas.batas_waktu|date:"d M Y, H:i" }} WIB
+      </span>
+    </div>
+
+    {% if tugas.deskripsi %}
+      <p class="tugas-deskripsi">{{ tugas.deskripsi }}</p>
+    {% endif %}
+
+  </div>
+
+  <!-- Statistik -->
+  <div class="stat-grid">
+    <div class="stat-card stat-card--hijau">
+      <div class="stat-card__angka">{{ sudah_kirim }}</div>
+      <div class="stat-card__label">Sudah Kirim</div>
+    </div>
+    <div class="stat-card stat-card--merah">
+      <div class="stat-card__angka">{{ belum_kirim }}</div>
+      <div class="stat-card__label">Belum Kirim</div>
+    </div>
+    <div class="stat-card stat-card--kuning">
+      <div class="stat-card__angka">{{ sudah_dinilai }}</div>
+      <div class="stat-card__label">Sudah Dinilai</div>
+    </div>
+    <div class="stat-card stat-card--oranye">
+      <div class="stat-card__angka">{{ total_siswa }}</div>
+      <div class="stat-card__label">Total Siswa</div>
+    </div>
+    {% if rata_nilai is not None %}
+      <div class="stat-card stat-card--ungu">
+        <div class="stat-card__angka">{{ rata_nilai }}</div>
+        <div class="stat-card__label">Rata Nilai</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- ── TABEL JAWABAN ─────────────────────────────────────── -->
+<div class="tbl-wrap">
+
+  <!-- Toolbar -->
+  <div class="tbl-toolbar">
+    <div class="tbl-toolbar__title">
+      <span class="tbl-toolbar__garis"></span>
+      Daftar Pengumpulan Jawaban
+    </div>
+    <span class="tbl-toolbar__info">
+      {{ jawaban_list.count }} dari {{ total_siswa }} siswa telah mengumpulkan
+    </span>
+  </div>
+
+  <div class="tbl-scroll">
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Siswa</th>
+          <th>Waktu Kirim</th>
+          <th>File Jawaban</th>
+          <th>Nilai &amp; Feedback Guru</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {% for jwb in jawaban_list %}
+        <tr>
+
+          <td class="td-no">{{ forloop.counter }}</td>
+
+          <!-- Identitas siswa -->
+          <td>
+            <div class="siswa-info">
+              <div class="siswa-avatar siswa-avatar--{{ forloop.counter|divisibleby:5|yesno:'5,4' }}">
+                {{ jwb.siswa.nama_lengkap|slice:":1"|upper }}
+              </div>
+              <div>
+                <div class="siswa-nama">{{ jwb.siswa.nama_lengkap }}</div>
+                <div class="siswa-sub">
+                  NISN: {{ jwb.siswa.nisn }}
+                  {% if jwb.siswa.kelas %}&nbsp;·&nbsp; {{ jwb.siswa.kelas }}{% endif %}
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <!-- Waktu kirim -->
+          <td class="td-waktu">
+            <div>{{ jwb.dikirim_at|date:"d M Y" }}</div>
+            <div class="td-waktu__jam">{{ jwb.dikirim_at|time:"H:i" }} WIB</div>
+            {% if jwb.dikirim_at != jwb.diperbarui_at %}
+              <div class="td-waktu__update">
+                <i class="fas fa-sync-alt"></i>
+                Diperbarui {{ jwb.diperbarui_at|date:"d/m H:i" }}
+              </div>
+            {% endif %}
+          </td>
+
+          <!-- File jawaban -->
+          <td>
+            <div class="file-row">
+              <span class="badge-ext">{{ jwb.ekstensi }}</span>
+              <a href="{{ jwb.file_jawaban.url }}" target="_blank" download class="btn-unduh">
+                <i class="fas fa-file-download"></i> Unduh
+              </a>
+            </div>
+            <div class="file-nama" title="{{ jwb.nama_file }}">{{ jwb.nama_file }}</div>
+          </td>
+
+          <!-- Form nilai -->
+          <td>
+            <form method="POST"
+                  action="{% url 'akademik:lihat_jawaban_guru' tugas.id %}"
+                  class="form-nilai">
+              {% csrf_token %}
+              <input type="hidden" name="jawaban_id" value="{{ jwb.id }}">
+
+              <div class="nilai-row">
+                <input type="number" name="nilai" min="0" max="100"
+                       value="{{ jwb.nilai|default:'' }}"
+                       placeholder="—"
+                       class="input-nilai">
+                <span class="nilai-maks">/ 100</span>
+
+                {% if jwb.nilai is not None %}
+                  {% if jwb.nilai >= 85 %}
+                    <span class="badge-grade badge-grade--a">A — {{ jwb.nilai }}</span>
+                  {% elif jwb.nilai >= 70 %}
+                    <span class="badge-grade badge-grade--b">B — {{ jwb.nilai }}</span>
+                  {% elif jwb.nilai >= 60 %}
+                    <span class="badge-grade badge-grade--c">C — {{ jwb.nilai }}</span>
+                  {% else %}
+                    <span class="badge-grade badge-grade--d">D — {{ jwb.nilai }}</span>
+                  {% endif %}
+                {% endif %}
+              </div>
+
+              <textarea name="catatan_guru" rows="2"
+                        placeholder="Catatan / feedback untuk siswa… (opsional)"
+                        class="textarea-catatan">{{ jwb.catatan_guru|default:'' }}</textarea>
+
+              <button type="submit" class="btn-simpan">
+                <i class="fas fa-save"></i> Simpan Nilai
+              </button>
+            </form>
+          </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="td-kosong">
+            <div class="kosong-wrap">
+              <div class="kosong-icon">
+                <i class="fas fa-inbox"></i>
+              </div>
+              <div class="kosong-judul">Belum ada jawaban masuk</div>
+              <div class="kosong-sub">Siswa belum mengumpulkan jawaban untuk tugas ini.</div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Footer tabel -->
+  {% if jawaban_list %}
+    <div class="tbl-footer">
+      <span>Menampilkan {{ jawaban_list.count }} jawaban</span>
+      {% if rata_nilai is not None %}
+        <span>
+          Rata-rata nilai kelas:
+          <strong class="txt-ungu">{{ rata_nilai }}</strong>
+        </span>
+      {% endif %}
+    </div>
+  {% endif %}
+
+</div>
+
+<!-- ── CSS ──────────────────────────────────────────────── -->
+<style>
+/* === NOTIF ========================================== */
+.notif-wrap        { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+.notif             { display: flex; align-items: center; gap: 8px;
+                     padding: 10px 16px; border-radius: 10px;
+                     font-size: 13px; font-weight: 600; }
+.notif--ok         { background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.3); color: #4ade80; }
+.notif--err        { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.3); color: #f87171; }
+
+/* === TOMBOL KEMBALI ================================= */
+.btn-back          { display: inline-flex; align-items: center; gap: 6px;
+                     color: rgba(255,255,255,.35); font-size: 12.5px;
+                     text-decoration: none; margin-bottom: 18px;
+                     transition: color .15s; }
+.btn-back:hover    { color: rgba(255,255,255,.7); }
+
+/* === KARTU TUGAS ==================================== */
+.card-tugas        { background: #161616; border: 1px solid rgba(255,255,255,.07);
+                     border-radius: 16px; padding: 22px 26px; margin-bottom: 22px;
+                     display: flex; align-items: flex-start;
+                     justify-content: space-between; flex-wrap: wrap; gap: 18px; }
+.card-tugas--biru  { border-left: 4px solid #2563eb; }
+.card-tugas--hijau { border-left: 4px solid #16a34a; }
+.card-tugas__body  { flex: 1; min-width: 220px; }
+
+.badge-jenis        { display: inline-flex; align-items: center; gap: 6px;
+                      padding: 3px 12px; border-radius: 99px; font-size: 11.5px;
+                      font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+                      margin-bottom: 10px; }
+.badge-jenis--biru  { background: rgba(37,99,235,.15); border: 1px solid rgba(37,99,235,.3); color: #60a5fa; }
+.badge-jenis--hijau { background: rgba(22,163,74,.15);  border: 1px solid rgba(22,163,74,.3);  color: #4ade80; }
+
+.tugas-judul       { font-family: 'Bebas Neue', sans-serif; font-size: 1.45rem;
+                     letter-spacing: 2px; color: #fff; margin: 0 0 10px; line-height: 1.15; }
+
+.tugas-meta        { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.tugas-meta span   { font-size: 12.5px; color: rgba(255,255,255,.45);
+                     display: flex; align-items: center; gap: 5px; }
+.tugas-meta i      { color: #F4731F; font-size: 10px; }
+.tugas-meta__deadline { color: #f87171 !important; }
+.tugas-meta__deadline i { color: #f87171 !important; }
+
+.tugas-deskripsi   { font-size: 12.5px; color: rgba(255,255,255,.4); margin: 10px 0 0;
+                     line-height: 1.6; border-left: 2px solid rgba(255,255,255,.1);
+                     padding-left: 10px; }
+
+/* === STATISTIK ====================================== */
+.stat-grid         { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-start; }
+.stat-card         { border-radius: 14px; padding: 14px 20px;
+                     text-align: center; min-width: 78px; }
+.stat-card__angka  { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+.stat-card__label  { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 4px; white-space: nowrap; }
+
+.stat-card--hijau  { background: rgba(34,197,94,.08);  border: 1px solid rgba(34,197,94,.2); }
+.stat-card--hijau .stat-card__angka  { color: #4ade80; }
+.stat-card--merah  { background: rgba(248,113,113,.07); border: 1px solid rgba(248,113,113,.18); }
+.stat-card--merah .stat-card__angka  { color: #f87171; }
+.stat-card--kuning { background: rgba(245,197,24,.07); border: 1px solid rgba(245,197,24,.2); }
+.stat-card--kuning .stat-card__angka { color: #F5C518; }
+.stat-card--oranye { background: rgba(232,86,26,.08);  border: 1px solid rgba(232,86,26,.2); }
+.stat-card--oranye .stat-card__angka { color: #F4731F; }
+.stat-card--ungu   { background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.2); }
+.stat-card--ungu .stat-card__angka   { color: #a78bfa; }
+
+/* === TABEL WRAPPER ================================== */
+.tbl-wrap          { background: #161616; border: 1px solid rgba(255,255,255,.06);
+                     border-top: 3px solid #F5C518; border-radius: 18px; overflow: hidden; }
+
+.tbl-toolbar       { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,.06);
+                     display: flex; align-items: center;
+                     justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+.tbl-toolbar__title { display: flex; align-items: center; gap: 8px;
+                      font-size: .75rem; font-weight: 700; color: #F5C518;
+                      letter-spacing: 1.8px; text-transform: uppercase; }
+.tbl-toolbar__garis { width: 3px; height: 16px; border-radius: 2px;
+                      background: linear-gradient(135deg, #b45309, #F5C518); }
+.tbl-toolbar__info  { font-size: 12px; color: rgba(255,255,255,.3); }
+
+.tbl-scroll        { overflow-x: auto; }
+
+.tbl               { width: 100%; border-collapse: collapse; text-align: left; }
+.tbl thead tr      { border-bottom: 1px solid rgba(232,86,26,.25); }
+.tbl th            { padding: 11px 18px; color: #F4731F; font-size: .69rem;
+                     letter-spacing: 1.4px; text-transform: uppercase;
+                     font-weight: 600; white-space: nowrap; }
+.tbl tbody tr      { border-bottom: 1px solid rgba(255,255,255,.04); transition: background .12s; }
+.tbl tbody tr:hover td { background: rgba(255,255,255,.015); }
+.tbl td            { padding: 14px 18px; vertical-align: top; }
+
+/* === KOLOM NOMOR ==================================== */
+.td-no             { color: rgba(255,255,255,.25); font-size: 12px;
+                     font-weight: 600; vertical-align: middle; }
+
+/* === KOLOM SISWA ==================================== */
+.siswa-info        { display: flex; align-items: center; gap: 10px; }
+.siswa-avatar      { width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+                     display: flex; align-items: center; justify-content: center;
+                     font-size: 13px; font-weight: 800; color: #fff; }
+.siswa-avatar--1   { background: linear-gradient(135deg, rgba(37,99,235,.5), rgba(0,0,0,.2)); }
+.siswa-avatar--2   { background: linear-gradient(135deg, rgba(22,163,74,.5), rgba(0,0,0,.2)); }
+.siswa-avatar--3   { background: linear-gradient(135deg, rgba(232,86,26,.5), rgba(0,0,0,.2)); }
+.siswa-avatar--4   { background: linear-gradient(135deg, rgba(139,92,246,.5), rgba(0,0,0,.2)); }
+.siswa-avatar--5   { background: linear-gradient(135deg, rgba(245,197,24,.4), rgba(0,0,0,.2)); }
+.siswa-nama        { font-weight: 700; color: #fff; font-size: 13.5px; }
+.siswa-sub         { font-size: 11.5px; color: rgba(255,255,255,.3); margin-top: 1px; }
+
+/* === KOLOM WAKTU ==================================== */
+.td-waktu          { white-space: nowrap; font-size: 13px; color: rgba(255,255,255,.6); }
+.td-waktu__jam     { font-size: 11.5px; color: rgba(255,255,255,.28); margin-top: 2px; }
+.td-waktu__update  { font-size: 10.5px; color: rgba(245,197,24,.5); margin-top: 3px; }
+
+/* === KOLOM FILE ===================================== */
+.file-row          { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.badge-ext         { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+                     color: rgba(255,255,255,.5); padding: 2px 8px; border-radius: 5px;
+                     font-size: 10.5px; font-weight: 700; letter-spacing: .5px; }
+.btn-unduh         { display: inline-flex; align-items: center; gap: 5px;
+                     background: rgba(37,99,235,.12); color: #60a5fa;
+                     border: 1px solid rgba(37,99,235,.25); padding: 5px 12px;
+                     border-radius: 8px; font-size: 12px; font-weight: 600;
+                     text-decoration: none; white-space: nowrap; transition: background .15s; }
+.btn-unduh:hover   { background: rgba(37,99,235,.22); }
+.file-nama         { font-size: 10.5px; color: rgba(255,255,255,.2); margin-top: 5px;
+                     max-width: 160px; overflow: hidden;
+                     text-overflow: ellipsis; white-space: nowrap; }
+
+/* === FORM NILAI ===================================== */
+.form-nilai        { display: flex; flex-direction: column; gap: 8px; }
+.nilai-row         { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.input-nilai       { width: 68px; padding: 6px 10px;
+                     background: rgba(255,255,255,.06);
+                     border: 1px solid rgba(255,255,255,.12); border-radius: 8px;
+                     color: #fff; font-size: 14px; font-weight: 700;
+                     outline: none; text-align: center; transition: border-color .15s; }
+.input-nilai:focus { border-color: rgba(245,197,24,.5); }
+.nilai-maks        { font-size: 11px; color: rgba(255,255,255,.2); }
+
+.badge-grade       { border-radius: 99px; padding: 2px 10px;
+                     font-size: 11.5px; font-weight: 700; }
+.badge-grade--a    { background: rgba(34,197,94,.15);  border: 1px solid rgba(34,197,94,.3);  color: #4ade80; }
+.badge-grade--b    { background: rgba(37,99,235,.15);  border: 1px solid rgba(37,99,235,.3);  color: #60a5fa; }
+.badge-grade--c    { background: rgba(245,197,24,.12); border: 1px solid rgba(245,197,24,.25);color: #F5C518; }
+.badge-grade--d    { background: rgba(248,113,113,.1); border: 1px solid rgba(248,113,113,.25);color: #f87171; }
+
+.textarea-catatan  { width: 100%; padding: 7px 10px;
+                     background: rgba(255,255,255,.04);
+                     border: 1px solid rgba(255,255,255,.08); border-radius: 8px;
+                     color: rgba(255,255,255,.7); font-size: 12px;
+                     font-family: 'Plus Jakarta Sans', sans-serif;
+                     resize: vertical; outline: none; box-sizing: border-box;
+                     transition: border-color .15s; }
+.textarea-catatan:focus { border-color: rgba(245,197,24,.4); }
+.textarea-catatan::placeholder { color: rgba(255,255,255,.2); }
+
+.btn-simpan        { align-self: flex-start;
+                     background: linear-gradient(135deg, #92400e, #d97706);
+                     color: #fff; border: none; padding: 6px 14px; border-radius: 8px;
+                     font-size: 12px; font-weight: 700; cursor: pointer;
+                     display: inline-flex; align-items: center; gap: 5px;
+                     transition: opacity .15s; }
+.btn-simpan:hover  { opacity: .85; }
+
+/* === KOSONG ========================================= */
+.td-kosong         { text-align: center; padding: 64px 20px; }
+.kosong-wrap       { display: inline-flex; flex-direction: column;
+                     align-items: center; gap: 12px; }
+.kosong-icon       { width: 60px; height: 60px; border-radius: 16px;
+                     background: rgba(255,255,255,.04);
+                     border: 1px solid rgba(255,255,255,.07);
+                     display: flex; align-items: center; justify-content: center; }
+.kosong-icon i     { font-size: 24px; color: rgba(255,255,255,.15); }
+.kosong-judul      { color: rgba(255,255,255,.35); font-size: 13.5px; font-weight: 600; }
+.kosong-sub        { color: rgba(255,255,255,.2); font-size: 12px; }
+
+/* === FOOTER TABEL =================================== */
+.tbl-footer        { padding: 12px 20px; border-top: 1px solid rgba(255,255,255,.05);
+                     display: flex; align-items: center;
+                     justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.tbl-footer span   { font-size: 12px; color: rgba(255,255,255,.25); }
+.txt-ungu          { color: #a78bfa; }
+
+/* === RESPONSIVE ===================================== */
+@media (max-width: 700px) {
+  .card-tugas      { flex-direction: column; }
+  .tbl             { font-size: 12px; }
+  .stat-card       { min-width: 64px; padding: 10px 14px; }
+}
+</style>
+
+{% endblock %}

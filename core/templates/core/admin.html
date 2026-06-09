@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin SMK POWER SUPPLY</title>
+    <style>
+        /* Kode Responsif HP */
+        @media (max-width: 768px) {
+            body { flex-direction: column !important; }
+            
+            /* Sembunyikan atau kecilkan sidebar */
+            div[style*="width: 260px"] { 
+                width: 100% !important; 
+                flex-shrink: 1 !important; 
+            }
+            
+            /* Jadikan grid 1 kolom saja */
+            div[style*="display: grid"] { 
+                grid-template-columns: 1fr !important; 
+            }
+            
+            /* Kurangi padding agar tidak terlihat sempit */
+            div[style*="padding: 25px"] { 
+                padding: 15px !important; 
+            }
+        }
+    </style>
+    <!-- Pemanggilan CSS Khusus Admin -->
+    <link rel="stylesheet" href="{% static 'core/admin.css' %}">
+    <!-- Icon pack tetap menggunakan link agar ringan -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Sidebar Navigasi -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-university"></i>
+            <span>SIAKAD</span>
+        </div>
+        <nav class="menu">
+            <a href="{% url 'dashboard_admin' %}" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="/admin-panel/core/profil/"><i class="fas fa-users-cog"></i> Kelola Pengguna</a>
+            <a href="/admin-panel/core/matapelajaran/"><i class="fas fa-book-open"></i> Mata Pelajaran</a>
+            <a href="/admin-panel/auth/user/"><i class="fas fa-user-shield"></i> Akun Sistem</a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="{% url 'logout' %}" class="btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Keluar
+            </a>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="user-info">
+                <span>Halo, <strong>{{ user.username }}</strong> (Administrator)</span>
+            </div>
+            <div class="date-info">
+                <i class="far fa-calendar-alt"></i> {% now "d F Y" %}
+            </div>
+        </header>
+
+        <section class="content-body">
+            <div class="welcome-banner">
+                <h1>Dashboard Admin</h1>
+                <p>Selamat datang kembali. Berikut adalah ringkasan operasional akademik saat ini.</p>
+            </div>
+
+            <!-- Kartu Statistik Riil -->
+            <div class="stats-container">
+                <div class="stat-card blue">
+                    <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div class="stat-data">
+                        <span class="label">Total Guru</span>
+                        <span class="number">{{ total_guru }}</span>
+                    </div>
+                </div>
+
+                <div class="stat-card green">
+                    <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+                    <div class="stat-data">
+                        <span class="label">Total Siswa</span>
+                        <span class="number">{{ total_siswa }}</span>
+                    </div>
+                </div>
+
+                <div class="stat-card purple">
+                    <div class="stat-icon"><i class="fas fa-book"></i></div>
+                    <div class="stat-data">
+                        <span class="label">Mata Pelajaran</span>
+                        <span class="number">{{ total_mapel }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Akses Cepat Database -->
+            <div class="quick-access">
+                <h2>Manajemen Data Master</h2>
+                <div class="action-grid">
+                    <a href="/admin-panel/" class="action-item">
+                        <i class="fas fa-database"></i>
+                        <span>Buka Panel Database</span>
+                    </a>
+                    <div class="action-item disabled">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Laporan Raport (Soon)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>

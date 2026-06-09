@@ -1,0 +1,1658 @@
+ {% load static %}
+
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SMA Negeri 5 Kota X</title>
+
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=6.0">
+
+    <link rel="stylesheet" href="{% static 'css/modal-berita.css' %}">
+
+</head>
+
+<body>
+
+
+
+    <!-- Canvas hanya di desktop, partikel sangat dibatasi -->
+
+    <canvas id="fire-canvas"></canvas>
+
+
+
+    {% if messages %}
+
+    <div class="toast-container">
+
+        {% for message in messages %}
+
+        <div class="toast-item {{ message.tags }}">
+
+            <div class="toast-content">
+
+                <div class="toast-icon">
+
+                    {% if message.tags == 'success' %}<i class="fa-solid fa-check"></i>
+
+                    {% elif message.tags == 'error' or message.tags == 'danger' %}<i class="fa-solid fa-exclamation"></i>
+
+                    {% elif message.tags == 'warning' %}<i class="fa-solid fa-triangle-exclamation"></i>
+
+                    {% else %}<i class="fa-solid fa-info"></i>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="toast-text"><p>{{ message }}</p></div>
+
+            </div>
+
+            <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+
+
+    <header class="main-header" id="mainHeader">
+
+        <div class="container header-wrapper">
+
+            <a href="{% url 'web_publik:index' %}" class="logo" style="display:flex;align-items:center;gap:12px;">
+
+                <img src="{% static 'images/logo-profil-sekolah.png' %}" alt="Logo"
+
+                     style="height:36px;width:auto;object-fit:contain;">
+
+                SMA<span> Negeri 5 Kota X</span>
+
+            </a>
+
+            <nav class="nav-bar">
+
+                <ul class="nav-menu">
+
+                    <li><a href="{% url 'web_publik:index' %}" class="active">Beranda</a></li>
+
+                    <li><a href="{% url 'web_publik:profil' %}">Profil</a></li>
+
+                    <li><a href="{% url 'web_publik:akademik_info' %}">Akademik</a></li>
+
+                    <li><a href="{% url 'web_publik:galeri' %}">Galeri</a></li>
+
+                    <li><a href="#news-section" class="scroll-link">Berita</a></li>
+
+                    <li>
+
+                        <a href="{% url 'web_publik:login_portal' %}" class="btn-portal-fixed">
+
+                            <i class="fa-solid fa-right-to-bracket"></i>
+
+                            <span>Login</span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </div>
+
+    </header>
+
+
+
+    {% if pengumuman_running %}
+
+    <div class="modern-ticker-container" id="tickerContainer">
+
+        <div class="ticker-badge">
+
+            <i class="fa-solid fa-bullhorn icon-pulse"></i>
+
+            <span>Info Kilat</span>
+
+        </div>
+
+        <div class="ticker-track-wrapper">
+
+            <div class="ticker-track" id="tickerTrack">
+
+                {% for info in pengumuman_running %}
+
+                <span class="ticker-message-item">
+
+                    <i class="fa-solid fa-circle-info text-accent"></i> {{ info.isi }}
+
+                </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+
+    <section class="hero" id="heroSection">
+
+        <div class="hero-grid-overlay"></div>
+
+        <div class="hero-orb-1"></div>
+
+        <div class="hero-orb-2"></div>
+
+        <div class="hero-orb-3"></div>
+
+        <canvas id="orbit-canvas"></canvas>
+
+        <div class="container hero-grid">
+
+            <div class="hero-text">
+
+                <span class="badge">
+
+                    <i class="fa-solid fa-bullhorn"></i> PPDB Online 2026/2027 Telah Dibuka
+
+                </span>
+
+                <h1>Membentuk<br><span class="highlight">Generasi Cerdas</span><br>&amp; <span class="highlight">Berkarakter</span></h1>
+
+                <p>Selamat datang di portal informasi resmi SMA Negeri 5 Kota X. Temukan pengalaman belajar terbaik dengan dukungan fasilitas modern, manajemen digital terintegrasi, dan kurikulum adaptif.</p>
+
+                <div class="cta-group">
+
+                    <a href="#ppdb-section" class="btn btn-ppdb scroll-link">
+
+                        <span>Info Pendaftaran</span> <i class="fa-solid fa-arrow-down"></i>
+
+                    </a>
+
+                    <a href="{% url 'web_publik:galeri' %}" class="btn btn-outline">
+
+                        <i class="fa-solid fa-images"></i> Lihat Fasilitas
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div class="hero-image-container">
+
+                <div class="hero-ring"></div>
+
+                <div class="hero-ring hero-ring-2"></div>
+
+                <img src="{% static 'images/hero-education.png' %}" alt="Ilustrasi Pendidikan"
+
+                     class="hero-img-fluid"
+
+                     loading="lazy">
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="welcome-section">
+
+        <div class="container welcome-grid">
+
+            <div class="welcome-img-box">
+
+                {% if kepala_sekolah.foto %}
+
+                    <img src="{{ kepala_sekolah.foto.url }}" alt="Kepala Sekolah" class="principal-img" loading="lazy">
+
+                {% else %}
+
+                    <img src="{% static 'images/principal-placeholder.jpg' %}" alt="Kepala Sekolah" class="principal-img" loading="lazy">
+
+                {% endif %}
+
+                <a href="{% url 'web_publik:profil' %}" class="principal-badge" style="text-decoration:none;display:block;">
+
+                    <strong>{{ kepala_sekolah.nama|default:"Kepala Sekolah" }}</strong>
+
+                    <span>Kepala Sekolah</span>
+
+                </a>
+
+            </div>
+
+            <div class="welcome-text-box">
+
+                <span class="sub-title">Sambutan Hangat</span>
+
+                <h3>Selamat Datang di SMA Negeri 5 Kota X</h3>
+
+                <div class="welcome-message">
+
+                    {% if kepala_sekolah.sambutan %}
+
+                        {{ kepala_sekolah.sambutan|safe }}
+
+                    {% else %}
+
+                        <p>Assalamu'alaikum Wr. Wb. Puji syukur kita panjatkan ke hadirat Tuhan Yang Maha Esa atas terwujudnya situs web resmi sekolah ini.</p>
+
+                    {% endif %}
+
+                </div>
+
+                {% if kepala_sekolah.ttd %}
+
+                    <img src="{{ kepala_sekolah.ttd.url }}" alt="TTD" class="digital-signature" loading="lazy">
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    {% if stats %}
+
+    <section class="stats-bar">
+
+        <div class="container">
+
+            <div class="stats-grid">
+
+                <div class="stat-item">
+
+                    <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+
+                    <div class="stat-info"><strong>{{ stats.total_siswa }}</strong><p>Siswa Aktif</p></div>
+
+                </div>
+
+                <div class="stat-item">
+
+                    <div class="stat-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+
+                    <div class="stat-info"><strong>{{ stats.total_guru }}</strong><p>Tenaga Pengajar</p></div>
+
+                </div>
+
+                <div class="stat-item">
+
+                    <div class="stat-icon"><i class="fa-solid fa-school"></i></div>
+
+                    <div class="stat-info"><strong>{{ stats.total_kelas }}</strong><p>Rombongan Belajar</p></div>
+
+                </div>
+
+                <div class="stat-item">
+
+                    <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+
+                    <div class="stat-info"><strong>{{ stats.total_mapel }}</strong><p>Mata Pelajaran</p></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+
+
+    <section class="ppdb-section" id="ppdb-section">
+
+        <div class="container">
+
+            <div class="ppdb-banner-grid">
+
+                <div class="ppdb-info-content">
+
+                    <span class="sub-title accent-badge" style="display:inline-flex;align-items:center;gap:6px;background:rgba(245,197,24,0.1);color:var(--fire-gold);padding:7px 16px;border-radius:50px;border:1px solid rgba(245,197,24,0.32);font-size:0.78rem;letter-spacing:0.18em;margin-bottom:10px;">
+
+                        <i class="fa-solid fa-graduation-cap"></i> Penerimaan Siswa Baru
+
+                    </span>
+
+                    <h2>Pendaftaran Jalur Online<br>TA 2026/2027</h2>
+
+                    <p>Segera bergabung bersama kami untuk mendapatkan pendidikan adaptif berbasis karakter.</p>
+
+                    <div class="ppdb-features">
+
+                        <div class="p-feature"><i class="fa-solid fa-circle-check"></i> Alur Pendaftaran Praktis</div>
+
+                        <div class="p-feature"><i class="fa-solid fa-circle-check"></i> Bebas Biaya Pendaftaran Alur Reguler</div>
+
+                        <div class="p-feature"><i class="fa-solid fa-circle-check"></i> Kuota Terbatas Setiap Rombel</div>
+
+                    </div>
+
+                    <div class="cta-group" style="margin-top:32px;">
+
+                        <a href="{% url 'web_publik:ppdb_online' %}" class="btn btn-ppdb">
+
+                            <span>Isi Formulir Online</span> <i class="fa-solid fa-pen-to-square"></i>
+
+                        </a>
+
+                        {% if ppdb_setting.brosur_pdf %}
+
+                        <a href="{{ ppdb_setting.brosur_pdf.url }}" class="btn btn-outline" download>
+
+                            <i class="fa-solid fa-file-pdf"></i> Unduh Brosur
+
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+                <div class="ppdb-waves-box">
+
+                    <h4><i class="fa-regular fa-clock"></i> Timeline Gelombang Seleksi</h4>
+
+                    <div class="wave-timeline">
+
+                        {% for gelombang in ppdb_gelombang %}
+
+                        <div class="wave-card {% if gelombang.is_aktif %}active{% endif %}">
+
+                            <div class="wave-header">
+
+                                <h5>{{ gelombang.nama }}</h5>
+
+                                {% if gelombang.is_aktif %}
+
+                                    <span class="status-live btn-buka-gelombang" data-id="{{ gelombang.id }}" style="cursor:pointer;">Buka</span>
+
+                                {% else %}
+
+                                    <span class="status-closed">Tutup</span>
+
+                                {% endif %}
+
+                            </div>
+
+                            <p class="wave-date"><i class="fa-regular fa-calendar-days"></i> {{ gelombang.tanggal_mulai }} s/d {{ gelombang.tanggal_selesai }}</p>
+
+                            <span class="wave-fee">Estimasi Biaya: Rp {{ gelombang.biaya }}</span>
+
+                        </div>
+
+                        {% empty %}
+
+                        <div class="wave-card active">
+
+                            <div class="wave-header">
+
+                                <h5>Gelombang I (Reguler)</h5>
+
+                                <span class="status-live btn-buka-gelombang" data-id="fallback" style="cursor:pointer;">Buka</span>
+
+                            </div>
+
+                            <p class="wave-date"><i class="fa-regular fa-calendar-days"></i> 1 Maret 2026 - 30 Juni 2026</p>
+
+                            <span class="wave-fee">Sesuai Syarat Ketentuan Berlaku</span>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="academic-features">
+
+        <div class="container academic-grid">
+
+            <div class="academic-left">
+
+                <span class="sub-title">Agenda Pembelajaran</span>
+
+                <h3>Kalender Akademik &amp; Agenda Terdekat</h3>
+
+                <p class="section-desc">Pantau timeline proses belajar mengajar serta agenda penting sekolah di sini.</p>
+
+                <div class="agenda-list">
+
+                    {% for agenda in agenda_sekolah %}
+
+                    <div class="agenda-item">
+
+                        <div class="agenda-date-box">
+
+                            <strong>{{ agenda.tanggal|date:"d" }}</strong>
+
+                            <span>{{ agenda.tanggal|date:"M" }}</span>
+
+                        </div>
+
+                        <div class="agenda-details">
+
+                            <h5>{{ agenda.nama_kegiatan }}</h5>
+
+                            <p><i class="fa-regular fa-clock"></i> {{ agenda.waktu|default:"07:30 - Selesai" }}</p>
+
+                        </div>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="agenda-item">
+
+                        <div class="agenda-date-box"><strong>17</strong><span>Jul</span></div>
+
+                        <div class="agenda-details">
+
+                            <h5>Hari Pertama Masuk Sekolah TA 2026/2027</h5>
+
+                            <p><i class="fa-regular fa-clock"></i> 07:00 WITA - Selesai</p>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+            <div class="academic-right">
+
+                <span class="sub-title">Puncak Prestasi</span>
+
+                <h3>Pencapaian Gemilang</h3>
+
+                <p class="section-desc">Apresiasi tinggi bagi para talenta muda yang mengharumkan nama almamater.</p>
+
+                <div class="achievement-grid-mini">
+
+                    {% for piala in prestasi %}
+
+                    <div class="achievement-card">
+
+                        <div class="ach-badge"><i class="fa-solid fa-trophy"></i> {{ piala.juara }}</div>
+
+                        <h5>{{ piala.nama_lomba }}</h5>
+
+                        <p>Dimenangkan oleh: <strong>{{ piala.nama_siswa }}</strong> ({{ piala.tingkat }})</p>
+
+                    </div>
+
+                    {% empty %}
+
+                    <div class="achievement-card">
+
+                        <div class="ach-badge"><i class="fa-solid fa-trophy"></i> Juara 1</div>
+
+                        <h5>Lomba Karya Tulis Ilmiah Nasional</h5>
+
+                        <p>Dimenangkan oleh: <strong>Tim Ilmu Pengetahuan Alam</strong> (Tingkat Provinsi)</p>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="news" id="news-section">
+
+        <div class="container">
+
+            <div class="header-flex">
+
+                <div>
+
+                    <span class="sub-title">Kabar Sekolah</span>
+
+                    <h3>Berita &amp; Artikel Informasi</h3>
+
+                    <p>Ikuti perkembangan informasi dan aktivitas terkini di SMA Negeri 5 Kota X.</p>
+
+                </div>
+
+            </div>
+
+            <div class="news-grid">
+
+                {% for item in berita %}
+
+                <article class="news-item">
+
+                    <div class="news-img">
+
+                        {% if item.gambar %}
+
+                        <!-- [OPTIMASI 5] lazy loading gambar berita -->
+
+                        <img src="{{ item.gambar.url }}" alt="{{ item.judul }}" loading="lazy">
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="news-content">
+
+                        <span class="news-date"><i class="fa-regular fa-calendar"></i> {{ item.tanggal_post }}</span>
+
+                        <h4>{{ item.judul }}</h4>
+
+                        <button type="button" class="btn-read-more" data-id="{{ item.id }}">
+
+                            Baca Selengkapnya <i class="fa-solid fa-angle-right"></i>
+
+                        </button>
+
+                    </div>
+
+                </article>
+
+                {% empty %}
+
+                <div class="empty-news-box">
+
+                    <i class="fa-regular fa-newspaper"></i>
+
+                    <p>Belum ada berita atau pengumuman terbaru yang diterbitkan saat ini.</p>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <footer class="main-footer">
+
+        <div class="container">
+
+            <div class="footer-grid">
+
+                <div class="footer-info">
+
+                    <a href="{% url 'web_publik:index' %}" class="footer-logo">
+
+                        <i class="fa-solid fa-graduation-cap"></i>SMA <span>NEGERI 5 KOTA X</span>
+
+                    </a>
+
+                    <p class="footer-desc">Sistem Informasi Akademik profesional yang berfokus pada efisiensi manajemen data sekolah serta keterbukaan informasi publik bagi seluruh warga SMA Negeri 5 Kota X.</p>
+
+                    <p class="footer-address">
+
+                        <i class="fa-solid fa-location-dot"></i>
+
+                        Jl. Pendidikan No. 123, Lombok Timur<br>Nusa Tenggara Barat, Indonesia
+
+                    </p>
+
+                </div>
+
+                <div class="footer-links">
+
+                    <h4>Tautan Cepat</h4>
+
+                    <ul>
+
+                        <li><a href="{% url 'web_publik:profil' %}"><i class="fa-solid fa-chevron-right"></i> Profil Sekolah</a></li>
+
+                        <li><a href="{% url 'web_publik:akademik_info' %}"><i class="fa-solid fa-chevron-right"></i> Akademik</a></li>
+
+                        <li><a href="{% url 'web_publik:galeri' %}"><i class="fa-solid fa-chevron-right"></i> Galeri</a></li>
+
+                        <li><a href="{% url 'web_publik:ppdb_online' %}"><i class="fa-solid fa-chevron-right"></i> PPDB Online</a></li>
+
+                    </ul>
+
+                </div>
+
+                <div class="footer-social">
+
+                    <h4>Media Sosial Resmi</h4>
+
+                    <p>Ikuti akun resmi kami untuk konten edukatif dan informasi terkini:</p>
+
+                    <div class="social-icons">
+
+                        <a href="https://www.instagram.com/alleeqyoouu?igsh=cjZhZjdnMXAyMXRu"
+
+                           target="_blank" class="social-btn instagram" title="Instagram">
+
+                            <i class="fa-brands fa-instagram"></i>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="copyright">
+
+                <p>&copy; 2026 <strong>SMA Negeri 5 </strong> · Powered by <strong>Kota X</strong>. All Rights Reserved.</p>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- MODAL BERITA -->
+
+    <div class="custom-modal-overlay" id="newsModalOverlay">
+
+        <div class="custom-modal-container">
+
+            <div class="custom-modal-header">
+
+                <h4 id="modalJudul">Memuat Berita...</h4>
+
+                <button type="button" class="custom-modal-close" id="closeModalX">&times;</button>
+
+            </div>
+
+            <div class="custom-modal-body">
+
+                <div class="custom-modal-img-wrapper" id="modalImgWrapper">
+
+                    <img id="modalGambar" src="" alt="Gambar Berita" class="custom-modal-img">
+
+                </div>
+
+                <div id="modalIsi" class="custom-modal-text">Sedang memproses data...</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- MODAL GELOMBANG PPDB -->
+
+    <div class="custom-modal-overlay" id="gelombangModalOverlay">
+
+        <div class="custom-modal-container">
+
+            <div class="custom-modal-header">
+
+                <h4 id="modalGelombangJudul">Memuat Detail Gelombang...</h4>
+
+                <button type="button" class="custom-modal-close" id="closeGelombangModalX">&times;</button>
+
+            </div>
+
+            <div class="custom-modal-body">
+
+                <div id="modalGelombangIsi" class="custom-modal-text">Sedang mengambil data...</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+    /* ═══════════════════════════════════════════════════════════
+   ORBIT CANVAS — Binary Star Style
+   [OPT 1] GPU layer via will-change + translateZ
+   [OPT 2] requestAnimationFrame
+   [OPT 3] IntersectionObserver — pause saat off-screen
+   [OPT 4] visibilitychange — pause saat tab hidden
+   [OPT 5] Satu clearRect per frame, no layout thrashing
+═══════════════════════════════════════════════════════════ */
+(function () {
+    'use strict';
+
+    const c = document.getElementById('orbit-canvas');
+    if (!c || window.innerWidth <= 768) { if (c) c.style.display = 'none'; return; }
+
+    const ctx = c.getContext('2d', { alpha: true });
+    let W, H, CX, CY;
+    let rafId = null;
+    let isVisible = true;
+    let isTabActive = true;
+
+    let resizeTimer;
+    function initSize() {
+        const hero = c.parentElement;
+        W  = c.width  = Math.round(hero.offsetWidth * 0.5);
+        H  = c.height = Math.round(hero.offsetHeight);
+        CX = W * 0.5;
+        CY = H * 0.5;
+    }
+    initSize();
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(initSize, 300);
+    }, { passive: true });
+
+    /* — Definisi bintang yang mengorbit — */
+    const STARS = [
+    {
+        orbitR: 90, angle: 0, speed: 0.004,
+        size: 12, trail: [],   // ← naikan dari 5
+        trailLen: 120, r: 200, g: 16, b: 46,
+    },
+    {
+        orbitR: 90, angle: Math.PI, speed: 0.004,
+        size: 10, trail: [],   // ← naikan dari 4
+        trailLen: 100, r: 232, g: 86, b: 26,
+    },
+    {
+        orbitR: 160, angle: Math.PI * 0.5, speed: 0.007,
+        size: 7, trail: [],    // ← naikan dari 2.5
+        trailLen: 80, r: 245, g: 197, b: 24,
+    },
+    {
+        orbitR: 160, angle: Math.PI * 1.5, speed: 0.007,
+        size: 6, trail: [],    // ← naikan dari 1.8
+        trailLen: 70, r: 200, g: 16, b: 46,
+    },
+    {
+        orbitR: 230, angle: Math.PI * 0.3, speed: 0.0025,
+        size: 5, trail: [],    // ← naikan dari 2
+        trailLen: 90, r: 244, g: 115, b: 31,
+    },
+    {
+        orbitR: 230, angle: Math.PI * 1.3, speed: 0.0025,
+        size: 5, trail: [],    // ← naikan dari 2
+        trailLen: 90, r: 244, g: 115, b: 31,
+    },
+];
+
+    /* — Cincin orbit samar — */
+    const RINGS = [90, 160, 230];
+
+    function draw() {
+        ctx.clearRect(0, 0, W, H);
+        ctx.save();
+        ctx.translate(CX, CY);
+
+        /* Cincin orbit */
+        RINGS.forEach(r => {
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(232,86,26,0.06)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        });
+
+        /* Titik pusat — glowing core */
+        const coreGrd = ctx.createRadialGradient(0, 0, 0, 0, 0, 28);
+        coreGrd.addColorStop(0, 'rgba(245,197,24,0.18)');
+        coreGrd.addColorStop(1, 'rgba(245,197,24,0)');
+        ctx.beginPath();
+        ctx.arc(0, 0, 28, 0, Math.PI * 2);
+        ctx.fillStyle = coreGrd;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(0, 0, 3, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(245,197,24,0.6)';
+        ctx.fill();
+
+        /* Setiap bintang */
+        STARS.forEach(s => {
+            s.angle += s.speed;
+
+            const x = Math.cos(s.angle) * s.orbitR;
+            const y = Math.sin(s.angle) * s.orbitR;
+
+            /* Simpan trail */
+            s.trail.push({ x, y });
+            if (s.trail.length > s.trailLen) s.trail.shift();
+
+            /* Gambar trail — opacity memudar ke belakang */
+            for (let i = 1; i < s.trail.length; i++) {
+                const prog  = i / s.trail.length;
+                const alpha = prog * 0.55;
+                const size  = s.size * prog * 0.7;
+                ctx.beginPath();
+                ctx.arc(s.trail[i].x, s.trail[i].y, Math.max(size, 0.5), 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${s.r},${s.g},${s.b},${alpha.toFixed(2)})`;
+                ctx.fill();
+            }
+
+            /* Glow bintang */
+            const glowR = s.size * 4;
+            const grd = ctx.createRadialGradient(x, y, 0, x, y, glowR);
+            grd.addColorStop(0, `rgba(${s.r},${s.g},${s.b},0.7)`);
+            grd.addColorStop(1, `rgba(${s.r},${s.g},${s.b},0)`);
+            ctx.beginPath();
+            ctx.arc(x, y, glowR, 0, Math.PI * 2);
+            ctx.fillStyle = grd;
+            ctx.fill();
+
+            /* Titik inti bintang */
+            ctx.beginPath();
+            ctx.arc(x, y, s.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgb(${s.r},${s.g},${s.b})`;
+            ctx.globalAlpha = 0.95;
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        });
+
+        ctx.restore();
+        rafId = requestAnimationFrame(draw);
+    }
+
+    function startDraw() {
+        if (!rafId && isVisible && isTabActive) rafId = requestAnimationFrame(draw);
+    }
+    function stopDraw() {
+        if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+        isTabActive = !document.hidden;
+        isTabActive ? startDraw() : stopDraw();
+    });
+
+    const orbitObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            isVisible = e.isIntersecting;
+            isVisible ? startDraw() : stopDraw();
+        });
+    }, { threshold: 0.05 });
+    orbitObs.observe(c.parentElement);
+
+    startDraw();
+})();
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           1. FIRE CANVAS — requestAnimationFrame + IntersectionObserver
+
+           [OPTIMASI 3] requestAnimationFrame — sync dengan 60/120Hz
+
+           [OPTIMASI 7] Canvas di-pause saat tab tidak aktif
+
+           [OPTIMASI 4] Spawn throttled via frame counter
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const canvas = document.getElementById('fire-canvas');
+
+        if (canvas && window.innerWidth > 768) {
+
+            const ctx   = canvas.getContext('2d');
+
+            let W = canvas.width  = window.innerWidth;
+
+            let H = canvas.height = window.innerHeight;
+
+
+
+            // [OPTIMASI 4] Debounce resize event — tidak jalankan setiap pixel
+
+            let resizeT;
+
+            window.addEventListener('resize', () => {
+
+                clearTimeout(resizeT);
+
+                resizeT = setTimeout(() => {
+
+                    W = canvas.width  = window.innerWidth;
+
+                    H = canvas.height = window.innerHeight;
+
+                }, 400);
+
+            });
+
+
+
+            const MAX    = 5;
+
+            const SPAWN  = 6;   // spawn setiap N frame
+
+            const CHANCE = 0.09;
+
+            const COLORS = ['#F5C518','#E8561A','#C8102E','#F4731F'];
+
+            const parts  = [];
+
+            let frame    = 0;
+
+            let rafId    = null;
+
+            let isVisible = true; // [OPTIMASI 7] track visibility
+
+
+
+            // [OPTIMASI 7] Pause canvas saat tab tidak aktif
+
+            document.addEventListener('visibilitychange', () => {
+
+                if (document.hidden) {
+
+                    isVisible = false;
+
+                    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+
+                } else {
+
+                    isVisible = true;
+
+                    if (!rafId) rafId = requestAnimationFrame(draw);
+
+                }
+
+            });
+
+
+
+            function spawn() {
+
+                if (parts.length >= MAX) return;
+
+                parts.push({
+
+                    x: Math.random() * W,
+
+                    y: H + 5,
+
+                    vx: (Math.random() - 0.5) * 0.5,
+
+                    vy: -(Math.random() * 0.9 + 0.4),
+
+                    r:  Math.random() * 1 + 0.3,
+
+                    a:  0.65 + Math.random() * 0.2,
+
+                    c:  COLORS[Math.random() * COLORS.length | 0],
+
+                    l:  0,
+
+                    ml: 100 + Math.random() * 70,
+
+                });
+
+            }
+
+
+
+            // [OPTIMASI 3] requestAnimationFrame — browser akan pause saat tab hidden
+
+            function draw() {
+
+                ctx.clearRect(0, 0, W, H);
+
+                frame++;
+
+
+
+                // [OPTIMASI 4] spawn throttled — hanya setiap SPAWN frame
+
+                if (frame % SPAWN === 0 && Math.random() < CHANCE) spawn();
+
+
+
+                for (let i = parts.length - 1; i >= 0; i--) {
+
+                    const p = parts[i];
+
+                    p.x += p.vx; p.y += p.vy; p.l++;
+
+                    const prog = p.l / p.ml;
+
+                    ctx.beginPath();
+
+                    ctx.arc(p.x, p.y, p.r * (1 - prog * 0.4), 0, 6.28);
+
+                    ctx.fillStyle   = p.c;
+
+                    ctx.globalAlpha = p.a * (1 - prog);
+
+                    ctx.fill();
+
+                    if (p.l >= p.ml) parts.splice(i, 1);
+
+                }
+
+                ctx.globalAlpha = 1;
+
+                rafId = requestAnimationFrame(draw);
+
+            }
+
+            rafId = requestAnimationFrame(draw);
+
+        } else if (canvas) {
+
+            canvas.style.display = 'none';
+
+        }
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           2. HEADER SCROLL — throttled
+
+           [OPTIMASI 4] Throttle: eksekusi max 1x per 100ms
+
+           [OPTIMASI 1] Hanya toggle class, bukan inline style
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const header = document.getElementById('mainHeader');
+
+        let lastScrollY = 0;
+
+        let scrollTicking = false;
+
+
+
+        function onScroll() {
+
+            lastScrollY = window.scrollY;
+
+            if (!scrollTicking) {
+
+                // [OPTIMASI 3] rAF untuk sync dengan render cycle
+
+                requestAnimationFrame(() => {
+
+                    header.classList.toggle('scrolled', lastScrollY > 30);
+
+                    scrollTicking = false;
+
+                });
+
+                scrollTicking = true;
+
+            }
+
+        }
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           3. TOAST — auto close 5s
+
+        ═══════════════════════════════════════════════════════════ */
+
+        setTimeout(() => {
+
+            document.querySelectorAll('.toast-item').forEach(t => {
+
+                // [OPTIMASI 1] transform + opacity — bukan height/margin
+
+                t.style.transition = 'opacity .5s, transform .5s';
+
+                t.style.opacity    = '0';
+
+                t.style.transform  = 'translateX(100%)';
+
+                setTimeout(() => t.remove(), 500);
+
+            });
+
+        }, 5000);
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           4. SMOOTH SCROLL
+
+        ═══════════════════════════════════════════════════════════ */
+
+        document.querySelectorAll('.scroll-link').forEach(l => {
+
+            l.addEventListener('click', function(e) {
+
+                e.preventDefault();
+
+                const t = document.querySelector(this.getAttribute('href'));
+
+                if (t) window.scrollTo({
+
+                    top: t.getBoundingClientRect().top + pageYOffset - 80,
+
+                    behavior: 'smooth'
+
+                });
+
+            });
+
+        });
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           5. SCROLL REVEAL — IntersectionObserver
+
+           [OPTIMASI 7] Observe & unobserve — tidak tracking selamanya
+
+           [OPTIMASI 2] Setelah animasi selesai, hapus will-change
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const revealObs = new IntersectionObserver(entries => {
+
+            entries.forEach(e => {
+
+                if (e.isIntersecting) {
+
+                    e.target.classList.add('reveal-visible');
+
+                    revealObs.unobserve(e.target);
+
+                    // [OPTIMASI 2] Hapus will-change setelah animasi selesai
+
+                    e.target.addEventListener('transitionend', function cleanup() {
+
+                        e.target.style.willChange = 'auto';
+
+                        e.target.removeEventListener('transitionend', cleanup);
+
+                    }, { once: true });
+
+                }
+
+            });
+
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           6. HERO VISIBILITY — aktifkan animasi floatHero + rings
+
+           [OPTIMASI 7] IntersectionObserver: animasi hanya jalan saat hero visible
+
+           [OPTIMASI 5] Lazy activate: tidak semua animasi berjalan dari awal
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const heroSection = document.getElementById('heroSection');
+
+        if (heroSection) {
+
+            const heroObs = new IntersectionObserver(entries => {
+
+                entries.forEach(e => {
+
+                    if (e.isIntersecting) {
+
+                        heroSection.classList.add('hero-visible');
+
+                    } else {
+
+                        // [OPTIMASI 7] Stop animasi saat hero off-screen
+
+                        heroSection.classList.remove('hero-visible');
+
+                    }
+
+                });
+
+            }, { threshold: 0.1 });
+
+            heroObs.observe(heroSection);
+
+        }
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           7. TICKER PAUSE — IntersectionObserver
+
+           [OPTIMASI 7] Ticker berhenti saat di luar viewport
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const ticker = document.getElementById('tickerContainer');
+
+        if (ticker) {
+
+            const tickerObs = new IntersectionObserver(entries => {
+
+                entries.forEach(e => {
+
+                    ticker.classList.toggle('ticker-paused', !e.isIntersecting);
+
+                });
+
+            }, { threshold: 0 });
+
+            tickerObs.observe(ticker);
+
+        }
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           8. SCROLL-TRIGGERED ANIMATIONS untuk news items & stat items
+
+           [OPTIMASI 7] Lazy-activate: animasi ::before news-item & stat-item
+
+           hanya diaktifkan saat elemen masuk viewport
+
+           [OPTIMASI 5] Tidak preload semua class di awal
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const lazyAnimObs = new IntersectionObserver(entries => {
+
+            entries.forEach(e => {
+
+                if (e.isIntersecting) {
+
+                    e.target.classList.add('anim-ready');
+
+                    lazyAnimObs.unobserve(e.target);
+
+                }
+
+            });
+
+        }, { threshold: 0.15 });
+
+
+
+        document.querySelectorAll('.news-item, .stat-item, .achievement-card, .agenda-item').forEach(el => {
+
+            lazyAnimObs.observe(el);
+
+        });
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           9. SCROLL COUNTER ANIMATION untuk stats
+
+           [OPTIMASI 7] Hanya jalankan saat stats bar visible
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const statsBar = document.querySelector('.stats-bar');
+
+        if (statsBar) {
+
+            let statsAnimated = false;
+
+            const statsObs = new IntersectionObserver(entries => {
+
+                entries.forEach(e => {
+
+                    if (e.isIntersecting && !statsAnimated) {
+
+                        statsAnimated = true;
+
+                        // [OPTIMASI 3] rAF untuk smooth counter animation
+
+                        animateCounters();
+
+                        statsObs.unobserve(statsBar);
+
+                    }
+
+                });
+
+            }, { threshold: 0.3 });
+
+            statsObs.observe(statsBar);
+
+        }
+
+
+
+        function animateCounters() {
+
+            document.querySelectorAll('.stat-info strong').forEach(el => {
+
+                const target = parseInt(el.textContent.replace(/\D/g,''), 10);
+
+                if (isNaN(target) || target === 0) return;
+
+                const duration = 1200;
+
+                const start    = performance.now();
+
+                const suffix   = el.textContent.replace(/[\d]/g, '').trim();
+
+
+
+                function update(now) {
+
+                    const elapsed  = now - start;
+
+                    const progress = Math.min(elapsed / duration, 1);
+
+                    // Easing: ease-out cubic
+
+                    const eased = 1 - Math.pow(1 - progress, 3);
+
+                    el.textContent = Math.round(eased * target) + suffix;
+
+                    if (progress < 1) requestAnimationFrame(update);
+
+                }
+
+                requestAnimationFrame(update);
+
+            });
+
+        }
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           10. Helper: lock / unlock scroll
+
+        ═══════════════════════════════════════════════════════════ */
+
+        function lockScroll() {
+
+            const sw = window.innerWidth - document.documentElement.clientWidth;
+
+            document.body.style.paddingRight = sw + 'px';
+
+            document.body.style.overflow = 'hidden';
+
+        }
+
+        function unlockScroll() {
+
+            document.body.style.overflow = '';
+
+            document.body.style.paddingRight = '';
+
+        }
+                /* ═══════════════════════════════════════════════════════════
+
+           11. MODAL BERITA
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const newsOverlay = document.getElementById('newsModalOverlay');
+
+
+
+        function tutupModal() { newsOverlay.classList.remove('active'); unlockScroll(); }
+
+
+
+        document.querySelectorAll('.btn-read-more').forEach(btn => {
+
+            btn.addEventListener('click', function() {
+
+                const id = this.getAttribute('data-id');
+
+                document.getElementById('modalJudul').innerText = 'Memuat...';
+
+                document.getElementById('modalImgWrapper').style.display = 'none';
+
+                document.getElementById('modalIsi').innerHTML = '<p>Mengambil data...</p>';
+
+                newsOverlay.classList.add('active');
+
+                lockScroll();
+
+
+
+                fetch(`/berita/detail-json/${id}/`)
+
+                    .then(r => { if (!r.ok) throw new Error('Gagal memuat.'); return r.json(); })
+
+                    .then(d => {
+
+                        document.getElementById('modalJudul').innerText = d.judul;
+
+                        if (d.gambar_url) {
+
+                            document.getElementById('modalGambar').src = d.gambar_url;
+
+                            document.getElementById('modalImgWrapper').style.display = 'block';
+
+                        }
+
+                        document.getElementById('modalIsi').innerHTML = `<p>${d.isi}</p>`;
+
+                    })
+
+                    .catch(err => {
+
+                        document.getElementById('modalIsi').innerHTML =
+
+                            `<p style="color:var(--fire-orange)">${err.message}</p>`;
+
+                    });
+
+            });
+
+        });
+
+
+
+        document.getElementById('closeModalX').addEventListener('click', tutupModal);
+
+        newsOverlay.addEventListener('click', e => { if (e.target === newsOverlay) tutupModal(); });
+
+
+
+        /* ═══════════════════════════════════════════════════════════
+
+           12. MODAL GELOMBANG PPDB
+
+        ═══════════════════════════════════════════════════════════ */
+
+        const glbOverlay = document.getElementById('gelombangModalOverlay');
+
+
+
+        function tutupGelombang() { glbOverlay.classList.remove('active'); unlockScroll(); }
+
+
+
+        document.querySelectorAll('.btn-buka-gelombang').forEach(btn => {
+
+            btn.addEventListener('click', function() {
+
+                const id = this.getAttribute('data-id');
+
+                document.getElementById('modalGelombangJudul').innerText = 'Detail Gelombang';
+
+                document.getElementById('modalGelombangIsi').innerHTML = '<p>Mengambil data...</p>';
+
+                glbOverlay.classList.add('active');
+
+                lockScroll();
+
+
+
+                if (id === 'fallback') {
+
+                    document.getElementById('modalGelombangJudul').innerText = 'Gelombang I (Reguler)';
+
+                    document.getElementById('modalGelombangIsi').innerHTML = `
+
+                        <div style="line-height:1.85">
+
+                            <p><strong style="color:var(--fire-gold)"><i class="fa-regular fa-calendar-days"></i> Masa Pendaftaran:</strong><br>1 Maret 2026 – 30 Juni 2026</p>
+
+                            <p style="margin-top:12px"><strong style="color:var(--fire-gold)"><i class="fa-solid fa-money-bill-wave"></i> Status Biaya:</strong><br>Bebas Biaya Pendaftaran Jalur Reguler</p>
+
+                            <hr style="border:0;border-top:1px solid rgba(255,255,255,0.08);margin:18px 0">
+
+                            <p style="color:var(--fire-orange);font-weight:700;margin-bottom:10px"><i class="fa-solid fa-file-invoice"></i> Dokumen yang Disiapkan:</p>
+
+                            <ul style="padding-left:20px;color:rgba(255,255,255,0.65);margin-bottom:22px">
+
+                                <li>Kartu Keluarga &amp; Akta Kelahiran (Scan)</li>
+
+                                <li>Surat Keterangan Lulus / Rapor Terakhir</li>
+
+                                <li>Pas Foto digital formal terbaru</li>
+
+                            </ul>
+
+                            <a href="{% url 'web_publik:ppdb_online' %}" class="btn btn-ppdb" style="display:inline-flex;text-decoration:none">
+
+                                <span>Mulai Isi Formulir</span> <i class="fa-solid fa-arrow-right"></i>
+
+                            </a>
+
+                        </div>`;
+
+                    return;
+
+                }
+
+
+
+                fetch(`/ppdb/gelombang-detail-json/${id}/`)
+                    .then(r => { if (!r.ok) throw new Error('Gagal memuat.'); return r.json(); })
+                    .then(d => {
+                        document.getElementById('modalGelombangJudul').innerText = d.nama;
+                        document.getElementById('modalGelombangIsi').innerHTML = `
+    <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px 16px;">
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+                    <i class="fa-regular fa-calendar-days" style="color:var(--fire-orange);font-size:.85rem;"></i>
+                    <span style="font-size:10px;color:var(--silver);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Periode</span>
+                </div>
+                <div style="font-size:.92rem;font-weight:700;color:var(--white);line-height:1.4;">${d.tanggal_mulai}<br><span style="color:var(--silver);font-weight:500;font-size:.8rem;">s/d</span><br>${d.tanggal_selesai}</div>
+            </div>
+            <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:14px 16px;">
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px;">
+                    <i class="fa-solid fa-money-bill-wave" style="color:var(--fire-gold);font-size:.85rem;"></i>
+                    <span style="font-size:10px;color:var(--silver);font-weight:700;text-transform:uppercase;letter-spacing:.06em;">Estimasi Biaya</span>
+                </div>
+                <div style="font-size:1.1rem;font-weight:800;color:var(--fire-gold);">Rp ${d.biaya}</div>
+            </div>
+        </div>
+        ${d.deskripsi ? `
+        <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:14px 16px;display:flex;gap:10px;align-items:flex-start;">
+            <i class="fa-solid fa-circle-info" style="color:var(--fire-orange);font-size:.85rem;margin-top:2px;flex-shrink:0;"></i>
+            <span style="font-size:.88rem;color:rgba(255,255,255,.55);line-height:1.6;">${d.deskripsi}</span>
+        </div>` : ''}
+        <a href="${d.url_daftar}" class="btn btn-ppdb" style="display:inline-flex;text-decoration:none;justify-content:center;margin-top:4px;">
+            <span>Lanjut ke Formulir</span> <i class="fa-solid fa-pen-to-square"></i>
+        </a>
+    </div>`;
+                    })
+
+                    .catch(err => {
+
+                        document.getElementById('modalGelombangIsi').innerHTML =
+
+                            `<p style="color:var(--fire-orange)">${err.message}</p>`;
+
+                    });
+
+            });
+
+        });
+
+
+
+        document.getElementById('closeGelombangModalX').addEventListener('click', tutupGelombang);
+
+        glbOverlay.addEventListener('click', e => { if (e.target === glbOverlay) tutupGelombang(); });
+
+
+
+    });
+
+    </script>
+
+</body>
+
+</html> 
+

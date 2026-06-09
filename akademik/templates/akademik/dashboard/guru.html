@@ -1,0 +1,663 @@
+{% extends 'akademik/base.html' %}
+
+{% block title %}Dashboard Guru SMA NEGERI 5 KOTA X{% endblock %}
+{% block page_title %}Dashboard Guru{% endblock %}
+{% block page_subtitle %}Sistem Informasi Akademik & Manajemen KBM Terpadu{% endblock %}
+
+{% block content %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --red:#C8102E; --deep:#8B0000; --orange:#E8561A; --amber:#F4731F; --gold:#F5C518;
+    --black:#0D0D0D; --dark:#161616; --silver:#9E9E9E; --white:#FFFFFF; --green:#22c55e;
+    --grad:linear-gradient(135deg,#8B0000,#E8561A 55%,#F5C518);
+    --bfire:1px solid rgba(232,86,26,.28); --bdim:1px solid rgba(255,255,255,.06);
+    --font:'Plus Jakarta Sans',sans-serif; --disp:'Bebas Neue',sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  .g-page {
+    width: 100%; max-width: 100%; overflow-x: hidden;
+    padding-bottom: 48px; font-family: var(--font); color: var(--white);
+  }
+
+  /* ── HERO BAR ── */
+  .hero-bar {
+    background: var(--dark); border: var(--bfire);
+    border-top: 3px solid var(--orange); border-radius: 18px;
+    padding: 28px 32px; margin-bottom: 24px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bar::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 5% 30%, rgba(200,16,46,.12) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(245,197,24,.06) 0%, transparent 50%);
+  }
+  .hero-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .hero-avatar {
+    width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0;
+    background: var(--grad); border: 2px solid rgba(232,86,26,.4);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-avatar i { color: #fff; font-size: 24px; }
+  .hero-info { flex: 1; min-width: 0; }
+  .hero-greeting { font-size: 11px; color: rgba(255,255,255,.5); font-weight: 500; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 3px; }
+  .hero-name { font-family: var(--disp); font-size: 1.8rem; letter-spacing: 1px; color: #fff; margin-bottom: 6px; word-break: break-word; }
+  .hero-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,.08); color: rgba(255,255,255,.8);
+    padding: 3px 10px; border-radius: 99px; font-size: 11.5px; font-weight: 500;
+  }
+  .hero-stats {
+    display: flex; flex-wrap: wrap; gap: 0;
+    margin-top: 20px; border-top: 1px solid rgba(255,255,255,.1);
+    padding-top: 16px; position: relative; z-index: 1;
+  }
+  .hstat { flex: 1; min-width: 80px; text-align: center; padding: 8px 12px; border-right: 1px solid rgba(255,255,255,.1); }
+  .hstat:last-child { border-right: none; }
+  .hstat-val { font-family: var(--disp); font-size: 2.2rem; color: #fff; line-height: 1; }
+  .hstat-lbl { font-size: 11px; color: rgba(255,255,255,.5); margin-top: 2px; }
+
+  /* ── MAIN GRID ── */
+  .g-grid { display: grid; grid-template-columns: 1fr 300px; gap: 20px; width: 100%; }
+
+  /* ── PANEL CARD ── */
+  .panel-card {
+    background: var(--dark); border: var(--bdim); border-radius: 18px;
+    padding: 22px; position: relative; overflow: hidden; margin-bottom: 20px;
+  }
+  .panel-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--grad);
+  }
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px; padding-bottom: 14px; border-bottom: var(--bdim);
+    flex-wrap: wrap; gap: 8px;
+  }
+  .panel-title {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--disp); font-size: .85rem; letter-spacing: 1.5px;
+    color: var(--white); text-transform: uppercase;
+  }
+  .panel-title-icon {
+    width: 34px; height: 34px;
+    background: rgba(232,86,26,.12); border: var(--bfire);
+    border-radius: 9px; display: flex; align-items: center; justify-content: center;
+    font-size: .9rem; color: var(--orange);
+  }
+  .panel-title-icon.green-ic  { background: rgba(34,197,94,.1); border-color: rgba(34,197,94,.3); color: var(--green); }
+  .panel-title-icon.gold-ic   { background: rgba(245,197,24,.1); border-color: rgba(245,197,24,.3); color: var(--gold); }
+  .panel-title-icon.blue-ic   { background: rgba(59,130,246,.1); border-color: rgba(59,130,246,.3); color: #60a5fa; }
+  .panel-title-icon.silver-ic { background: rgba(158,158,158,.1); border-color: rgba(158,158,158,.2); color: var(--silver); }
+
+  /* ── PROFIL GURU ── */
+  .guru-profile { display: flex; align-items: center; gap: 18px; }
+  .avatar-wrap {
+    position: relative; width: 68px; height: 68px; border-radius: 50%;
+    cursor: pointer; overflow: hidden; flex-shrink: 0;
+    background: rgba(232,86,26,.12); border: 2px solid rgba(232,86,26,.3);
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color .2s, transform .2s;
+  }
+  .avatar-wrap:hover { border-color: var(--orange); transform: scale(1.04); }
+  .avatar-wrap img  { width: 100%; height: 100%; object-fit: cover; }
+  .avatar-wrap > i  { font-size: 28px; color: var(--orange); }
+  .avatar-overlay {
+    position: absolute; inset: 0; background: rgba(0,0,0,.5);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .2s;
+  }
+  .avatar-wrap:hover .avatar-overlay { opacity: 1; }
+  .avatar-overlay i { color: #fff; font-size: 16px; }
+  .guru-info { min-width: 0; }
+  .guru-name   { font-size: 17px; font-weight: 700; color: var(--white); margin-bottom: 4px; word-break: break-word; }
+  .guru-nip    { font-size: 12.5px; color: var(--silver); font-family: 'DM Mono', monospace; margin-bottom: 3px; }
+  .guru-bidang {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(232,86,26,.1); color: var(--amber);
+    border: 1px solid rgba(232,86,26,.28); border-radius: 99px;
+    padding: 3px 10px; font-size: 11.5px; font-weight: 600; margin-top: 2px;
+  }
+
+  /* ── DATA TABLE ── */
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+  .data-table thead tr { background: rgba(255,255,255,.03); }
+  .data-table thead th {
+    padding: 10px 12px; text-align: left;
+    font-family: var(--disp); font-size: .72rem; letter-spacing: 1.5px;
+    color: var(--amber); text-transform: uppercase;
+    border-bottom: 1px solid rgba(232,86,26,.3);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .data-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); }
+  .data-table tbody tr:last-child { border-bottom: none; }
+  .data-table tbody tr:hover { background: rgba(232,86,26,.04); }
+  .data-table td { padding: 10px 12px; color: rgba(255,255,255,.7); overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── BADGE ── */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-blue  { background: rgba(59,130,246,.12); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+  .badge-green { background: rgba(34,197,94,.12); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
+  .badge-amber { background: rgba(245,197,24,.12); color: var(--gold); border: 1px solid rgba(245,197,24,.3); }
+  .badge-red   { background: rgba(200,16,46,.12); color: #f87171; border: 1px solid rgba(200,16,46,.3); }
+
+  /* ── HARI CHIP ── */
+  .hari-chip {
+    display: inline-block; padding: 3px 10px; border-radius: 99px;
+    font-size: 11.5px; font-weight: 700;
+    background: rgba(232,86,26,.1); color: var(--amber);
+    border: 1px solid rgba(232,86,26,.2);
+  }
+
+  /* ── PENGUMUMAN ── */
+  .info-item { padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .info-item:last-child { border-bottom: none; }
+  .info-item-bar { display: flex; gap: 12px; align-items: flex-start; }
+  .info-accent { width: 3px; border-radius: 99px; background: var(--orange); flex-shrink: 0; align-self: stretch; min-height: 40px; }
+  .info-title { font-size: 13.5px; font-weight: 700; color: var(--white); margin-bottom: 4px; word-break: break-word; }
+  .info-isi   { font-size: 12.5px; color: var(--silver); line-height: 1.5; }
+  .info-date  { font-size: 11px; color: rgba(255,255,255,.35); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+
+  /* ── QUICK ACCESS ── */
+  .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .quick-btn {
+    text-decoration: none; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; padding: 16px 10px; border-radius: 12px;
+    background: rgba(232,86,26,.08); color: var(--amber);
+    font-size: 12px; font-weight: 700;
+    border: 1px solid rgba(232,86,26,.2);
+    transition: background .15s, transform .15s;
+  }
+  .quick-btn:hover { background: rgba(232,86,26,.18); transform: translateY(-1px); }
+  .quick-btn i { font-size: 20px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state { text-align: center; padding: 28px 12px; color: var(--silver); font-size: 13px; }
+  .empty-state i { font-size: 26px; display: block; margin-bottom: 8px; opacity: .5; }
+
+  /* ── ERROR BANNER ── */
+  .error-banner {
+    display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px;
+    border-radius: 10px; background: rgba(200,16,46,.08); border: 1px solid rgba(200,16,46,.28);
+    font-size: 13px; color: #f87171;
+  }
+
+  /* ── PERILAKU FORM ── */
+  .perilaku-filter-row {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-end;
+    margin-bottom: 18px;
+  }
+  .pf-group { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+  .pf-group label { font-size: 11px; color: rgba(255,255,255,.5); font-weight: 600; letter-spacing: .4px; text-transform: uppercase; }
+  .pf-select, .pf-date {
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    color: var(--white); border-radius: 8px; padding: 8px 12px;
+    font-size: 13px; font-family: var(--font); width: 100%;
+    transition: border-color .15s;
+  }
+  .pf-select:focus, .pf-date:focus { outline: none; border-color: var(--orange); }
+  .pf-select option { background: #1e1e1e; }
+
+  .pf-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 9px 18px; border-radius: 8px; font-size: 12.5px; font-weight: 700;
+    cursor: pointer; border: none; transition: background .15s, transform .1s;
+    font-family: var(--font); white-space: nowrap;
+  }
+  .pf-btn-load  { background: rgba(59,130,246,.15); color: #60a5fa; border: 1px solid rgba(59,130,246,.3); }
+  .pf-btn-load:hover  { background: rgba(59,130,246,.28); }
+  .pf-btn-save  { background: rgba(34,197,94,.15); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
+  .pf-btn-save:hover  { background: rgba(34,197,94,.28); transform: translateY(-1px); }
+
+  /* Perilaku table */
+  .perilaku-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .perilaku-table thead th {
+    padding: 9px 12px; text-align: left;
+    font-family: var(--disp); font-size: .72rem; letter-spacing: 1.5px;
+    color: var(--amber); text-transform: uppercase;
+    border-bottom: 1px solid rgba(232,86,26,.3);
+    background: rgba(255,255,255,.03);
+  }
+  .perilaku-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); }
+  .perilaku-table tbody tr:last-child { border-bottom: none; }
+  .perilaku-table tbody tr:hover { background: rgba(232,86,26,.03); }
+  .perilaku-table td { padding: 10px 12px; vertical-align: middle; }
+
+  /* Radio perilaku */
+  .radio-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .radio-pill { display: none; }
+  .radio-label {
+    cursor: pointer; padding: 4px 12px; border-radius: 99px; font-size: 12px; font-weight: 700;
+    border: 1px solid rgba(255,255,255,.12); color: rgba(255,255,255,.45);
+    background: rgba(255,255,255,.04); transition: all .12s; user-select: none;
+  }
+  .radio-pill[value="Baik"]:checked   + .radio-label { background: rgba(34,197,94,.18); color: #4ade80; border-color: rgba(34,197,94,.5); }
+  .radio-pill[value="Cukup"]:checked  + .radio-label { background: rgba(245,197,24,.15); color: var(--gold); border-color: rgba(245,197,24,.45); }
+  .radio-pill[value="Kurang"]:checked + .radio-label { background: rgba(200,16,46,.15); color: #f87171; border-color: rgba(200,16,46,.45); }
+  .radio-label:hover { border-color: rgba(255,255,255,.3); color: rgba(255,255,255,.75); }
+
+  /* Catatan input */
+  .catatan-input {
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1);
+    color: rgba(255,255,255,.8); border-radius: 7px; padding: 5px 9px;
+    font-size: 12px; font-family: var(--font); width: 100%; max-width: 200px;
+    transition: border-color .15s;
+  }
+  .catatan-input:focus { outline: none; border-color: var(--orange); }
+
+  /* Skor badge */
+  .skor-pill {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 24px; border-radius: 6px; font-size: 12px; font-weight: 700;
+  }
+  .skor-high   { background: rgba(34,197,94,.15); color: #4ade80; }
+  .skor-mid    { background: rgba(245,197,24,.13); color: var(--gold); }
+  .skor-low    { background: rgba(200,16,46,.13); color: #f87171; }
+  .skor-zero   { background: rgba(158,158,158,.1); color: var(--silver); }
+
+  /* Info panel — no jadwal selected */
+  .perilaku-hint {
+    text-align: center; padding: 32px 16px; color: var(--silver); font-size: 13px;
+    border: 1px dashed rgba(255,255,255,.12); border-radius: 12px;
+  }
+  .perilaku-hint i { font-size: 28px; display: block; margin-bottom: 10px; color: rgba(232,86,26,.5); }
+
+  /* Save bar */
+  .save-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    padding: 14px 16px; border-radius: 10px;
+    background: rgba(34,197,94,.06); border: 1px solid rgba(34,197,94,.2);
+    margin-top: 16px;
+  }
+  .save-bar-info { font-size: 13px; color: rgba(255,255,255,.65); }
+  .save-bar-info strong { color: #4ade80; }
+
+  /* Divider */
+  .section-divider {
+    height: 1px; background: rgba(255,255,255,.06);
+    margin: 20px 0;
+  }
+
+  @media (max-width: 860px) {
+    .g-grid { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; }
+    .perilaku-filter-row { flex-direction: column; }
+  }
+  @media (max-width: 600px) {
+    .hero-name { font-size: 1.4rem; }
+    .data-table thead th, .data-table td { padding: 8px; font-size: 12px; }
+    .panel-header { flex-direction: column; align-items: flex-start; }
+    .guru-profile { flex-direction: column; align-items: flex-start; }
+    .radio-group { gap: 4px; }
+    .catatan-input { max-width: 100%; }
+  }
+</style>
+
+<div class="g-page">
+
+  <!-- ── HERO BAR ── -->
+<div class="hero-bar">
+  <div class="hero-top">
+
+    <!-- Avatar dengan upload foto -->
+    <div class="avatar-wrap" onclick="document.getElementById('inputFotoProfil').click();"
+         style="width:64px;height:64px;border-radius:50%;flex-shrink:0;">
+      {% if guru.foto %}
+        <img id="displayFotoGuru" src="{{ guru.foto.url }}" alt="Foto Profil">
+      {% else %}
+        <i id="iconFotoGuru" class="fas fa-chalkboard-teacher"></i>
+        <img id="displayFotoGuru" src="" alt="Foto Profil" style="display:none;">
+      {% endif %}
+      <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+    </div>
+
+    <form id="formFotoAJAX" enctype="multipart/form-data" style="display:none;">
+      {% csrf_token %}
+      <input type="file" id="inputFotoProfil" accept="image/*" onchange="unggahFotoProfil(this)">
+    </form>
+
+    <div class="hero-info">
+      <div class="hero-greeting">Dashboard Pendidik</div>
+      <div class="hero-name">{{ guru.nama_lengkap|default:"Guru" }}</div>
+      <div class="hero-badges">
+        <span class="hero-badge"><i class="fas fa-id-badge"></i> NIP: {{ guru.nip|default:"—" }}</span>
+        {% if guru.bidang_studi %}
+        <span class="hero-badge"><i class="fas fa-book" style="font-size:10px;"></i> {{ guru.bidang_studi }}</span>
+        {% endif %}
+        <span class="hero-badge"><i class="fas fa-circle" style="font-size:7px;color:#4ade80;"></i> Aktif</span>
+      </div>
+    </div>
+
+  </div>
+  <div class="hero-stats">
+    <div class="hstat">
+      <div class="hstat-val">{{ total_sesi }}</div>
+      <div class="hstat-lbl">Sesi Kontrak</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val" style="font-size:1.3rem;color:#4ade80;">Aktif</div>
+      <div class="hstat-lbl">E-Learning & CBT</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val" style="font-size:1rem;letter-spacing:.5px;">2025/2026</div>
+      <div class="hstat-lbl">Tahun Ajaran Ganjil</div>
+    </div>
+  </div>
+</div>
+
+  <div class="g-grid">
+
+    <!-- ══════════════ KIRI ══════════════ -->
+    <div>
+
+      
+
+      <!-- JADWAL MENGAJAR -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <div class="panel-title-icon gold-ic"><i class="fas fa-calendar-alt"></i></div>
+            Jadwal Mengajar ({{ total_sesi }} Sesi)
+          </div>
+          <span class="badge badge-green"><i class="fas fa-circle" style="font-size:7px;"></i> Aktif</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <colgroup>
+              <col style="width:14%">
+              <col style="width:22%">
+              <col style="width:28%">
+              <col style="width:20%">
+              <col style="width:16%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Hari</th>
+                <th>Jam</th>
+                <th>Mata Pelajaran</th>
+                <th>Kelas</th>
+                <th>Ruang</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for jadwal in jadwal_mengajar %}
+              <tr>
+                <td><span class="hari-chip">{{ jadwal.hari|capfirst }}</span></td>
+                <td style="font-family:'DM Mono',monospace;font-size:12px;">{{ jadwal.jam_mulai }} – {{ jadwal.jam_selesai }}</td>
+                <td style="font-weight:500;color:var(--white);">{{ jadwal.mata_pelajaran }}</td>
+                <td><span class="badge badge-blue">{{ jadwal.kelas }}</span></td>
+                <td style="color:var(--silver);">{{ jadwal.ruangan|default:"—" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5">
+                  <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    Belum ada jadwal mengajar yang ditugaskan.
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ══ PANEL NILAI PERILAKU SISWA ══ -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <div class="panel-title-icon blue-ic"><i class="fas fa-star-half-alt"></i></div>
+            Input Nilai Perilaku Siswa
+          </div>
+          {% if jadwal_terpilih_perilaku %}
+          <span class="badge badge-amber">
+            <i class="fas fa-chalkboard"></i>
+            {{ jadwal_terpilih_perilaku.kelas }} — {{ jadwal_terpilih_perilaku.mata_pelajaran }}
+          </span>
+          {% endif %}
+        </div>
+
+        <!-- Filter: Pilih Jadwal & Tanggal -->
+        <form method="get" action="">
+          <div class="perilaku-filter-row">
+            <div class="pf-group" style="flex:2;">
+              <label><i class="fas fa-calendar-check" style="font-size:10px;"></i> Jadwal Kelas</label>
+              <select name="jadwal_perilaku" class="pf-select">
+                <option value="">— Pilih Jadwal —</option>
+                {% for j in jadwal_mengajar %}
+                <option value="{{ j.id }}"
+                  {% if jadwal_terpilih_perilaku and jadwal_terpilih_perilaku.id == j.id %}selected{% endif %}>
+                  {{ j.hari }} | {{ j.kelas }} | {{ j.mata_pelajaran }} ({{ j.jam_mulai|time:"H:i" }}–{{ j.jam_selesai|time:"H:i" }})
+                </option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="pf-group">
+              <label><i class="fas fa-calendar-day" style="font-size:10px;"></i> Tanggal Sesi</label>
+              <input type="date" name="tanggal_perilaku" class="pf-date"
+                value="{{ tanggal_terpilih_perilaku|date:'Y-m-d' }}">
+            </div>
+            <button type="submit" class="pf-btn pf-btn-load">
+              <i class="fas fa-search"></i> Muat Siswa
+            </button>
+          </div>
+        </form>
+
+        {% if siswa_perilaku_list %}
+        <!-- Form simpan nilai perilaku -->
+        <form method="post" action="">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="simpan_perilaku_guru">
+          <input type="hidden" name="jadwal_id" value="{{ jadwal_terpilih_perilaku.id }}">
+          <input type="hidden" name="tanggal" value="{{ tanggal_terpilih_perilaku|date:'Y-m-d' }}">
+
+          <div style="overflow-x:auto;">
+            <table class="perilaku-table">
+              <thead>
+                <tr>
+                  <th style="width:32px;">#</th>
+                  <th>Nama Siswa</th>
+                  <th>Penilaian</th>
+                  <th>Skor Global</th>
+                  <th>Catatan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in siswa_perilaku_list %}
+                <tr>
+                  <td style="color:rgba(255,255,255,.35);font-size:12px;">{{ forloop.counter }}</td>
+                  <td>
+                    <span style="font-weight:600;color:var(--white);">{{ item.siswa.nama_lengkap }}</span>
+                    <div style="font-size:11px;color:var(--silver);font-family:'DM Mono',monospace;">{{ item.siswa.nisn }}</div>
+                  </td>
+                  <td>
+                    <div class="radio-group">
+                      {% for pilihan in PERILAKU_CHOICES %}
+                      <input type="radio" class="radio-pill" id="p_{{ item.siswa.pk }}_{{ pilihan }}"
+                        name="perilaku_{{ item.siswa.pk }}" value="{{ pilihan }}"
+                        {% if item.kategori == pilihan %}checked{% endif %}>
+                      <label class="radio-label" for="p_{{ item.siswa.pk }}_{{ pilihan }}">{{ pilihan }}</label>
+                      {% endfor %}
+                    </div>
+                  </td>
+                  <td>
+                    {% if item.skor_global >= 85 %}
+                      <span class="skor-pill skor-high">{{ item.skor_global }}</span>
+                    {% elif item.skor_global >= 60 %}
+                      <span class="skor-pill skor-mid">{{ item.skor_global }}</span>
+                    {% elif item.skor_global > 0 %}
+                      <span class="skor-pill skor-low">{{ item.skor_global }}</span>
+                    {% else %}
+                      <span class="skor-pill skor-zero">—</span>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <input type="text" class="catatan-input"
+                      name="catatan_perilaku_{{ item.siswa.pk }}"
+                      value="{{ item.catatan|default:'' }}"
+                      placeholder="Catatan singkat...">
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="save-bar">
+            <div class="save-bar-info">
+              <i class="fas fa-info-circle" style="color:#60a5fa;margin-right:4px;"></i>
+              Penilaian untuk <strong>{{ siswa_perilaku_list|length }} siswa</strong>
+              — {{ jadwal_terpilih_perilaku.kelas }} —
+              <strong>{{ tanggal_terpilih_perilaku|date:"d M Y" }}</strong>
+            </div>
+            <button type="submit" class="pf-btn pf-btn-save">
+              <i class="fas fa-save"></i> Simpan Semua Nilai Perilaku
+            </button>
+          </div>
+        </form>
+
+        {% elif jadwal_terpilih_perilaku %}
+        <div class="perilaku-hint">
+          <i class="fas fa-users-slash"></i>
+          Tidak ada siswa di kelas <strong>{{ jadwal_terpilih_perilaku.kelas }}</strong>.
+        </div>
+
+        {% else %}
+        <div class="perilaku-hint">
+          <i class="fas fa-hand-point-up"></i>
+          Pilih jadwal dan tanggal sesi di atas, lalu klik <strong>Muat Siswa</strong>
+          untuk mulai mengisi nilai perilaku.
+
+        </div>
+        {% endif %}
+
+      </div>
+
+    </div>
+
+    <!-- ══════════════ KANAN ══════════════ -->
+    <div>
+
+      <!-- PENGUMUMAN -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <div class="panel-title-icon gold-ic"><i class="fas fa-bullhorn"></i></div>
+            Pengumuman Internal
+          </div>
+        </div>
+        {% for info in pengumuman %}
+        <div class="info-item">
+          <div class="info-item-bar">
+            <div class="info-accent"></div>
+            <div style="min-width:0;">
+              <div class="info-title">{{ info.judul }}</div>
+              <div class="info-isi">{{ info.isi|truncatewords:15 }}</div>
+              <div class="info-date"><i class="far fa-clock"></i> {{ info.created_at|date:"d M Y" }}</div>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+        <div class="empty-state">
+          <i class="fas fa-bell-slash"></i>
+          Tidak ada pengumuman aktif saat ini.
+        </div>
+        {% endfor %}
+      </div>
+
+
+      <!-- LEGENDA PERILAKU -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div class="panel-title">
+            <div class="panel-title-icon silver-ic"><i class="fas fa-info-circle"></i></div>
+            Panduan Nilai Perilaku
+          </div>
+        </div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.6);line-height:1.9;">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+            <span><span style="color:#4ade80;font-weight:700;">Baik</span> — Aktif, sopan, disiplin</span>
+            <span class="skor-pill skor-high" style="font-size:11px;">100</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);">
+            <span><span style="color:var(--gold);font-weight:700;">Cukup</span> — Ada catatan minor</span>
+            <span class="skor-pill skor-mid" style="font-size:11px;">70</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span><span style="color:#f87171;font-weight:700;">Kurang</span> — Perlu pembinaan</span>
+            <span class="skor-pill skor-low" style="font-size:11px;">30</span>
+          </div>
+          <div style="margin-top:10px;font-size:11.5px;color:rgba(255,255,255,.35);">
+            Nilai perilaku akhir = rata-rata dari semua penilaian semua guru.
+            Bobot ke rapor = <strong style="color:var(--amber);">15%</strong>.
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function unggahFotoProfil(input) {
+  if (input.files && input.files[0]) {
+    var formData = new FormData();
+    formData.append('foto_profil', input.files[0]);
+    formData.append('csrfmiddlewaretoken', document.querySelector('[name=csrfmiddlewaretoken]').value);
+    fetch("{% url 'akademik:update_foto_guru' %}", {
+      method: 'POST',
+      body: formData,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        var img  = document.getElementById('displayFotoGuru');
+        var icon = document.getElementById('iconFotoGuru');
+        img.src = data.url;
+        img.style.display = 'block';
+        if (icon) { icon.style.display = 'none'; }
+        alert(data.message);
+      } else {
+        alert('Gagal mengunggah foto: ' + data.message);
+      }
+    })
+    .catch(function() { alert('Terjadi kesalahan sistem saat mengunggah gambar.'); });
+  }
+}
+</script>
+
+<script>
+(function () {
+  'use strict';
+
+  var KEY = 'guru_scroll_pos';
+
+  window.addEventListener('load', function () {
+    var pos = localStorage.getItem(KEY);
+    if (pos) {
+      window.scrollTo({ top: parseInt(pos), behavior: 'instant' });
+    }
+  });
+
+  document.addEventListener('submit', function () {
+    localStorage.setItem(KEY, window.scrollY);
+  });
+
+  window.addEventListener('scroll', function () {
+    if (window.scrollY === 0) {
+      localStorage.removeItem(KEY);
+    }
+  }, { passive: true });
+
+}());
+</script>
+
+
+{% endblock %}

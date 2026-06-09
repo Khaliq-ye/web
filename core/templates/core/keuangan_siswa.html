@@ -1,0 +1,706 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Staf Keuangan — SMA Negeri 5 Kota X</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --fire-red:    #C8102E;
+            --fire-deep:   #8B0000;
+            --fire-orange: #E8561A;
+            --fire-amber:  #F4731F;
+            --fire-gold:   #F5C518;
+            --coal-black:  #0D0D0D;
+            --coal-dark:   #161616;
+            --coal-mid:    #1F1F1F;
+            --silver:      #9E9E9E;
+            --white:       #FFFFFF;
+            --grad-fire:   linear-gradient(135deg, #8B0000 0%, #E8561A 50%, #F5C518 100%);
+            --grad-text:   linear-gradient(90deg, #E8561A, #F5C518, #C8102E);
+            --grad-side:   linear-gradient(180deg, #0D0500 0%, #1A0800 50%, #0D0500 100%);
+            --font-body:   'Plus Jakarta Sans', sans-serif;
+            --font-disp:   'Bebas Neue', sans-serif;
+            --border-fire: 1px solid rgba(232,86,26,0.28);
+            --border-dim:  1px solid rgba(255,255,255,0.06);
+            --green:       #22c55e;
+            --red-soft:    #f87171;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--coal-black);
+            color: var(--white);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 260px;
+            background: var(--grad-side);
+            border-right: var(--border-fire);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100vh;
+            position: sticky;
+            top: 0;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 200;
+        }
+        /* Garis kanan sidebar — statis, tanpa animasi */
+        .sidebar::after {
+            content: '';
+            position: absolute; top:0; right:0; bottom:0;
+            width: 2px;
+            background: rgba(232,86,26,0.35);
+            pointer-events: none;
+        }
+
+        .sidebar-brand {
+            padding: 22px 18px 18px;
+            border-bottom: var(--border-fire);
+            background: rgba(0,0,0,0.4);
+            position: relative; z-index: 1; flex-shrink: 0;
+        }
+        /* Garis bawah brand — statis */
+        .sidebar-brand::after {
+            content: '';
+            position: absolute; bottom:0; left:0; right:0;
+            height: 1px;
+            background: rgba(232,86,26,0.35);
+        }
+
+        .brand-logo {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none; margin-bottom: 4px;
+        }
+        .brand-logo-icon {
+            width: 36px; height: 36px;
+            background: var(--grad-fire);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; flex-shrink: 0;
+        }
+        .brand-name {
+            font-family: var(--font-disp);
+            font-size: 1.1rem; letter-spacing: 2px;
+            color: var(--white); line-height: 1.15;
+        }
+        @keyframes textShimmer {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .brand-name span {
+            background: var(--grad-text);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShimmer 3.5s linear infinite;
+        }
+        .brand-sub {
+            font-size: 0.68rem; color: rgba(255,255,255,0.3);
+            letter-spacing: 0.5px; padding-left: 46px;
+        }
+
+        .sidebar-section-label {
+            padding: 18px 18px 6px;
+            font-family: var(--font-disp);
+            font-size: 0.72rem; letter-spacing: 2.5px;
+            color: var(--fire-amber); text-transform: uppercase;
+            position: relative; z-index: 1;
+        }
+
+        .sidebar-nav {
+            flex: 1; padding: 0 10px;
+            display: flex; flex-direction: column; gap: 3px;
+            position: relative; z-index: 1;
+        }
+
+        .nav-item {
+            display: flex; align-items: center; gap: 11px; padding: 10px 13px;
+            border-radius: 9px; text-decoration: none;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.86rem; font-weight: 500;
+            transition: background 0.2s, color 0.2s;
+        }
+        .nav-item:hover { background: rgba(232,86,26,0.08); color: var(--white); }
+        .nav-item.active {
+            background: rgba(232,86,26,0.12); color: var(--fire-gold);
+            border: var(--border-fire);
+        }
+        .nav-item i { width: 18px; text-align: center; font-size: 0.9rem; flex-shrink: 0; }
+
+        .nav-item-db {
+            display: flex; align-items: center; gap: 11px; padding: 12px 14px;
+            border-radius: 9px; text-decoration: none;
+            background: var(--grad-fire);
+            color: var(--white);
+            font-size: 0.88rem; font-weight: 700; letter-spacing: 0.5px;
+            margin: 4px 0;
+            transition: opacity 0.2s;
+        }
+        .nav-item-db:hover { opacity: 0.85; }
+        .nav-item-db i { width: 18px; text-align: center; font-size: 1rem; }
+
+        .sidebar-footer {
+            padding: 14px 10px;
+            border-top: var(--border-dim);
+            position: relative; z-index: 1; flex-shrink: 0;
+        }
+
+        /* Role badge — tanpa glow animasi */
+        .role-badge {
+            background: rgba(34,197,94,0.08);
+            border: 1px solid rgba(34,197,94,0.25);
+            border-radius: 10px; padding: 10px 12px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 9px;
+        }
+        .role-badge i { color: var(--green); }
+        .role-badge-text strong { color: var(--white); display: block; font-size: 0.83rem; }
+        .role-badge-text span  { color: var(--silver); font-size: 0.72rem; }
+
+        .btn-logout {
+            display: flex; align-items: center; justify-content: center; gap: 9px;
+            width: 100%; padding: 10px;
+            background: rgba(200,16,46,0.12);
+            border: 1px solid rgba(200,16,46,0.28);
+            color: #ff6b6b; border-radius: 9px;
+            font-family: var(--font-body); font-size: 0.86rem; font-weight: 600;
+            cursor: pointer; transition: background 0.2s, color 0.2s;
+        }
+        .btn-logout:hover {
+            background: rgba(200,16,46,0.25);
+            color: var(--white);
+        }
+
+        /* ── MAIN ── */
+        .main-wrap {
+            flex: 1; display: flex; flex-direction: column;
+            overflow-x: hidden; min-width: 0;
+        }
+
+        .topbar {
+            background: rgba(13,13,13,0.96);
+            border-bottom: var(--border-fire);
+            height: 62px;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px;
+            position: sticky; top: 0; z-index: 100;
+        }
+        /* Garis bawah topbar — statis */
+        .topbar::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: rgba(232,86,26,0.25);
+            pointer-events: none;
+        }
+
+        .topbar-left {
+            font-family: var(--font-disp);
+            font-size: 1rem; letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.5);
+        }
+        .topbar-left strong {
+            background: var(--grad-text);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShimmer 3.5s linear infinite;
+        }
+
+        .topbar-right { display: flex; align-items: center; gap: 14px; }
+
+        /* Dot status — statis, tanpa pulse */
+        .topbar-dot {
+            width: 8px; height: 8px; background: var(--green);
+            border-radius: 50%;
+        }
+        .topbar-status { font-size: 0.78rem; color: var(--silver); }
+
+        .page-content {
+            padding: 28px; flex: 1; position: relative;
+        }
+
+        /* Grid overlay — dihapus */
+
+        /* BANNER */
+        .dashboard-banner {
+            background: var(--coal-dark);
+            border: var(--border-fire);
+            border-radius: 18px; padding: 30px 34px; margin-bottom: 28px;
+            position: relative; overflow: hidden; z-index: 1;
+        }
+        /* Fire top bar banner — statis */
+        .dashboard-banner::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--grad-fire);
+            pointer-events: none;
+        }
+
+        .banner-label {
+            font-family: var(--font-disp);
+            font-size: 0.75rem; letter-spacing: 3px;
+            color: var(--green); text-transform: uppercase; margin-bottom: 8px;
+        }
+        .dashboard-banner h2 {
+            font-family: var(--font-disp);
+            font-size: 2rem; letter-spacing: 1.5px; line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        /* Teks banner — shimmer */
+        .dashboard-banner h2 span {
+            background: var(--grad-text);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: textShimmer 3.5s linear infinite;
+        }
+        .dashboard-banner p {
+            color: rgba(255,255,255,0.5); font-size: 0.9rem;
+            max-width: 560px; line-height: 1.68;
+        }
+        .dashboard-banner p strong { color: var(--fire-gold); }
+        .dashboard-banner p em { color: var(--green); font-style: normal; font-weight: 600; }
+
+        /* STATS */
+        .stats-row {
+            display: grid; grid-template-columns: repeat(4,1fr);
+            gap: 16px; margin-bottom: 28px;
+            position: relative; z-index: 1;
+        }
+        .stat-chip {
+            background: var(--coal-dark);
+            border: var(--border-dim);
+            border-radius: 14px; padding: 20px 16px;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 8px; text-align: center;
+            transition: all 0.35s ease;
+            position: relative; overflow: hidden;
+        }
+        .stat-chip::before {
+            content: '';
+            position: absolute; bottom: 0; left: 0;
+            width: 0; height: 2px;
+            background: var(--grad-fire);
+            transition: width 0.5s ease;
+        }
+        .stat-chip:hover::before { width: 100%; }
+        .stat-chip:hover {
+            border-color: rgba(232,86,26,0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(200,16,46,0.25);
+        }
+        .stat-chip i { font-size: 1.3rem; transition: color 0.3s; }
+        .stat-chip:hover i { color: var(--fire-gold) !important; }
+        .stat-chip strong {
+            font-family: var(--font-disp);
+            font-size: 1.9rem; color: var(--white); line-height: 1;
+        }
+        .stat-chip span { font-size: 0.72rem; color: var(--silver); text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-chip .ic-orange { color: var(--fire-orange); }
+        .stat-chip .ic-green  { color: var(--green); }
+        .stat-chip .ic-red    { color: var(--red-soft); }
+        .stat-chip .ic-gold   { color: var(--fire-gold); }
+
+        /* SECTION TITLE */
+        .section-title {
+            font-family: var(--font-disp);
+            font-size: 0.82rem; letter-spacing: 2.5px;
+            color: var(--fire-orange); text-transform: uppercase;
+            margin-bottom: 16px; margin-top: 8px;
+            display: flex; align-items: center; gap: 12px;
+            position: relative; z-index: 1;
+        }
+        .section-title::after {
+            content: ''; flex: 1; height: 1px;
+            background: rgba(232,86,26,0.2);
+        }
+
+        /* TABLE CARD */
+        .keu-card {
+            background: var(--coal-dark);
+            border: var(--border-dim);
+            border-radius: 18px; overflow: hidden;
+            position: relative; z-index: 1;
+            margin-bottom: 24px;
+        }
+        /* Fire top bar card — statis */
+        .keu-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--grad-fire);
+        }
+
+        .keu-card-toolbar {
+            padding: 16px 22px;
+            border-bottom: var(--border-dim);
+            display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+            background: rgba(255,255,255,0.02);
+        }
+        .keu-search {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.04);
+            border: var(--border-dim);
+            border-radius: 9px; padding: 8px 14px;
+            flex: 1; max-width: 300px;
+            transition: border-color 0.2s;
+        }
+        .keu-search:focus-within { border-color: rgba(232,86,26,0.5); }
+        .keu-search input {
+            background: none; border: none; outline: none;
+            color: var(--white); font-size: 0.83rem;
+            font-family: var(--font-body); width: 100%;
+        }
+        .keu-search input::placeholder { color: var(--silver); }
+        .keu-search i { color: var(--silver); font-size: 0.8rem; }
+
+        .keu-select {
+            background: rgba(255,255,255,0.06);
+            border: var(--border-dim);
+            border-radius: 9px; padding: 8px 28px 8px 12px;
+            color: var(--white);
+            font-family: var(--font-body); font-size: 0.82rem;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239E9E9E'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+        .keu-select:focus { outline: none; border-color: rgba(232,86,26,0.5); }
+        .keu-select option { background: #1F1F1F; color: var(--white); }
+
+        .keu-count {
+            font-size: 0.78rem; color: var(--silver);
+            background: rgba(232,86,26,0.08);
+            border: 1px solid rgba(232,86,26,0.18);
+            padding: 4px 14px; border-radius: 50px; white-space: nowrap;
+            margin-left: auto;
+        }
+        .keu-count strong { color: var(--fire-gold); }
+
+        /* TABLE — hover row dihapus */
+        .keu-table-wrap { overflow-x: auto; }
+        .keu-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+        .keu-table thead tr {
+            background: rgba(232,86,26,0.08);
+            border-bottom: 1px solid rgba(232,86,26,0.2);
+        }
+        .keu-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; table-layout: fixed; }
+        .keu-table colgroup col:nth-child(1) { width: 48px; }
+        .keu-table colgroup col:nth-child(2) { width: 18%; }
+        .keu-table colgroup col:nth-child(3) { width: 14%; }
+        .keu-table colgroup col:nth-child(4) { width: 14%; }
+        .keu-table colgroup col:nth-child(5) { width: 13%; }
+        .keu-table colgroup col:nth-child(6) { width: 13%; }
+        .keu-table colgroup col:nth-child(7) { width: 130px; }
+        .keu-table colgroup col:nth-child(8) { width: 140px; }
+        .keu-table thead th {
+            padding: 12px 18px; color: var(--fire-gold);
+            font-family: var(--font-disp);
+            font-size: 0.75rem; letter-spacing: 1.5px;
+            text-transform: uppercase; text-align: left;
+            font-weight: 400; white-space: nowrap; overflow: hidden;
+        }
+        .keu-table tbody tr {
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        /* Tidak ada hover effect pada baris tabel */
+        .keu-table tbody td {
+            padding: 12px 18px;
+            color: rgba(255,255,255,0.65); vertical-align: middle;
+        }
+        .keu-table tbody td:first-child { color: var(--white); font-weight: 600; }
+        .keu-table tbody tr:last-child td { border-bottom: none; }
+
+        .no-data {
+            text-align: center; padding: 40px 20px;
+            color: var(--silver); font-size: 0.87rem;
+        }
+        .no-data i { display: block; font-size: 2rem; margin-bottom: 10px; opacity: 0.2; }
+
+        /* BADGES */
+        .t-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 50px;
+            font-size: 0.7rem; font-weight: 700;
+        }
+        .t-badge.green { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+        .t-badge.red   { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+
+        /* ACTION BUTTONS */
+        .btn-toggle {
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            padding: 6px 13px; border-radius: 8px;
+            font-size: 0.76rem; font-weight: 700;
+            cursor: pointer; border: none;
+            font-family: var(--font-body);
+            transition: background 0.2s, color 0.2s;
+            white-space: nowrap;
+            min-width: 120px;
+        }
+        .btn-toggle.tandai-lunas {
+            background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.4);
+            color: #4ade80;
+        }
+        .btn-toggle.tandai-lunas:hover {
+            background: rgba(34,197,94,0.28);
+            color: var(--white);
+        }
+        .btn-toggle.batalkan {
+            background: rgba(239,68,68,0.12);
+            border: 1px solid rgba(239,68,68,0.35);
+            color: #f87171;
+        }
+        .btn-toggle.batalkan:hover {
+            background: rgba(239,68,68,0.25);
+            color: var(--white);
+        }
+
+        /* SOP */
+        .sop-card {
+            background: rgba(34,197,94,0.04);
+            border: 1px solid rgba(34,197,94,0.18);
+            border-radius: 14px; padding: 22px 26px;
+            display: flex; gap: 16px; align-items: flex-start;
+            position: relative; overflow: hidden; z-index: 1;
+            margin-top: 8px;
+        }
+        /* SOP top bar — statis */
+        .sop-card::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #22c55e, #16a34a, #22c55e);
+        }
+        .sop-icon {
+            width: 42px; height: 42px;
+            background: rgba(34,197,94,0.1);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; color: var(--green); flex-shrink: 0;
+        }
+        .sop-card h4 { font-size: 0.92rem; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+        .sop-card p  { color: rgba(255,255,255,0.45); font-size: 0.83rem; line-height: 1.7; }
+        .sop-card strong { color: var(--fire-gold); }
+
+        /* RESPONSIVE */
+        @media (max-width: 1100px) { .stats-row { grid-template-columns: repeat(2,1fr); } }
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: static; }
+            .sidebar::after { display: none; }
+            .stats-row { grid-template-columns: repeat(2,1fr); }
+            .page-content { padding: 16px; }
+        }
+        @media (max-width: 480px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <a href="{% url 'web_publik:index' %}" class="brand-logo">
+            <div class="brand-logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="brand-name">SMA N 5 <span>KOTA X</span></div>
+        </a>
+        <div class="brand-sub">Sistem Informasi Akademik</div>
+    </div>
+
+    <div class="sidebar-section-label">Menu Keuangan</div>
+    <nav class="sidebar-nav">
+        <a href="{% url 'core:keuangan_siswa' %}" class="nav-item active">
+            <i class="fa-solid fa-wallet"></i> Dashboard Keuangan
+        </a>
+        <a href="/admin/" target="_blank" class="nav-item-db">
+            <i class="fa-solid fa-database"></i>
+            <span>Kelola Database</span>
+            <i class="fa-solid fa-arrow-up-right-from-square" style="margin-left:auto;font-size:0.7rem;opacity:0.7;"></i>
+        </a>
+        <a href="{% url 'web_publik:index' %}" class="nav-item">
+            <i class="fa-solid fa-globe"></i> Lihat Web Publik
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="role-badge">
+            <i class="fa-solid fa-coins"></i>
+            <div class="role-badge-text">
+                <strong>{{ request.user.username }}</strong>
+                <span>Staf Keuangan</span>
+            </div>
+        </div>
+        <form action="{% url 'web_publik:logout' %}" method="post" style="margin:0">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Keluar / Logout
+            </button>
+        </form>
+    </div>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<div class="main-wrap">
+    <div class="topbar">
+        <div class="topbar-left">Keuangan Siswa &nbsp;|&nbsp; <strong>SMA Negeri 5 Kota X</strong></div>
+        <div class="topbar-right">
+            <div class="topbar-dot"></div>
+            <span class="topbar-status">Otoritas Keuangan Aktif</span>
+        </div>
+    </div>
+
+    <div class="page-content">
+
+        <!-- Banner -->
+        <div class="dashboard-banner">
+            <div class="banner-label"><i class="fa-solid fa-coins"></i> &nbsp;Panel Keuangan</div>
+            <h2>Dashboard <span>Keuangan Siswa</span></h2>
+            <p>Selamat bertugas, <strong>{{ request.user.username }}</strong>.
+               Pantau dan kelola status tagihan seluruh siswa.
+               Gunakan tombol <em>Tandai Lunas</em> untuk mengubah status pembayaran secara langsung.</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-row">
+            <div class="stat-chip">
+                <i class="fa-solid fa-file-invoice-dollar ic-orange"></i>
+                <strong>{{ total_tagihan }}</strong>
+                <span>Total Tagihan</span>
+            </div>
+            <div class="stat-chip">
+                <i class="fa-solid fa-circle-check ic-green"></i>
+                <strong>{{ total_lunas }}</strong>
+                <span>Sudah Lunas</span>
+            </div>
+            <div class="stat-chip">
+                <i class="fa-solid fa-circle-xmark ic-red"></i>
+                <strong>{{ total_belum_lunas }}</strong>
+                <span>Belum Lunas</span>
+            </div>
+            <div class="stat-chip">
+                <i class="fa-solid fa-money-bill-wave ic-gold"></i>
+                <strong style="font-size:1.1rem;">{{ total_nominal }}</strong>
+                <span>Total Nominal</span>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="section-title"><i class="fa-solid fa-table"></i> Data Keuangan Siswa</div>
+        <div class="keu-card">
+            <div class="keu-card-toolbar">
+                <form method="GET" style="display:contents">
+                    <div class="keu-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" name="q" value="{{ request.GET.q }}"
+                               placeholder="Cari nama atau NISN siswa…">
+                    </div>
+                    <select name="status" class="keu-select" onchange="this.form.submit()">
+                        <option value="">Semua Status</option>
+                        <option value="true"  {% if request.GET.status == 'true'  %}selected{% endif %}>Lunas</option>
+                        <option value="false" {% if request.GET.status == 'false' %}selected{% endif %}>Belum Lunas</option>
+                    </select>
+                    <select name="jenis" class="keu-select" onchange="this.form.submit()">
+                        <option value="">Semua Jenis</option>
+                        {% for j in jenis_tagihan_list %}
+                        <option value="{{ j }}" {% if request.GET.jenis == j %}selected{% endif %}>{{ j }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                <div class="keu-count">Menampilkan <strong>{{ keuangan_list|length }}</strong> data</div>
+            </div>
+            <div class="keu-table-wrap">
+                <table class="keu-table">
+                    <colgroup>
+                        <col><col><col><col><col><col><col><col>
+                    </colgroup>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Nama Siswa</th>
+                            <th>NISN</th>
+                            <th>Jenis Tagihan</th>
+                            <th>Jumlah</th>
+                            <th>Tgl Tagihan</th>
+                            <th>Status</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in keuangan_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.siswa.nama_lengkap }}</td>
+                            <td>{{ item.siswa.nisn }}</td>
+                            <td>{{ item.jenis_tagihan }}</td>
+                            <td>Rp {{ item.jumlah|floatformat:0 }}</td>
+                            <td>{{ item.tanggal_tagihan|date:"d M Y" }}</td>
+                            <td>
+                                {% if item.status_lunas %}
+                                    <span class="t-badge green"><i class="fa-solid fa-check"></i> Lunas</span>
+                                {% else %}
+                                    <span class="t-badge red"><i class="fa-solid fa-xmark"></i> Belum Lunas</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <form method="POST" action="{% url 'core:toggle_lunas' item.id %}" style="margin:0">
+                                    {% csrf_token %}
+                                    {% if item.status_lunas %}
+                                    <button type="submit" class="btn-toggle batalkan">
+                                        <i class="fa-solid fa-rotate-left"></i> Batalkan
+                                    </button>
+                                    {% else %}
+                                    <button type="submit" class="btn-toggle tandai-lunas">
+                                        <i class="fa-solid fa-check"></i> Tandai Lunas
+                                    </button>
+                                    {% endif %}
+                                </form>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="no-data">
+                                <i class="fa-regular fa-folder-open"></i>
+                                Tidak ada data keuangan ditemukan.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SOP -->
+        <div class="sop-card">
+            <div class="sop-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div>
+                <h4>SOP Pengelolaan Keuangan</h4>
+                <p>Setiap perubahan status pembayaran terekam otomatis oleh sistem.
+                   Pastikan bukti pembayaran fisik sudah diverifikasi sebelum menekan <strong>Tandai Lunas</strong>.
+                   Selalu tekan <strong>Logout</strong> jika meninggalkan komputer kerja.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

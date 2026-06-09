@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran Online — SMA Negeri 5 Kota X</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style-ppdb.css' %}?v=10.0">
+</head>
+<body>
+
+<!-- Canvas DIHAPUS TOTAL — CSS sudah set display:none, tag ini pun tidak perlu -->
+
+{% include 'includes/_messages.html' %}
+
+<div class="page-split">
+
+    <!-- ══════════════════════════════
+         LEFT PANEL — branding
+    ══════════════════════════════ -->
+    <div class="split-left">
+        <div class="fire-top"></div>
+        <div class="split-left-grid"></div>
+        <div class="split-orb-1"></div>
+        <div class="split-orb-2"></div>
+
+
+        <div class="split-left-content">
+
+            <a href="{% url 'web_publik:index' %}" class="split-logo">
+                <img src="{% static 'images/logo-profil-sekolah.png' %}"
+                     alt="Logo SMA Negeri 5" onerror="this.style.display='none'">
+                <span class="split-logo-name">SMA <em>Negeri 5 Kota X</em></span>
+            </a>
+
+            <div class="split-headline">
+                <span class="split-eyebrow">
+                    <i class="fa-solid fa-graduation-cap"></i> Penerimaan Siswa Baru
+                </span>
+                <h1>Daftar<br><span class="split-highlight">Sekarang</span></h1>
+                <p>Bergabunglah bersama ribuan siswa berprestasi di SMA Negeri 5 Kota X. Pendaftaran cepat, mudah, dan sepenuhnya online.</p>
+            </div>
+
+            <div class="split-features">
+                <div class="split-feature">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Gratis biaya pendaftaran</span>
+                </div>
+                <div class="split-feature">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Proses seleksi transparan</span>
+                </div>
+                <div class="split-feature">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span>Tahun Ajaran 2026 / 2027</span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         RIGHT PANEL — form
+    ══════════════════════════════ -->
+    <div class="split-right">
+        <div class="split-right-inner">
+
+            <div class="form-heading">
+                <h2>Formulir Pendaftaran</h2>
+                <p>Lengkapi semua kolom dengan data yang benar dan sesuai dokumen resmi.</p>
+            </div>
+
+            <form method="POST" class="ppdb-form">
+                {% csrf_token %}
+
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fa-solid fa-user-graduate"></i> Identitas Calon Siswa
+                    </h3>
+                    <div class="input-grid">
+                        <div class="input-group full-width">
+                            <label>Nama Lengkap</label>
+                            <input type="text" name="nama" value="{{ form_data.nama }}"
+                                   placeholder="Masukkan nama lengkap sesuai ijazah" required>
+                        </div>
+                        <div class="input-group">
+                            <label>NISN</label>
+                            <input type="text" name="nisn" value="{{ form_data.nisn }}"
+                                   placeholder="10 Digit NISN"
+                                   pattern="\d{10}" maxlength="10"
+                                   inputmode="numeric" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Asal Sekolah</label>
+                            <input type="text" name="asal_sekolah" value="{{ form_data.asal }}"
+                                   placeholder="Nama SMP Asal" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3 class="section-title">
+                        <i class="fa-solid fa-phone-volume"></i> Informasi Kontak
+                    </h3>
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>Alamat Email</label>
+                            <input type="email" name="email" value="{{ form_data.email }}"
+                                   placeholder="contoh@domain.com" required>
+                        </div>
+                        <div class="input-group">
+                            <label>Nomor WhatsApp</label>
+                            <input type="tel" name="hp" value="{{ form_data.hp }}"
+                                   placeholder="08xxxxxxxxxx" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn-primary">
+                        Proses Pendaftaran <i class="fa-solid fa-arrow-right-long"></i>
+                    </button>
+                    <a href="{% url 'web_publik:index' %}" class="btn-link">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali ke Beranda
+                    </a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    /* Toast auto close 5s — transform + opacity, zero reflow */
+    setTimeout(function () {
+        document.querySelectorAll('.toast-item').forEach(function (t) {
+            t.style.transition = 'opacity .5s, transform .5s';
+            t.style.opacity = '0';
+            t.style.transform = 'translateX(100%)';
+            setTimeout(function () { t.remove(); }, 500);
+        });
+    }, 5000);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,368 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informasi Akademik SMA Negeri 5 Kota X</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}?v=5.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5.0">
+    <link rel="stylesheet" href="{% static 'css/academic.css' %}?v=5.0">
+</head>
+<body>
+
+    <header class="main-header" id="mainHeader">
+        <div class="container header-wrapper">
+            <a href="{% url 'web_publik:index' %}" class="logo" style="display:flex;align-items:center;gap:12px;">
+                <img src="{% static 'images/logo-profil-sekolah.png' %}" alt="Logo SMA Negeri 5 Kota X"
+                     style="height:36px;width:auto;object-fit:contain;">
+                SMA<span> Negeri 5 Kota X</span>
+            </a>
+            <nav class="nav-bar">
+                <ul class="nav-menu">
+                    <li><a href="{% url 'web_publik:index' %}">Beranda</a></li>
+                    <li><a href="{% url 'web_publik:profil' %}">Profil</a></li>
+                    <li><a href="{% url 'web_publik:akademik_info' %}" class="active">Akademik</a></li>
+                    <li><a href="{% url 'web_publik:galeri' %}">Galeri</a></li>
+                    <li><a href="{% url 'web_publik:index' %}#news-section" class="scroll-link">Berita</a></li>
+                    <li>
+                        <a href="{% url 'web_publik:login_portal' %}" class="btn-portal-fixed">
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-hero">
+        <div class="page-hero-grid-overlay"></div>
+        <div class="orb orb-hero-1"></div>
+        <div class="orb orb-hero-2"></div>
+        <div class="orb orb-hero-3"></div>
+
+        <div class="container page-hero-inner">
+            <span class="page-hero-label">
+                <i class="fa-solid fa-graduation-cap"></i> Layanan &amp; Informasi Resmi
+            </span>
+            <h1>Akademik <span class="highlight">Terpadu</span></h1>
+            <div class="breadcrumb">
+                <a href="{% url 'web_publik:index' %}">Beranda</a>
+                <i class="fa-solid fa-chevron-right"></i>
+                <span class="current-page">Akademik</span>
+            </div>
+        </div>
+    </section>
+
+    <main class="sub-layout">
+        <div class="container">
+            <div class="sub-grid">
+
+                <!-- ═══════════════════════════════════════
+                     KONTEN UTAMA
+                ═══════════════════════════════════════ -->
+                <div class="sub-main">
+
+                    <!-- Kurikulum -->
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-graduation-cap"></i> Kurikulum &amp; Sistem Belajar</h3>
+                        <div class="rich-text-content">
+                            <p>SMA Negeri 5 Kota X menerapkan <strong>Kurikulum Merdeka Belajar</strong> yang diintegrasikan dengan materi akademik berbasis kebutuhan era digital. Proses evaluasi berkala dilakukan secara digital penuh (CBT) melalui portal internal untuk menjamin transparansi nilai dan akuntabilitas belajar.</p>
+                        </div>
+                        <div class="curriculum-features">
+                            <div class="feat-box">
+                                <i class="fa-solid fa-laptop-code"></i>
+                                <h5>70% Pembelajaran Aktif</h5>
+                                <p>Siswa difokuskan pada pemecahan masalah nyata melalui pendekatan Project-Based Learning.</p>
+                            </div>
+                            <div class="feat-box">
+                                <i class="fa-solid fa-certificate"></i>
+                                <h5>Sertifikasi Kompetensi</h5>
+                                <p>Pendampingan ujian sertifikasi keahlian berskala nasional sebelum kelulusan.</p>
+                            </div>
+                            <div class="feat-box">
+                                <i class="fa-solid fa-chart-line"></i>
+                                <h5>Asesmen Berbasis Data</h5>
+                                <p>Penilaian formatif dan sumatif berbasis portofolio digital yang terukur dan transparan.</p>
+                            </div>
+                            <div class="feat-box">
+                                <i class="fa-solid fa-users-gear"></i>
+                                <h5>Pembelajaran Kolaboratif</h5>
+                                <p>Sesi diskusi kelompok dan kolaborasi lintas kelas difasilitasi secara aktif.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jadwal Pelajaran -->
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-calendar-day"></i> Jadwal Pelajaran &amp; Program Keahlian</h3>
+                        <p class="card-desc">Gunakan tombol tab di bawah untuk melihat rincian mata pelajaran berdasarkan program keahlian unggulan sekolah.</p>
+
+                        <div class="academic-tabs">
+                            <button class="tab-btn active" data-panel="tkj-panel">
+                                <i class="fa-solid fa-network-wired"></i> Teknik Komputer Jaringan
+                            </button>
+                            <button class="tab-btn" data-panel="rpl-panel">
+                                <i class="fa-solid fa-code"></i> Rekayasa Perangkat Lunak
+                            </button>
+                        </div>
+
+                        <div id="tkj-panel" class="tab-panel active">
+                            <div class="table-responsive">
+                                <table class="schedule-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mata Pelajaran Kejuruan</th>
+                                            <th>Alokasi Waktu</th>
+                                            <th>Ruangan / Lab</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for jadwal in jadwal_tkj %}
+                                        <tr>
+                                            <td><strong>{{ jadwal.mata_pelajaran }}</strong></td>
+                                            <td>{{ jadwal.alokasi_waktu }}</td>
+                                            <td><span class="room-tag">{{ jadwal.ruangan }}</span></td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);padding:28px 18px;font-style:italic;">
+                                                Belum ada data jadwal TKJ. Tambahkan melalui panel admin.
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div id="rpl-panel" class="tab-panel">
+                            <div class="table-responsive">
+                                <table class="schedule-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mata Pelajaran Kejuruan</th>
+                                            <th>Alokasi Waktu</th>
+                                            <th>Ruangan / Lab</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for jadwal in jadwal_rpl %}
+                                        <tr>
+                                            <td><strong>{{ jadwal.mata_pelajaran }}</strong></td>
+                                            <td>{{ jadwal.alokasi_waktu }}</td>
+                                            <td><span class="room-tag">{{ jadwal.ruangan }}</span></td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="3" style="text-align:center;color:rgba(255,255,255,0.3);padding:28px 18px;font-style:italic;">
+                                                Belum ada data jadwal RPL. Tambahkan melalui panel admin.
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════
+                         EKSTRAKURIKULER — dari database
+                    ═══════════════════════════════════════ -->
+                    <div class="content-card">
+                        <h3><i class="fa-solid fa-puzzle-piece"></i> Pengembangan Diri &amp; Ekstrakurikuler</h3>
+                        <p class="card-desc">Program pengembangan diri dirancang untuk memaksimalkan potensi siswa di luar jam pelajaran formal.</p>
+                        <div class="ekstra-grid">
+                            {% for ekskul in ekskul_list %}
+                            <div class="ekstra-item">
+                                <i class="fa-solid {{ ekskul.icon }}"></i>
+                                <h5>{{ ekskul.nama }}</h5>
+                                <p>{{ ekskul.deskripsi }}</p>
+                            </div>
+                            {% empty %}
+                            <div class="ekstra-item">
+                                <i class="fa-solid fa-code"></i>
+                                <h5>IT Club &amp; Robotics</h5>
+                                <p>Eksplorasi programming kompetitif, IoT, dan rancang bangun robotika.</p>
+                            </div>
+                            <div class="ekstra-item">
+                                <i class="fa-solid fa-camera"></i>
+                                <h5>Multimedia &amp; Jurnalistik</h5>
+                                <p>Fotografi, editing video, desain grafis, dan pengelolaan media sekolah.</p>
+                            </div>
+                            <div class="ekstra-item">
+                                <i class="fa-solid fa-futbol"></i>
+                                <h5>Olahraga Prestasi</h5>
+                                <p>Pelatihan Futsal, Basket, Badminton untuk turnamen resmi daerah.</p>
+                            </div>
+                            <div class="ekstra-item">
+                                <i class="fa-solid fa-music"></i>
+                                <h5>Seni &amp; Budaya</h5>
+                                <p>Paduan suara, tari tradisional, teater, dan seni rupa.</p>
+                            </div>
+                            <div class="ekstra-item">
+                                <i class="fa-solid fa-leaf"></i>
+                                <h5>Pramuka &amp; PMR</h5>
+                                <p>Pembentukan karakter kepemimpinan, disiplin, dan kepedulian sosial.</p>
+                            </div>
+                            <div class="ekstra-item">
+                                <i class="fa-solid fa-microphone-lines"></i>
+                                <h5>Debat &amp; Public Speaking</h5>
+                                <p>Pengembangan kemampuan berpikir kritis dan komunikasi publik.</p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ═══════════════════════════════════════
+                     SIDEBAR
+                ═══════════════════════════════════════ -->
+                <aside class="sub-sidebar">
+
+                    <div class="sidebar-widget">
+                        <h4><i class="fa-solid fa-calendar-days"></i> Agenda Terdekat</h4>
+                        <div class="agenda-list-sidebar">
+                            {% for agenda in agenda_sekolah %}
+                            <div class="agenda-sidebar-item">
+                                <div class="date-badge-fire">
+                                    <strong>{{ agenda.tanggal|date:"d" }}</strong>
+                                    <span>{{ agenda.tanggal|date:"M" }}</span>
+                                </div>
+                                <div class="agenda-sidebar-info">
+                                    <h6>{{ agenda.nama_kegiatan }}</h6>
+                                    <p><i class="fa-regular fa-clock"></i> {{ agenda.waktu|default:"07:30 - Selesai" }}</p>
+                                </div>
+                            </div>
+                            {% empty %}
+                            <div class="agenda-sidebar-item">
+                                <div class="date-badge-fire"><strong>18</strong><span>Mei</span></div>
+                                <div class="agenda-sidebar-info">
+                                    <h6>Penilaian Akhir Semester</h6>
+                                    <p><i class="fa-regular fa-clock"></i> Via portal siswa online</p>
+                                </div>
+                            </div>
+                            <div class="agenda-sidebar-item">
+                                <div class="date-badge-fire"><strong>05</strong><span>Jun</span></div>
+                                <div class="agenda-sidebar-info">
+                                    <h6>Rapat Pleno Kelulusan</h6>
+                                    <p><i class="fa-regular fa-clock"></i> Seluruh dewan guru &amp; staf</p>
+                                </div>
+                            </div>
+                            <div class="agenda-sidebar-item">
+                                <div class="date-badge-fire"><strong>17</strong><span>Jul</span></div>
+                                <div class="agenda-sidebar-info">
+                                    <h6>Hari Pertama Masuk TA 2026/2027</h6>
+                                    <p><i class="fa-regular fa-clock"></i> 07:00 WITA - Selesai</p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widget">
+                        <h4><i class="fa-solid fa-cloud-arrow-down"></i> Dokumen Unduhan</h4>
+                        <ul class="download-list">
+                            {% for dokumen in dokumen_list %}
+                            <li>
+                                <a href="{{ dokumen.file.url }}" class="download-link" download>
+                                    <i class="fa-regular fa-file-pdf"></i>
+                                    <div>
+                                        <span>{{ dokumen.nama_dokumen }}</span>
+                                        <small>PDF · {{ dokumen.file.size|filesizeformat }}</small>
+                                    </div>
+                                    <i class="fa-solid fa-arrow-down dl-icon"></i>
+                                </a>
+                            </li>
+                            {% empty %}
+                            <li>
+                                <div class="no-data-alert">
+                                    Belum ada dokumen tersedia. Tambahkan melalui panel admin.
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="sidebar-widget sidebar-cta">
+                        <h4><i class="fa-solid fa-graduation-cap"></i> PPDB 2026/2027</h4>
+                        <p>Pendaftaran jalur online telah dibuka. Kuota terbatas setiap rombel!</p>
+                        <a href="{% url 'web_publik:ppdb_online' %}" class="btn btn-ppdb"
+                           style="width:100%;justify-content:center;margin-top:16px;text-decoration:none;display:inline-flex;">
+                            Daftar Sekarang <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                    </div>
+
+                </aside>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-info">
+                    <a href="{% url 'web_publik:index' %}" class="footer-logo">
+                        <i class="fa-solid fa-graduation-cap"></i>SMA <span>Negeri 5KOTA X</span>
+                    </a>
+                    <p class="footer-desc">Sistem Informasi Akademik profesional yang berfokus pada efisiensi manajemen data sekolah serta keterbukaan informasi publik bagi seluruh warga SMA Negeri 5 Kota X.</p>
+                    <p class="footer-address">
+                        <i class="fa-solid fa-location-dot"></i>
+                        Jl. Pendidikan No. 123, Lombok Timur<br>Nusa Tenggara Barat, Indonesia
+                    </p>
+                </div>
+                <div class="footer-links">
+                    <h4>Tautan Cepat</h4>
+                    <ul>
+                        <li><a href="{% url 'web_publik:profil' %}"><i class="fa-solid fa-chevron-right"></i> Profil Sekolah</a></li>
+                        <li><a href="{% url 'web_publik:akademik_info' %}"><i class="fa-solid fa-chevron-right"></i> Akademik</a></li>
+                        <li><a href="{% url 'web_publik:galeri' %}"><i class="fa-solid fa-chevron-right"></i> Galeri</a></li>
+                        <li><a href="{% url 'web_publik:ppdb_online' %}"><i class="fa-solid fa-chevron-right"></i> PPDB Online</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Media Sosial Resmi</h4>
+                    <p>Ikuti akun resmi kami untuk konten edukatif dan informasi terkini:</p>
+                    <div class="social-icons">
+                        <a href="https://www.instagram.com/alleeqyoouu?igsh=cjZhZjdnMXAyMXRu"
+                           target="_blank" class="social-btn instagram" title="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 <strong>SMA Negeri 5 </strong> · Powered by <strong>Kota X</strong>. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const header = document.getElementById('mainHeader');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 60);
+        }, { passive: true });
+
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const panelId = this.getAttribute('data-panel');
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(panelId).classList.add('active');
+            });
+        });
+    });
+    </script>
+</body>
+</html>

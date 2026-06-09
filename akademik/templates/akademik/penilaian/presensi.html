@@ -1,0 +1,211 @@
+{% extends 'akademik/base.html' %}
+
+{% block title %}Presensi Siswa — SMA Negeri 5 Kota X{% endblock %}
+{% block topbar_label %}Akademik{% endblock %}
+{% block topbar_sub %}Presensi & Absensi Siswa{% endblock %}
+
+{% block content %}
+
+<!-- HEADER -->
+<div style="margin-bottom:24px;">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div style="width:40px;height:40px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);
+                border-radius:10px;display:flex;align-items:center;justify-content:center;">
+      <i class="fas fa-user-check" style="color:#22c55e;font-size:1rem;"></i>
+    </div>
+    <div>
+      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:2px;
+                 color:#fff;margin:0;line-height:1.1;">Lembar Kehadiran Siswa</h2>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.4);margin:0;">
+        Rekam absensi KBM tatap muka hari ini: {{ hari_ini|date:"d F Y" }}
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- PILIH SESI -->
+<div style="background:rgba(232,86,26,.06);border:1px solid rgba(232,86,26,.2);
+            border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+  <form method="GET" action=""
+        style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;">
+    <span style="font-size:13px;font-weight:700;color:#F4731F;white-space:nowrap;">
+      Pilih Sesi Kelas:
+    </span>
+    <select name="jadwal"
+            style="flex:1;min-width:220px;padding:9px 14px;background:rgba(255,255,255,.05);
+                   border:1px solid rgba(255,255,255,.12);border-radius:9px;
+                   color:#fff;font-size:13px;outline:none;">
+      <option value="" style="background:#1F1F1F;">-- Pilih Sesi Kelas --</option>
+      {% for j in jadwal_guru %}
+      <option value="{{ j.id }}" style="background:#1F1F1F;"
+              {% if request.GET.jadwal == j.id|stringformat:"i" %}selected{% endif %}>
+        {{ j.kelas }} - {{ j.mata_pelajaran.nama }} ({{ j.jam_mulai|time:"H:i" }})
+      </option>
+      {% empty %}
+      <option value="" disabled style="background:#1F1F1F;">Tidak ada jadwal untuk Anda</option>
+      {% endfor %}
+    </select>
+    <button type="submit"
+            style="background:linear-gradient(135deg,#8B0000,#E8561A 55%,#F5C518);
+                   color:#fff;border:none;padding:9px 18px;border-radius:9px;
+                   font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;
+                   font-weight:700;cursor:pointer;display:inline-flex;
+                   align-items:center;gap:7px;white-space:nowrap;">
+      <i class="fas fa-folder-open"></i> Buka Absen
+    </button>
+  </form>
+</div>
+
+{% if jadwal_terpilih %}
+
+<!-- INFO KELAS -->
+<div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+            border-left:3px solid #E8561A;border-radius:9px;
+            padding:10px 16px;margin-bottom:16px;font-size:13px;color:rgba(255,255,255,.6);">
+  Kelas: <strong style="color:#F4731F;">{{ jadwal_terpilih.kelas }}</strong>
+  &nbsp;|&nbsp;
+  Mata Pelajaran: <strong style="color:#F4731F;">{{ jadwal_terpilih.mata_pelajaran.nama }}</strong>
+</div>
+
+<form method="POST" action="" id="form-presensi-siswa">
+  {% csrf_token %}
+  <input type="hidden" name="jadwal_id" value="{{ jadwal_terpilih.id }}">
+
+  <div style="background:#161616;border:1px solid rgba(255,255,255,.06);
+              border-top:3px solid #E8561A;border-radius:18px;overflow:hidden;
+              margin-bottom:20px;">
+    <div style="overflow-x:auto;">
+      <table style="width:100%;border-collapse:collapse;text-align:left;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(232,86,26,.3);">
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;width:46px;text-align:center;">No</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;">Nama Siswa</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;text-align:center;">NISN</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;text-align:center;white-space:nowrap;">
+                       Status Kehadiran</th>
+            <th style="padding:12px 16px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;
+                       text-transform:uppercase;font-weight:600;white-space:nowrap;">
+                       Keterangan</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in siswa_status_list %}
+          <tr style="border-bottom:1px solid rgba(255,255,255,.05);">
+            <td style="padding:13px 16px;text-align:center;color:rgba(255,255,255,.35);font-size:13px;">
+              {{ forloop.counter }}
+            </td>
+            <td style="padding:13px 16px;font-weight:700;color:#fff;">
+              {{ item.siswa.nama_lengkap }}
+            </td>
+            <td style="padding:13px 16px;text-align:center;color:rgba(255,255,255,.35);font-size:13px;">
+              {{ item.siswa.nisn|default:"—" }}
+            </td>
+            <td style="padding:13px 16px;text-align:center;">
+              <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                <label class="radio-label" style="color:#4ade80;">
+                  <input type="radio" name="status_{{ item.siswa.pk }}" value="Hadir"
+                         {% if item.status_terakhir == "Hadir" or not item.status_terakhir %}checked{% endif %}
+                         style="accent-color:#22c55e;"> Hadir
+                </label>
+                <label class="radio-label" style="color:#60a5fa;">
+                  <input type="radio" name="status_{{ item.siswa.pk }}" value="Izin"
+                         {% if item.status_terakhir == "Izin" %}checked{% endif %}
+                         style="accent-color:#3b82f6;"> Izin
+                </label>
+                <label class="radio-label" style="color:#F5C518;">
+                  <input type="radio" name="status_{{ item.siswa.pk }}" value="Sakit"
+                         {% if item.status_terakhir == "Sakit" %}checked{% endif %}
+                         style="accent-color:#F5C518;"> Sakit
+                </label>
+                <label class="radio-label" style="color:#f87171;">
+                  <input type="radio" name="status_{{ item.siswa.pk }}" value="Alpa"
+                         {% if item.status_terakhir == "Alpa" %}checked{% endif %}
+                         style="accent-color:#ef4444;"> Alpa
+                </label>
+              </div>
+            </td>
+            <!-- KOLOM KETERANGAN — field sudah ada di model Presensi -->
+            <td style="padding:13px 16px;">
+              <input type="text" name="keterangan_{{ item.siswa.pk }}"
+                     value="{{ item.keterangan }}"
+                     placeholder="Misal: Sakit demam, surat terlampir..."
+                     class="input-keterangan">
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" style="text-align:center;padding:48px 20px;">
+              <i class="fas fa-users-slash" style="font-size:32px;color:rgba(255,255,255,.15);
+                 display:block;margin-bottom:10px;"></i>
+              <span style="color:rgba(255,255,255,.3);font-size:13px;">
+                Tidak ada siswa terdaftar di kelas {{ jadwal_terpilih.kelas }}.
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if siswa_status_list %}
+  <div style="display:flex;justify-content:flex-end;">
+    <button type="submit"
+            style="background:linear-gradient(135deg,#166534,#16a34a);
+                   color:#fff;border:none;padding:11px 28px;border-radius:9px;
+                   font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;
+                   font-weight:700;cursor:pointer;display:inline-flex;
+                   align-items:center;gap:8px;">
+      <i class="fas fa-save"></i> Simpan & Selesai Absen
+    </button>
+  </div>
+  {% endif %}
+</form>
+
+{% else %}
+<div style="text-align:center;padding:60px 20px;border:2px dashed rgba(255,255,255,.08);
+            border-radius:18px;">
+  <i class="fas fa-users-slash" style="font-size:44px;color:rgba(255,255,255,.1);
+     display:block;margin-bottom:14px;"></i>
+  <h4 style="color:rgba(255,255,255,.5);font-weight:700;margin-bottom:6px;">
+    Lembar Absensi Belum Terbuka
+  </h4>
+  <p style="font-size:13px;color:rgba(255,255,255,.25);max-width:420px;margin:0 auto;">
+    Pilih sesi jadwal mengajar aktif Anda di atas, kemudian klik
+    <strong style="color:#F4731F;">Buka Absen</strong>.
+  </p>
+</div>
+{% endif %}
+
+<style>
+  select option { background:#1F1F1F; color:#fff; }
+  select:focus  { border-color:rgba(232,86,26,.5) !important; }
+  .radio-label  {
+    cursor:pointer; font-size:13px; font-weight:600;
+    display:flex; align-items:center; gap:5px;
+  }
+  .input-keterangan {
+    width: 100%;
+    min-width: 180px;
+    padding: 7px 10px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 8px;
+    color: #fff;
+    font-size: 12px;
+    outline: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    box-sizing: border-box;
+  }
+  .input-keterangan:focus   { border-color: rgba(232,86,26,.5); }
+  .input-keterangan::placeholder { color: rgba(255,255,255,.2); }
+  @media(max-width:600px) {
+    div[style*="gap:16px"] { gap:10px !important; }
+  }
+</style>
+
+{% endblock %}

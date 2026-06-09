@@ -1,0 +1,1172 @@
+{% extends 'akademik/base.html' %}
+
+{% block title %}Dashboard Siswa — SMA Negeri 5 Kota X{% endblock %}
+{% block topbar_label %}Dashboard Akademik{% endblock %}
+{% block topbar_sub %}{{ siswa.nama_lengkap|default:request.user.username }}{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+  --red:#C8102E;--deep:#8B0000;--orange:#E8561A;--amber:#F4731F;--gold:#F5C518;
+  --black:#0D0D0D;--dark:#161616;--silver:#9E9E9E;--white:#FFFFFF;--green:#22c55e;
+  --purple:#7c3aed;
+  --grad:linear-gradient(135deg,#8B0000,#E8561A 55%,#F5C518);
+  --bfire:1px solid rgba(232,86,26,.28);--bdim:1px solid rgba(255,255,255,.06);
+  --font:'Plus Jakarta Sans',sans-serif;--disp:'Bebas Neue',sans-serif;
+}
+
+/* AVATAR FOTO SISWA */
+.hero-avatar {
+  position: relative;
+  cursor: pointer;
+}
+.hero-avatar img {
+  width: 56px; height: 56px; border-radius: 14px;
+  object-fit: cover; border: 2px solid rgba(232,86,26,.4);
+  display: block;
+}
+.hero-avatar .avatar-overlay {
+  position: absolute; inset: 0; border-radius: 14px;
+  background: rgba(0,0,0,.55);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .18s;
+  pointer-events: none;
+}
+.hero-avatar:hover .avatar-overlay { opacity: 1; }
+.hero-avatar .avatar-overlay i { color: #fff; font-size: 16px; }
+.avatar-upload-input { display: none; }
+
+/* Toast notifikasi */
+.foto-toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px);
+  background: #1e1e1e; border: 1px solid rgba(34,197,94,.35); color: #4ade80;
+  padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600;
+  z-index: 99999; transition: transform .25s ease, opacity .25s ease; opacity: 0;
+  white-space: nowrap; pointer-events: none;
+}
+.foto-toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+.foto-toast.error { border-color: rgba(200,16,46,.4); color: #f87171; }
+
+/* HERO BAR */
+.hero-bar {
+  background:var(--dark);border:var(--bfire);border-top:3px solid var(--orange);
+  border-radius:18px;padding:28px 32px;margin-bottom:24px;
+  position:relative;overflow:hidden;
+}
+.hero-bar::before {
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 5% 30%,rgba(200,16,46,.12) 0%,transparent 50%),
+             radial-gradient(ellipse at 90% 80%,rgba(245,197,24,.06) 0%,transparent 50%);
+}
+.hero-top {display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;z-index:1;}
+.hero-avatar {
+  width:56px;height:56px;border-radius:14px;flex-shrink:0;
+  background:var(--grad);border:2px solid rgba(232,86,26,.4);
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-avatar i {color:#fff;font-size:24px;}
+.hero-info {flex:1;min-width:0;}
+.hero-greeting {font-size:11px;color:rgba(255,255,255,.5);font-weight:500;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;}
+.hero-name {font-family:var(--disp);font-size:1.8rem;letter-spacing:1px;color:#fff;margin-bottom:6px;word-break:break-word;}
+.hero-badges {display:flex;flex-wrap:wrap;gap:8px;}
+.hero-badge {
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);
+  padding:3px 10px;border-radius:99px;font-size:11.5px;font-weight:500;white-space:nowrap;
+}
+.hero-stats {
+  display:flex;flex-wrap:wrap;gap:0;margin-top:20px;
+  border-top:1px solid rgba(255,255,255,.1);padding-top:16px;
+  position:relative;z-index:1;
+}
+.hstat {flex:1;min-width:80px;text-align:center;padding:8px 12px;border-right:1px solid rgba(255,255,255,.1);}
+.hstat:last-child {border-right:none;}
+.hstat-val {font-family:var(--disp);font-size:2.2rem;color:#fff;line-height:1;}
+.hstat-lbl {font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+
+.hstat-perilaku {font-size:1.5rem;}
+.perilaku-sangat-baik {color:#4ade80;}
+.perilaku-baik        {color:#60a5fa;}
+.perilaku-cukup       {color:#F5C518;}
+.perilaku-kurang      {color:#f87171;}
+
+/* MAIN GRID */
+.main-grid {display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:20px;}
+
+/* PANEL CARD */
+.panel-card {
+  background:var(--dark);border:var(--bdim);border-radius:18px;
+  padding:22px;position:relative;overflow:hidden;margin-bottom:20px;
+}
+.panel-card::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);
+}
+.panel-header {
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;padding-bottom:14px;border-bottom:var(--bdim);
+  flex-wrap:wrap;gap:8px;
+}
+.panel-title {
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--disp);font-size:.85rem;letter-spacing:1.5px;
+  color:var(--white);text-transform:uppercase;
+}
+.panel-title-icon {
+  width:34px;height:34px;background:rgba(232,86,26,.12);border:var(--bfire);
+  border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;color:var(--orange);
+}
+.panel-title-icon.green-ic  {background:rgba(34,197,94,.1);  border-color:rgba(34,197,94,.3);  color:var(--green);}
+.panel-title-icon.gold-ic   {background:rgba(245,197,24,.1); border-color:rgba(245,197,24,.3); color:var(--gold);}
+.panel-title-icon.red-ic    {background:rgba(200,16,46,.1);  border-color:rgba(200,16,46,.3);  color:#f87171;}
+.panel-title-icon.silver-ic {background:rgba(158,158,158,.1);border-color:rgba(158,158,158,.2);color:var(--silver);}
+.panel-title-icon.blue-ic   {background:rgba(59,130,246,.1); border-color:rgba(59,130,246,.3); color:#60a5fa;}
+.panel-title-icon.purple-ic {background:rgba(168,85,247,.1); border-color:rgba(168,85,247,.3); color:#c084fc;}
+
+/* BIO TABLE */
+.bio-table {width:100%;border-collapse:collapse;}
+.bio-table td {padding:9px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;vertical-align:top;}
+.bio-table tr:last-child td {border-bottom:none;}
+.bio-table .lbl {color:var(--silver);width:40%;font-weight:500;}
+.bio-table .val {color:var(--white);font-weight:600;word-break:break-word;}
+.kelas-chip {
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(232,86,26,.1);color:var(--amber);
+  border:1px solid rgba(232,86,26,.28);border-radius:99px;
+  padding:4px 14px;font-size:12px;font-weight:600;
+}
+.status-banner {
+  display:flex;align-items:flex-start;gap:8px;padding:10px 14px;border-radius:10px;
+  background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.2);
+  font-size:13px;color:var(--gold);margin-top:14px;
+}
+
+/* ABSENSI */
+.absen-grid {display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.absen-box {border-radius:12px;padding:16px 8px;text-align:center;border:1px solid;}
+.absen-box .num {font-family:var(--disp);font-size:2rem;line-height:1;}
+.absen-box .lbl {font-size:10.5px;font-weight:600;margin-top:4px;text-transform:uppercase;letter-spacing:.4px;}
+.ab-hadir {background:rgba(34,197,94,.06); border-color:rgba(34,197,94,.2);}
+.ab-hadir .num {color:var(--green);} .ab-hadir .lbl {color:#4ade80;}
+.ab-izin  {background:rgba(59,130,246,.06);border-color:rgba(59,130,246,.2);}
+.ab-izin .num  {color:#60a5fa;}  .ab-izin .lbl  {color:#93c5fd;}
+.ab-sakit {background:rgba(245,197,24,.06);border-color:rgba(245,197,24,.2);}
+.ab-sakit .num {color:var(--gold);} .ab-sakit .lbl {color:var(--amber);}
+.ab-alfa  {background:rgba(200,16,46,.06); border-color:rgba(200,16,46,.2);}
+.ab-alfa .num  {color:#f87171;}  .ab-alfa .lbl  {color:#fca5a5;}
+
+/* TUGAS */
+.tugas-item {display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.tugas-item:last-child {border-bottom:none;}
+.tugas-dot {width:8px;height:8px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:5px;}
+.tugas-info {flex:1;min-width:0;}
+.tugas-judul {font-size:13px;font-weight:600;color:var(--white);word-break:break-word;}
+.tugas-mapel {font-size:11.5px;color:var(--silver);margin-top:2px;}
+.tugas-right {display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;}
+.tugas-dl {font-size:11.5px;font-weight:600;color:#f87171;white-space:nowrap;}
+
+/* KEUANGAN TABLE */
+.data-table {width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.data-table thead tr {background:rgba(255,255,255,.03);}
+.data-table thead th {
+  padding:10px 12px;text-align:left;
+  font-family:var(--disp);font-size:.72rem;letter-spacing:1.5px;
+  color:var(--amber);text-transform:uppercase;
+  border-bottom:1px solid rgba(232,86,26,.3);white-space:nowrap;
+}
+.data-table tbody tr {border-bottom:1px solid rgba(255,255,255,.04);}
+.data-table tbody tr:last-child {border-bottom:none;}
+.data-table tbody tr:hover {background:rgba(232,86,26,.04);}
+.data-table td {padding:10px 12px;color:rgba(255,255,255,.7);overflow:hidden;text-overflow:ellipsis;}
+
+/* BADGE */
+.badge {display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;white-space:nowrap;}
+.badge-green  {background:rgba(34,197,94,.12); color:#4ade80;border:1px solid rgba(34,197,94,.3);}
+.badge-blue   {background:rgba(59,130,246,.12);color:#60a5fa;border:1px solid rgba(59,130,246,.3);}
+.badge-yellow {background:rgba(245,197,24,.12);color:#F5C518;border:1px solid rgba(245,197,24,.25);}
+.badge-red    {background:rgba(239,68,68,.12); color:#f87171;border:1px solid rgba(239,68,68,.3);}
+.badge-gray   {background:rgba(255,255,255,.07);color:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.1);}
+.badge-purple {background:rgba(168,85,247,.12);color:#c084fc;border:1px solid rgba(168,85,247,.3);}
+
+/* PENGUMUMAN */
+.pengumuman-item {padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.pengumuman-item:last-child {border-bottom:none;}
+.pengumuman-title {font-size:13px;font-weight:600;color:var(--white);margin-bottom:4px;word-break:break-word;}
+.pengumuman-date {display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--silver);}
+
+/* AGENDA */
+.agenda-item {display:flex;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);align-items:flex-start;}
+.agenda-item:last-child {border-bottom:none;}
+.agenda-date {
+  min-width:42px;text-align:center;
+  background:rgba(232,86,26,.1);border:1px solid rgba(232,86,26,.2);
+  border-radius:8px;padding:6px 4px;flex-shrink:0;
+}
+.agenda-day {font-family:var(--disp);font-size:18px;color:var(--orange);line-height:1;}
+.agenda-mon {font-size:10px;color:var(--amber);font-weight:600;text-transform:uppercase;}
+.agenda-text {font-size:12.5px;color:rgba(255,255,255,.65);padding-top:4px;line-height:1.5;word-break:break-word;}
+
+/* EMPTY STATE */
+.empty-state {text-align:center;padding:24px 12px;color:var(--silver);font-size:13px;}
+.empty-state i {font-size:22px;display:block;margin-bottom:8px;opacity:.5;}
+
+/* BUTTONS */
+.btn-fire {
+  display:inline-flex;align-items:center;gap:6px;background:var(--grad);color:var(--white);
+  padding:7px 14px;border-radius:9px;text-decoration:none;font-size:12px;font-weight:600;
+  transition:filter .15s;will-change:filter;border:none;cursor:pointer;font-family:var(--font);
+}
+.btn-fire:hover {filter:brightness(1.12);}
+.btn-fire-green {
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#166534,#16a34a);color:var(--white);
+  padding:7px 14px;border-radius:9px;text-decoration:none;font-size:12px;font-weight:600;
+  transition:filter .15s;will-change:filter;
+}
+.btn-fire-green:hover {filter:brightness(1.15);}
+.btn-ghost-fire {
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.06);border:var(--bdim);color:var(--silver);
+  padding:9px 14px;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;
+  font-family:var(--font);transition:background .15s;width:100%;justify-content:flex-start;
+}
+.btn-ghost-fire:hover {background:rgba(255,255,255,.12);color:var(--white);}
+.btn-wa-fire {
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);color:#4ade80;
+  padding:9px 14px;border-radius:9px;text-decoration:none;font-size:13px;font-weight:600;
+  cursor:pointer;font-family:var(--font);width:100%;transition:background .15s;
+}
+.btn-wa-fire:hover {background:rgba(34,197,94,.2);}
+.btn-bug-fire {
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(200,16,46,.1);border:1px solid rgba(200,16,46,.28);color:#f87171;
+  padding:9px 14px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;
+  font-family:var(--font);width:100%;transition:background .15s;
+}
+.btn-bug-fire:hover {background:rgba(200,16,46,.2);}
+
+/* NILAI PILL BESAR */
+.nilai-pill {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:44px;height:44px;border-radius:12px;
+  font-family:var(--disp);font-size:1.2rem;font-weight:700;flex-shrink:0;
+}
+.nilai-pill-a  {background:rgba(34,197,94,.15); color:#4ade80;border:1px solid rgba(34,197,94,.3);}
+.nilai-pill-b  {background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);}
+.nilai-pill-c  {background:rgba(245,197,24,.12);color:#F5C518;border:1px solid rgba(245,197,24,.25);}
+.nilai-pill-d  {background:rgba(239,68,68,.12); color:#f87171;border:1px solid rgba(239,68,68,.3);}
+
+/* NILAI TUGAS ITEM */
+.nilai-item {
+  display:flex;align-items:flex-start;gap:14px;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.nilai-item:last-child {border-bottom:none;}
+.nilai-item-info {flex:1;min-width:0;}
+.nilai-item-judul {font-size:13px;font-weight:700;color:var(--white);word-break:break-word;margin-bottom:3px;}
+.nilai-item-mapel {font-size:11.5px;color:var(--silver);}
+.nilai-item-catatan {
+  margin-top:8px;padding:8px 12px;border-radius:8px;
+  background:rgba(255,255,255,.04);border-left:2px solid rgba(232,86,26,.3);
+  font-size:12px;color:rgba(255,255,255,.5);line-height:1.6;
+}
+
+/* RATA-RATA STRIP */
+.rata-strip {
+  margin-top:14px;padding:12px 16px;border-radius:10px;
+  background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.15);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+}
+.rata-strip-lbl {font-size:12.5px;color:rgba(255,255,255,.45);}
+.rata-strip-val {font-size:15px;font-weight:800;color:var(--gold);}
+
+/* NILAI RAPOR TABLE */
+.rapor-table {width:100%;border-collapse:collapse;font-size:12.5px;}
+.rapor-table thead th {
+  padding:9px 10px;text-align:left;
+  font-family:var(--disp);font-size:.68rem;letter-spacing:1.5px;
+  color:var(--amber);text-transform:uppercase;
+  border-bottom:1px solid rgba(232,86,26,.25);white-space:nowrap;
+}
+.rapor-table thead th.text-center {text-align:center;}
+.rapor-table tbody tr {border-bottom:1px solid rgba(255,255,255,.04);}
+.rapor-table tbody tr:last-child {border-bottom:none;}
+.rapor-table tbody tr:hover {background:rgba(232,86,26,.03);}
+.rapor-table td {padding:9px 10px;color:rgba(255,255,255,.75);}
+.rapor-table td.text-center {text-align:center;}
+.rapor-table .mapel-name {font-weight:600;color:var(--white);}
+.rapor-table .nilai-angka {font-family:var(--disp);font-size:1.1rem;font-weight:700;}
+.rapor-table tfoot td {
+  padding:11px 10px;border-top:1px solid rgba(232,86,26,.3);
+  background:rgba(245,197,24,.04);
+}
+.predikat-chip {
+  display:inline-flex;align-items:center;justify-content:center;
+  width:26px;height:26px;border-radius:7px;
+  font-size:11px;font-weight:800;
+}
+.pred-a {background:rgba(34,197,94,.15);color:#4ade80;border:1px solid rgba(34,197,94,.3);}
+.pred-b {background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.3);}
+.pred-c {background:rgba(245,197,24,.12);color:#F5C518;border:1px solid rgba(245,197,24,.25);}
+.pred-d {background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+.pred-e {background:rgba(107,114,128,.12);color:#9ca3af;border:1px solid rgba(107,114,128,.25);}
+
+.na-hijau {color:#4ade80;}
+.na-biru  {color:#60a5fa;}
+.na-kuning{color:#F5C518;}
+.na-merah {color:#f87171;}
+
+/* NILAI PERILAKU WIDGET */
+.perilaku-wrap {
+  display:flex;align-items:center;gap:16px;padding:14px 16px;
+  background:rgba(168,85,247,.06);border:1px solid rgba(168,85,247,.2);
+  border-radius:12px;margin-bottom:14px;
+}
+.perilaku-score-ring {position:relative;width:64px;height:64px;flex-shrink:0;}
+.perilaku-score-ring svg {transform:rotate(-90deg);}
+.perilaku-score-ring .score-num {
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--disp);font-size:1.25rem;color:#c084fc;
+}
+.perilaku-desc {flex:1;min-width:0;}
+.perilaku-title {font-size:12px;color:rgba(255,255,255,.45);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.perilaku-label {font-size:14px;font-weight:700;color:var(--white);}
+.perilaku-sub {font-size:11.5px;color:var(--silver);margin-top:2px;}
+
+/* RIWAYAT PERILAKU */
+.perilaku-item {
+  display:flex;align-items:flex-start;gap:10px;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.perilaku-item:last-child {border-bottom:none;}
+.perilaku-dot {
+  width:30px;height:30px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;
+}
+.dot-baik   {background:rgba(34,197,94,.12);color:#4ade80;border:1px solid rgba(34,197,94,.25);}
+.dot-cukup  {background:rgba(245,197,24,.12);color:#F5C518;border:1px solid rgba(245,197,24,.25);}
+.dot-kurang {background:rgba(239,68,68,.12);color:#f87171;border:1px solid rgba(239,68,68,.3);}
+.perilaku-info {flex:1;min-width:0;}
+.perilaku-mapel {font-size:12.5px;font-weight:600;color:var(--white);}
+.perilaku-guru  {font-size:11px;color:var(--silver);margin-top:2px;}
+.perilaku-tgl   {font-size:11px;color:rgba(255,255,255,.3);white-space:nowrap;flex-shrink:0;}
+
+/* FORMULA INFO */
+.formula-strip {
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding:10px 14px;
+  background:rgba(255,255,255,.03);border:var(--bdim);border-radius:10px;
+  align-items:center;
+}
+.formula-item {display:inline-flex;align-items:center;gap:5px;font-size:11.5px;color:rgba(255,255,255,.45);}
+.formula-pct {font-family:var(--disp);font-size:.85rem;color:var(--orange);font-weight:700;}
+
+/* MODAL */
+.s-modal-overlay {
+  display:flex;position:fixed;z-index:9999;inset:0;
+  background:rgba(13,13,13,.8);
+  align-items:center;justify-content:center;padding:16px;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .15s ease,visibility 0s linear .15s;
+}
+.s-modal-overlay.open {
+  opacity:1;visibility:visible;pointer-events:auto;
+  transition:opacity .15s ease,visibility 0s linear 0s;
+}
+.s-modal-box {
+  background:var(--dark);border:var(--bfire);border-top:3px solid var(--orange);
+  border-radius:18px;width:100%;max-width:460px;
+  box-shadow:0 8px 32px rgba(0,0,0,.6);overflow:hidden;
+  transform:translateY(-16px);transition:transform .15s ease;
+}
+.s-modal-overlay.open .s-modal-box {transform:translateY(0);}
+.s-modal-head {
+  padding:18px 22px;border-bottom:var(--bdim);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.s-modal-head h4 {
+  font-family:var(--disp);font-size:1rem;letter-spacing:1.5px;
+  color:var(--white);margin:0;text-transform:uppercase;
+  display:flex;align-items:center;gap:9px;
+}
+.s-modal-head h4 i {color:var(--orange);}
+.modal-close-btn {
+  background:rgba(255,255,255,.06);border:var(--bdim);color:var(--silver);
+  width:34px;height:34px;border-radius:8px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  transition:color .15s,transform .15s;
+}
+.modal-close-btn:hover {color:var(--orange);transform:rotate(90deg);}
+.s-modal-body {padding:20px 22px;}
+.form-group {margin-bottom:15px;}
+.form-label {display:block;margin-bottom:5px;font-size:12px;color:var(--silver);font-weight:600;}
+.form-input {
+  width:100%;padding:10px 14px;
+  background:rgba(255,255,255,.05);border:var(--bdim);
+  border-radius:9px;font-family:var(--font);font-size:13px;
+  color:var(--white);outline:none;transition:border-color .15s;
+}
+.form-input:focus {border-color:var(--orange);}
+textarea.form-input {height:85px;resize:vertical;}
+.form-actions {display:flex;justify-content:flex-end;gap:10px;margin-top:20px;}
+.btn-cancel {
+  background:rgba(255,255,255,.06);border:var(--bdim);color:var(--silver);
+  border-radius:9px;padding:9px 18px;font-size:.86rem;font-weight:500;
+  cursor:pointer;font-family:var(--font);transition:background .15s;
+}
+.btn-cancel:hover {background:rgba(255,255,255,.12);}
+.btn-save {
+  background:var(--grad);border:none;color:var(--white);
+  border-radius:9px;padding:9px 22px;font-size:.86rem;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:filter .15s;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.btn-save:hover {filter:brightness(1.12);}
+.btn-danger {
+  background:rgba(200,16,46,.7);border:1px solid rgba(200,16,46,.5);color:var(--white);
+  border-radius:9px;padding:9px 22px;font-size:.86rem;font-weight:700;
+  cursor:pointer;font-family:var(--font);transition:filter .15s;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.btn-danger:hover {filter:brightness(1.15);}
+
+@media (max-width:860px) {.main-grid {grid-template-columns:1fr;}}
+@media (max-width:600px) {
+  .absen-grid {grid-template-columns:repeat(2,1fr);}
+  .hero-name {font-size:1.4rem;}
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="hero-bar">
+  <div class="hero-top">
+    <div class="hero-avatar" onclick="document.getElementById('inputFotoSiswa').click()" title="Klik untuk ganti foto profil">
+  {% if siswa.foto %}
+    <img src="{{ siswa.foto.url }}" alt="Foto {{ siswa.nama_lengkap }}" id="previewFotoSiswa">
+  {% else %}
+    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Crect width='56' height='56' rx='14' fill='%23E8561A' fill-opacity='.18'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='24' fill='%23F5C518'%3E👤%3C/text%3E%3C/svg%3E"
+         alt="Foto Profil" id="previewFotoSiswa">
+  {% endif %}
+  <div class="avatar-overlay"><i class="fas fa-camera"></i></div>
+</div>
+<input type="file" id="inputFotoSiswa" class="avatar-upload-input" accept="image/*">
+<div id="fotoToast" class="foto-toast"></div>
+    <div class="hero-info">
+      <div class="hero-greeting">Dashboard Akademik Siswa</div>
+      <div class="hero-name">{{ siswa.nama_lengkap|default:request.user.username }}</div>
+      <div class="hero-badges">
+        <span class="hero-badge"><i class="fas fa-id-badge"></i> {{ siswa.nisn|default:"—" }}</span>
+        <span class="hero-badge"><i class="fas fa-circle" style="font-size:7px;color:#4ade80;"></i> {{ siswa.status|default:"Aktif" }}</span>
+        {% if siswa.kelas %}<span class="hero-badge"><i class="fas fa-door-open"></i> {{ siswa.kelas }}</span>{% endif %}
+        {% if rata_nilai_rapor is not None %}
+        <span class="hero-badge" style="background:rgba(245,197,24,.12);border:1px solid rgba(245,197,24,.2);color:#F5C518;">
+          <i class="fas fa-star" style="font-size:9px;"></i> Rata-rata: {{ rata_nilai_rapor }}
+        </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="hstat">
+      <div class="hstat-val">{{ absensi.persentase|default:"0" }}%</div>
+      <div class="hstat-lbl">Kehadiran</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val">{{ tugas_list|length|default:"0" }}</div>
+      <div class="hstat-lbl">Tugas Aktif</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val">{{ jawaban_dinilai|length|default:"0" }}</div>
+      <div class="hstat-lbl">Tugas Dinilai</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val">{{ nilai_list|length|default:"0" }}</div>
+      <div class="hstat-lbl">Mata Pelajaran</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val hstat-perilaku
+        {% if nilai_perilaku_siswa >= 85 %}perilaku-sangat-baik
+        {% elif nilai_perilaku_siswa >= 70 %}perilaku-baik
+        {% elif nilai_perilaku_siswa >= 50 %}perilaku-cukup
+        {% else %}perilaku-kurang{% endif %}">
+        {{ nilai_perilaku_siswa }}
+      </div>
+      <div class="hstat-lbl">Nilai Perilaku</div>
+    </div>
+  </div>
+</div>
+
+<div class="main-grid">
+
+  <!-- KIRI -->
+  <div>
+
+    <!-- PROFIL -->
+    <div class="panel-card" id="profil">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon"><i class="fas fa-id-card"></i></div>
+          Data Profil &amp; Biodata Resmi
+        </div>
+        <button type="button" class="btn-fire" onclick="bukaModalBiodata()">
+          <i class="fas fa-edit"></i> Perbarui Data
+        </button>
+      </div>
+      <table class="bio-table">
+        <tr><td class="lbl">NISN / NIS</td><td class="val">{{ siswa.nisn|default:"—" }}</td></tr>
+        <tr><td class="lbl">Nama Lengkap</td><td class="val">{{ siswa.nama_lengkap|default:request.user.get_full_name|default:"Belum diisi" }}</td></tr>
+        <tr><td class="lbl">Tempat, Tgl Lahir</td><td class="val">{{ siswa.tempat_lahir|default:"—" }}, {{ siswa.tanggal_lahir|date:"d F Y"|default:"—" }}</td></tr>
+        <tr><td class="lbl">Wali / Orang Tua</td><td class="val">{{ siswa.wali.nama_lengkap|default:"—" }}</td></tr>
+      </table>
+      <div style="margin-top:14px;">
+        {% if siswa.kelas %}
+          <span class="kelas-chip"><i class="fas fa-chalkboard-teacher"></i> {{ siswa.kelas.nama_kelas }}</span>
+        {% else %}
+          <div class="status-banner"><i class="fas fa-info-circle"></i> Menunggu penempatan kelas oleh admin.</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         REKAP NILAI RAPOR — tampilkan SEMUA komponen nilai
+         (tugas, uts, uas, perilaku, nilai akhir, grade)
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="panel-card" id="akademik">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon"><i class="fas fa-graduation-cap"></i></div>
+          Rekap Nilai Rapor — Semua Mata Pelajaran
+        </div>
+        {% if siswa %}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a href="{% url 'akademik:lihat_rapor_siswa' siswa.id %}" class="btn-fire">
+            <i class="fas fa-file-pdf"></i> Unduh Rapor PDF
+          </a>
+          <a href="{% url 'akademik:export_nilai_excel' siswa.id %}" class="btn-fire-green">
+            <i class="fas fa-file-excel"></i> Unduh Nilai Excel
+          </a>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Formula strip -->
+      <div class="formula-strip">
+        <span style="font-size:11px;color:rgba(255,255,255,.3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-right:4px;">Formula Nilai Akhir:</span>
+        <span class="formula-item"><span class="formula-pct">35%</span> Tugas</span>
+        <span style="color:rgba(255,255,255,.2);font-size:11px;">+</span>
+        <span class="formula-item"><span class="formula-pct">25%</span> UTS</span>
+        <span style="color:rgba(255,255,255,.2);font-size:11px;">+</span>
+        <span class="formula-item"><span class="formula-pct">25%</span> UAS</span>
+        <span style="color:rgba(255,255,255,.2);font-size:11px;">+</span>
+        <span class="formula-item"><span class="formula-pct" style="color:#c084fc;">15%</span> Perilaku</span>
+        <span style="font-size:11px;color:rgba(255,255,255,.2);margin-left:auto;">KKM: 70</span>
+      </div>
+
+      {% if nilai_list %}
+      <div style="overflow-x:auto;margin-top:16px;">
+        <table class="rapor-table">
+          <thead>
+            <tr>
+              <th>Mata Pelajaran</th>
+              <th class="text-center">Tugas<br><span style="font-size:9px;color:rgba(255,255,255,.3);">35%</span></th>
+              <th class="text-center">UTS<br><span style="font-size:9px;color:rgba(255,255,255,.3);">25%</span></th>
+              <th class="text-center">UAS<br><span style="font-size:9px;color:rgba(255,255,255,.3);">25%</span></th>
+              <th class="text-center" style="color:#c084fc;">Perilaku<br><span style="font-size:9px;color:rgba(168,85,247,.5);">15%</span></th>
+              <th class="text-center">Nilai Akhir</th>
+              <th class="text-center">Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for n in nilai_list %}
+            <tr>
+              <td class="mapel-name">{{ n.mata_pelajaran.nama }}</td>
+              <td class="text-center">{{ n.nilai_tugas }}</td>
+              <td class="text-center">{{ n.nilai_uts }}</td>
+              <td class="text-center">{{ n.nilai_uas }}</td>
+              <td class="text-center" style="color:#c084fc;font-weight:600;">{{ n.nilai_perilaku }}</td>
+              <td class="text-center">
+                <span class="nilai-angka
+                  {% if n.nilai_angka >= 85 %}na-hijau
+                  {% elif n.nilai_angka >= 70 %}na-biru
+                  {% elif n.nilai_angka >= 60 %}na-kuning
+                  {% else %}na-merah{% endif %}">
+                  {{ n.nilai_angka }}
+                </span>
+              </td>
+              <td class="text-center">
+                {% if n.nilai_angka >= 90 %}<span class="predikat-chip pred-a">A</span>
+                {% elif n.nilai_angka >= 80 %}<span class="predikat-chip pred-b">B</span>
+                {% elif n.nilai_angka >= 70 %}<span class="predikat-chip pred-c">C</span>
+                {% elif n.nilai_angka >= 60 %}<span class="predikat-chip pred-d">D</span>
+                {% else %}<span class="predikat-chip pred-e">E</span>{% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          {% if rata_nilai_rapor is not None %}
+          <tfoot>
+            <tr>
+              <td colspan="5" style="font-weight:700;color:rgba(255,255,255,.45);font-size:12px;letter-spacing:.5px;text-transform:uppercase;">
+                <i class="fas fa-chart-bar" style="color:var(--gold);margin-right:6px;"></i>
+                Rata-rata dari {{ total_nilai_rapor }} Mata Pelajaran
+              </td>
+              <td class="text-center" style="font-family:var(--disp);font-size:1.2rem;color:var(--gold);font-weight:700;">{{ rata_nilai_rapor }}</td>
+              <td class="text-center">
+                {% if rata_nilai_rapor >= 90 %}<span class="predikat-chip pred-a">A</span>
+                {% elif rata_nilai_rapor >= 80 %}<span class="predikat-chip pred-b">B</span>
+                {% elif rata_nilai_rapor >= 70 %}<span class="predikat-chip pred-c">C</span>
+                {% elif rata_nilai_rapor >= 60 %}<span class="predikat-chip pred-d">D</span>
+                {% else %}<span class="predikat-chip pred-e">E</span>{% endif %}
+              </td>
+            </tr>
+          </tfoot>
+          {% endif %}
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state" style="margin-top:16px;">
+        <i class="fas fa-book-open" style="color:var(--amber);opacity:1;"></i>
+        Nilai rapor belum tersedia.<br>
+        <span style="font-size:12px;">Hubungi wali kelas jika sudah memasuki periode penilaian.</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- NILAI PERILAKU -->
+    <div class="panel-card" id="perilaku">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon purple-ic"><i class="fas fa-heart"></i></div>
+          Penilaian Sikap &amp; Perilaku
+        </div>
+        {% if riwayat_perilaku %}
+        <span class="badge badge-purple">
+          <i class="fas fa-check" style="font-size:9px;"></i>
+          {{ total_penilaian_perilaku }} Penilaian
+        </span>
+        {% endif %}
+      </div>
+
+      <div class="perilaku-wrap">
+        <div class="perilaku-score-ring">
+          <svg width="64" height="64" viewBox="0 0 64 64">
+            <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(168,85,247,.15)" stroke-width="6"/>
+            <circle cx="32" cy="32" r="26" fill="none" stroke="#a855f7" stroke-width="6"
+              stroke-dasharray="163.36"
+              stroke-dashoffset="{{ nilai_perilaku_siswa }}"
+              stroke-linecap="round"/>
+          </svg>
+          <div class="score-num">{{ nilai_perilaku_siswa }}</div>
+        </div>
+        <div class="perilaku-desc">
+          <div class="perilaku-title">Skor Perilaku Global (Semua Guru)</div>
+          <div class="perilaku-label">
+            {% if nilai_perilaku_siswa >= 85 %}Sangat Baik
+            {% elif nilai_perilaku_siswa >= 70 %}Baik
+            {% elif nilai_perilaku_siswa >= 50 %}Cukup
+            {% else %}Perlu Peningkatan{% endif %}
+          </div>
+          <div class="perilaku-sub">
+            Dari {{ total_penilaian_perilaku }} penilaian semua guru
+            &nbsp;·&nbsp; Kontribusi ke rapor: <strong style="color:#c084fc;">15%</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Distribusi perilaku -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;">
+        <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-family:var(--disp);font-size:1.5rem;color:#4ade80;">{{ perilaku_baik_count }}</div>
+          <div style="font-size:10.5px;color:#4ade80;font-weight:600;">Baik</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">= 100 poin</div>
+        </div>
+        <div style="background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.2);border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-family:var(--disp);font-size:1.5rem;color:#F5C518;">{{ perilaku_cukup_count }}</div>
+          <div style="font-size:10.5px;color:#F5C518;font-weight:600;">Cukup</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">= 70 poin</div>
+        </div>
+        <div style="background:rgba(200,16,46,.06);border:1px solid rgba(200,16,46,.2);border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-family:var(--disp);font-size:1.5rem;color:#f87171;">{{ perilaku_kurang_count }}</div>
+          <div style="font-size:10.5px;color:#f87171;font-weight:600;">Kurang</div>
+          <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">= 30 poin</div>
+        </div>
+      </div>
+
+      {% if riwayat_perilaku %}
+        {% for p in riwayat_perilaku %}
+        <div class="perilaku-item">
+          <div class="perilaku-dot {% if p.kategori == 'Baik' %}dot-baik{% elif p.kategori == 'Cukup' %}dot-cukup{% else %}dot-kurang{% endif %}">
+            {% if p.kategori == 'Baik' %}B{% elif p.kategori == 'Cukup' %}C{% else %}K{% endif %}
+          </div>
+          <div class="perilaku-info">
+            <div class="perilaku-mapel">
+              {% if p.jadwal %}{{ p.jadwal.mata_pelajaran.nama }}{% else %}—{% endif %}
+              &nbsp;
+              <span class="badge {% if p.kategori == 'Baik' %}badge-green{% elif p.kategori == 'Cukup' %}badge-yellow{% else %}badge-red{% endif %}" style="font-size:10px;padding:2px 7px;">{{ p.kategori }}</span>
+            </div>
+            <div class="perilaku-guru">
+              <i class="fas fa-chalkboard-teacher" style="font-size:9px;color:var(--amber);"></i>
+              {{ p.guru.nama_lengkap }}
+              {% if p.catatan %}&nbsp;·&nbsp;<span style="font-style:italic;color:rgba(255,255,255,.35);">{{ p.catatan }}</span>{% endif %}
+            </div>
+          </div>
+          <div class="perilaku-tgl">{{ p.tanggal|date:"d M Y" }}</div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-user-check" style="color:#c084fc;opacity:1;"></i>
+          Belum ada penilaian perilaku dari guru.
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- ABSENSI -->
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon green-ic"><i class="fas fa-user-check"></i></div>
+          Rekapitulasi Kehadiran
+        </div>
+      </div>
+      <div class="absen-grid">
+        <div class="absen-box ab-hadir"><div class="num">{{ absensi.hadir|default:"0" }}</div><div class="lbl">Hadir</div></div>
+        <div class="absen-box ab-izin"> <div class="num">{{ absensi.izin|default:"0" }}</div><div class="lbl">Izin</div></div>
+        <div class="absen-box ab-sakit"><div class="num">{{ absensi.sakit|default:"0" }}</div><div class="lbl">Sakit</div></div>
+        <div class="absen-box ab-alfa"> <div class="num">{{ absensi.alfa|default:"0" }}</div><div class="lbl">Alfa</div></div>
+      </div>
+    </div>
+
+    <!-- E-LEARNING: Tugas Aktif -->
+    <div class="panel-card" id="elearning">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon gold-ic"><i class="fas fa-laptop-code"></i></div>
+          E-Learning — Tugas Aktif &amp; Modul
+        </div>
+      </div>
+      {% for tugas in tugas_list %}
+        <div class="tugas-item">
+          <div class="tugas-dot"></div>
+          <div class="tugas-info">
+            <div class="tugas-judul">{{ tugas.judul }}</div>
+            <div class="tugas-mapel">{{ tugas.mata_pelajaran.nama }}</div>
+          </div>
+          <div class="tugas-right">
+            <div class="tugas-dl"><i class="fas fa-clock" style="font-size:10px;"></i> {{ tugas.batas_waktu|date:"d M Y" }}</div>
+            {% for jwb in tugas.jawaban_siswa.all %}
+              {% if jwb.siswa_id == siswa.id %}
+                {% if jwb.nilai is not None %}
+                  <span class="badge badge-green" style="font-size:10px;"><i class="fas fa-check" style="font-size:8px;"></i> Dinilai: {{ jwb.nilai }}</span>
+                {% else %}
+                  <span class="badge badge-yellow" style="font-size:10px;"><i class="fas fa-paper-plane" style="font-size:8px;"></i> Terkumpul</span>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% empty %}
+        <div class="empty-state">
+          <i class="fas fa-check-circle" style="color:#22c55e;opacity:1;"></i>
+          Tidak ada tugas aktif.
+        </div>
+      {% endfor %}
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         NILAI & FEEDBACK TUGAS DARI GURU
+         Panel ini HANYA menampilkan jawaban tugas yang sudah dinilai.
+         Bukan nilai rapor. Nilai rapor ada di panel "Rekap Nilai Rapor" di atas.
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="panel-card" id="nilai-tugas">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon blue-ic"><i class="fas fa-star-half-alt"></i></div>
+          Nilai &amp; Feedback Tugas dari Guru
+        </div>
+        {% if jawaban_dinilai %}
+        <span class="badge badge-green"><i class="fas fa-check" style="font-size:9px;"></i> {{ jawaban_dinilai|length }} Dinilai</span>
+        {% endif %}
+      </div>
+
+      <div style="padding:8px 0 14px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:14px;font-size:11.5px;color:rgba(255,255,255,.35);">
+        <i class="fas fa-info-circle" style="color:#60a5fa;margin-right:4px;"></i>
+        Menampilkan nilai tugas harian yang sudah dinilai guru. Nilai rapor lengkap tersedia di panel <strong style="color:rgba(255,255,255,.55);">Rekap Nilai Rapor</strong> di atas.
+      </div>
+
+      {% if jawaban_dinilai %}
+        {% for jwb in jawaban_dinilai %}
+        <div class="nilai-item">
+          {% if jwb.nilai >= 85 %}<div class="nilai-pill nilai-pill-a">{{ jwb.nilai }}</div>
+          {% elif jwb.nilai >= 70 %}<div class="nilai-pill nilai-pill-b">{{ jwb.nilai }}</div>
+          {% elif jwb.nilai >= 60 %}<div class="nilai-pill nilai-pill-c">{{ jwb.nilai }}</div>
+          {% else %}<div class="nilai-pill nilai-pill-d">{{ jwb.nilai }}</div>{% endif %}
+          <div class="nilai-item-info">
+            <div class="nilai-item-judul">{{ jwb.tugas.judul }}</div>
+            <div class="nilai-item-mapel">
+              <i class="fas fa-book" style="font-size:9px;color:var(--amber);"></i>
+              {{ jwb.tugas.mata_pelajaran.nama }}
+              &nbsp;·&nbsp;
+              <i class="far fa-clock" style="font-size:9px;color:rgba(255,255,255,.3);"></i>
+              Dinilai {{ jwb.diperbarui_at|date:"d M Y, H:i" }}
+            </div>
+            {% if jwb.catatan_guru %}
+            <div class="nilai-item-catatan">
+              <i class="fas fa-comment-alt" style="color:var(--orange);font-size:9px;margin-right:4px;"></i>
+              {{ jwb.catatan_guru }}
+            </div>
+            {% else %}
+            <div class="nilai-item-catatan" style="font-style:italic;color:rgba(255,255,255,.25);">Tidak ada catatan dari guru.</div>
+            {% endif %}
+          </div>
+          <div style="flex-shrink:0;">
+            {% if jwb.nilai >= 85 %}<span class="badge badge-green">A</span>
+            {% elif jwb.nilai >= 70 %}<span class="badge badge-blue">B</span>
+            {% elif jwb.nilai >= 60 %}<span class="badge badge-yellow">C</span>
+            {% else %}<span class="badge badge-red">D</span>{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+        {% if rata_nilai_tugas is not None %}
+        <div class="rata-strip">
+          <span class="rata-strip-lbl"><i class="fas fa-chart-bar" style="color:var(--gold);margin-right:4px;"></i>Rata-rata dari {{ jawaban_dinilai|length }} tugas yang sudah dinilai</span>
+          <span class="rata-strip-val">{{ rata_nilai_tugas }} / 100</span>
+        </div>
+        {% endif %}
+      {% else %}
+      <div class="empty-state">
+        <i class="fas fa-hourglass-half" style="color:var(--amber);opacity:1;"></i>
+        Belum ada tugas yang dinilai guru.<br>
+        <span style="font-size:12px;">Kirimkan tugasmu dan tunggu penilaian dari guru.</span>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- KEUANGAN -->
+    <div class="panel-card" id="keuangan">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon silver-ic"><i class="fas fa-credit-card"></i></div>
+          Status Keuangan &amp; Tagihan SPP
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <colgroup><col style="width:45%"><col style="width:30%"><col style="width:25%"></colgroup>
+          <thead>
+            <tr><th>Jenis Tagihan</th><th>Jumlah</th><th>Status</th></tr>
+          </thead>
+          <tbody>
+            {% for t in tagihan_list %}
+            <tr>
+              <td style="font-weight:500;color:var(--white);">{{ t.jenis_tagihan }}</td>
+              <td style="font-family:monospace;font-size:.8rem;">Rp {{ t.jumlah_tagihan }}</td>
+              <td>
+                {% if t.status == 'Lunas' %}
+                  <span class="badge badge-green"><i class="fas fa-check" style="font-size:9px;"></i> Lunas</span>
+                {% else %}
+                  <span class="badge badge-red"><i class="fas fa-times" style="font-size:9px;"></i> Belum Lunas</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">
+              <div class="empty-state"><i class="fas fa-smile" style="color:#22c55e;opacity:1;"></i>Semua administrasi keuangan semester ini lunas.</div>
+            </td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /kiri -->
+
+  <!-- KANAN -->
+  <div>
+
+    <!-- PENGUMUMAN -->
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon red-ic"><i class="fas fa-bullhorn"></i></div>
+          Papan Pengumuman
+        </div>
+      </div>
+      {% for p in pengumuman %}
+      <div class="pengumuman-item">
+        <div class="pengumuman-title">{{ p.judul }}</div>
+        <span class="pengumuman-date"><i class="fas fa-calendar-alt"></i> {{ p.created_at|date:"d M Y" }}</span>
+      </div>
+      {% empty %}
+      <div class="empty-state"><i class="fas fa-bell-slash"></i>Tidak ada pengumuman baru.</div>
+      {% endfor %}
+    </div>
+
+    <!-- AGENDA -->
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon"><i class="fas fa-calendar-alt"></i></div>
+          Agenda &amp; Kalender
+        </div>
+      </div>
+      {% for a in agenda %}
+      <div class="agenda-item">
+        <div class="agenda-date">
+          <div class="agenda-day">{{ a.tanggal|date:"d" }}</div>
+          <div class="agenda-mon">{{ a.tanggal|date:"M" }}</div>
+        </div>
+        <div class="agenda-text">{{ a.nama_kegiatan }}</div>
+      </div>
+      {% empty %}
+      <div class="empty-state"><i class="fas fa-calendar-check"></i>Tidak ada agenda terdekat.</div>
+      {% endfor %}
+    </div>
+
+    <!-- RINGKASAN NILAI RAPOR (sidebar) -->
+    {% if nilai_list %}
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon gold-ic"><i class="fas fa-trophy"></i></div>
+          Ringkasan Nilai Rapor
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div style="background:rgba(245,197,24,.06);border:1px solid rgba(245,197,24,.15);border-radius:12px;padding:14px;text-align:center;">
+          <div style="font-family:var(--disp);font-size:2rem;color:var(--gold);line-height:1;">
+            {% if rata_nilai_rapor is not None %}{{ rata_nilai_rapor }}{% else %}—{% endif %}
+          </div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;">Rata-rata Rapor</div>
+        </div>
+        <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);border-radius:12px;padding:14px;text-align:center;">
+          <div style="font-family:var(--disp);font-size:2rem;color:#4ade80;line-height:1;">{{ total_nilai_rapor }}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.4);margin-top:4px;">Mata Pelajaran</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;font-weight:700;">Distribusi Grade</div>
+      {% for n in nilai_list %}
+        {% if n.nilai_angka >= 90 %}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="predikat-chip pred-a">A</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.6);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ n.mata_pelajaran.nama }}</span>
+            <span style="font-size:12px;font-weight:700;color:#4ade80;">{{ n.nilai_angka }}</span>
+          </div>
+        {% elif n.nilai_angka >= 80 %}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="predikat-chip pred-b">B</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.6);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ n.mata_pelajaran.nama }}</span>
+            <span style="font-size:12px;font-weight:700;color:#60a5fa;">{{ n.nilai_angka }}</span>
+          </div>
+        {% elif n.nilai_angka >= 70 %}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="predikat-chip pred-c">C</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.6);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ n.mata_pelajaran.nama }}</span>
+            <span style="font-size:12px;font-weight:700;color:#F5C518;">{{ n.nilai_angka }}</span>
+          </div>
+        {% elif n.nilai_angka >= 60 %}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="predikat-chip pred-d">D</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.6);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ n.mata_pelajaran.nama }}</span>
+            <span style="font-size:12px;font-weight:700;color:#f87171;">{{ n.nilai_angka }}</span>
+          </div>
+        {% else %}
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="predikat-chip pred-e">E</span>
+            <span style="font-size:12px;color:rgba(255,255,255,.6);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ n.mata_pelajaran.nama }}</span>
+            <span style="font-size:12px;font-weight:700;color:#9ca3af;">{{ n.nilai_angka }}</span>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- RINGKASAN PERILAKU (sidebar) -->
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon purple-ic"><i class="fas fa-heart"></i></div>
+          Ringkasan Perilaku
+        </div>
+      </div>
+      <div style="text-align:center;padding:12px 0 8px;">
+        <div style="font-family:var(--disp);font-size:3rem;color:#c084fc;line-height:1;margin-bottom:6px;">{{ nilai_perilaku_siswa }}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.4);">Skor Perilaku / 100</div>
+        <div style="margin-top:10px;margin-bottom:12px;">
+          {% if nilai_perilaku_siswa >= 85 %}<span class="badge badge-green">Sangat Baik</span>
+          {% elif nilai_perilaku_siswa >= 70 %}<span class="badge badge-blue">Baik</span>
+          {% elif nilai_perilaku_siswa >= 50 %}<span class="badge badge-yellow">Cukup</span>
+          {% else %}<span class="badge badge-red">Perlu Peningkatan</span>{% endif %}
+        </div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.35);border-top:1px solid rgba(255,255,255,.06);padding-top:10px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+          <span style="color:#4ade80;">Baik ({{ perilaku_baik_count }}x)</span>
+          <span>100 poin</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+          <span style="color:#F5C518;">Cukup ({{ perilaku_cukup_count }}x)</span>
+          <span>70 poin</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="color:#f87171;">Kurang ({{ perilaku_kurang_count }}x)</span>
+          <span>30 poin</span>
+        </div>
+        <div style="text-align:center;color:rgba(255,255,255,.3);">
+          Kontribusi ke rapor: <strong style="color:#c084fc;">15%</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- KONTAK -->
+    <div class="panel-card">
+      <div class="panel-header">
+        <div class="panel-title">
+          <div class="panel-title-icon silver-ic"><i class="fas fa-user-shield"></i></div>
+          Pengaturan &amp; Kontak
+        </div>
+      </div>
+      <div style="display:grid;gap:10px;">
+        {% if siswa.wali.no_hp %}
+          <a href="https://wa.me/{{ siswa.wali.no_hp }}?text=Assalamualaikum" target="_blank" style="text-decoration:none;">
+            <button type="button" class="btn-wa-fire"><i class="fab fa-whatsapp"></i> Hubungi Wali Murid</button>
+          </a>
+        {% else %}
+          <button type="button" disabled class="btn-ghost-fire" style="opacity:.5;cursor:not-allowed;"><i class="fas fa-comments"></i> Kontak Wali Belum Tersedia</button>
+        {% endif %}
+        <button type="button" class="btn-bug-fire" onclick="bukaModalBug()"><i class="fas fa-bug"></i> Laporkan Kendala Sistem</button>
+      </div>
+    </div>
+
+  </div><!-- /kanan -->
+</div><!-- /main-grid -->
+
+<!-- MODAL EDIT BIODATA -->
+<div id="modalBiodata" class="s-modal-overlay">
+  <div class="s-modal-box">
+    <div class="s-modal-head">
+      <h4><i class="fas fa-user-edit"></i> Perbarui Biodata Siswa</h4>
+      <button class="modal-close-btn" onclick="tutupModalBiodata()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="s-modal-body">
+      <form action="{% url 'akademik:dashboard_siswa' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="update_biodata">
+        <div class="form-group">
+          <label class="form-label">Tempat Lahir</label>
+          <input type="text" name="tempat_lahir" value="{{ siswa.tempat_lahir|default:'' }}" required class="form-input" placeholder="Masukkan tempat lahir">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tanggal Lahir</label>
+          <input type="date" name="tanggal_lahir" value="{{ siswa.tanggal_lahir|date:'Y-m-d'|default:'' }}" required class="form-input">
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" onclick="tutupModalBiodata()">Batal</button>
+          <button type="submit" class="btn-save"><i class="fas fa-save"></i> Simpan Data</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LAPORAN BUG -->
+<div id="modalBug" class="s-modal-overlay">
+  <div class="s-modal-box">
+    <div class="s-modal-head">
+      <h4><i class="fas fa-bug"></i> Laporkan Masalah IT / Bug</h4>
+      <button class="modal-close-btn" onclick="tutupModalBug()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="s-modal-body">
+      <p style="font-size:13px;color:var(--silver);margin:0 0 16px;line-height:1.6;">
+        Keluhan kamu akan langsung dikirimkan ke dasbor tim teknis Tata Usaha (TU) sekolah.
+      </p>
+      <form action="{% url 'akademik:laporkan_bug' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Deskripsi Singkat Kendala</label>
+          <textarea name="deskripsi" required placeholder="Contoh: Modul nilai tidak keluar..." class="form-input"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" onclick="tutupModalBug()">Tutup</button>
+          <button type="submit" class="btn-danger"><i class="fas fa-paper-plane"></i> Kirim Laporan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Upload foto profil siswa via AJAX
+(function () {
+  const input   = document.getElementById('inputFotoSiswa');
+  const preview = document.getElementById('previewFotoSiswa');
+  const toast   = document.getElementById('fotoToast');
+
+  function showToast(msg, isError) {
+    toast.textContent = msg;
+    toast.className   = 'foto-toast' + (isError ? ' error' : '');
+    void toast.offsetWidth;
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 3000);
+  }
+
+  input.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+      showToast('Ukuran file maksimal 3 MB.', true); return;
+    }
+    // Preview instan
+    const reader = new FileReader();
+    reader.onload = e => { preview.src = e.target.result; };
+    reader.readAsDataURL(file);
+
+    // Upload ke server
+    const fd = new FormData();
+    fd.append('foto_profil', file);
+    fd.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    fetch('{% url "akademik:update_foto_siswa" %}', { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          preview.src = data.url + '?t=' + Date.now();
+          showToast('✓ Foto profil berhasil diperbarui!', false);
+        } else {
+          showToast('✗ ' + data.message, true);
+        }
+      })
+      .catch(() => showToast('✗ Gagal menghubungi server.', true));
+  });
+}());
+(function () {
+  'use strict';
+  function bukaModalBiodata() { document.getElementById('modalBiodata').classList.add('open'); }
+  function tutupModalBiodata() { document.getElementById('modalBiodata').classList.remove('open'); }
+  function bukaModalBug() { document.getElementById('modalBug').classList.add('open'); }
+  function tutupModalBug() { document.getElementById('modalBug').classList.remove('open'); }
+  window.bukaModalBiodata = bukaModalBiodata;
+  window.tutupModalBiodata = tutupModalBiodata;
+  window.bukaModalBug = bukaModalBug;
+  window.tutupModalBug = tutupModalBug;
+  ['modalBiodata', 'modalBug'].forEach(function (id) {
+    document.getElementById(id).addEventListener('click', function (e) {
+      if (e.target === this) { this.classList.remove('open'); }
+    }, { passive: true });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.getElementById('modalBiodata').classList.remove('open');
+      document.getElementById('modalBug').classList.remove('open');
+    }
+  }, { passive: true });
+}());
+</script>
+{% endblock %}
