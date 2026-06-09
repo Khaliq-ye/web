@@ -122,6 +122,10 @@
 
             </nav>
 
+            <button class="nav-toggle" id="navToggle" aria-label="Buka menu navigasi">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
         </div>
 
     </header>
@@ -777,6 +781,24 @@
    [OPT 4] visibilitychange — pause saat tab hidden
    [OPT 5] Satu clearRect per frame, no layout thrashing
 ═══════════════════════════════════════════════════════════ */
+
+// Hamburger toggle
+const navToggle = document.getElementById('navToggle');
+const navBar = document.querySelector('.nav-bar');
+navToggle.addEventListener('click', function() {
+    navBar.classList.toggle('open');
+    this.querySelector('i').className = navBar.classList.contains('open')
+        ? 'fa-solid fa-xmark'
+        : 'fa-solid fa-bars';
+});
+// Tutup menu saat link diklik
+document.querySelectorAll('.nav-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        navBar.classList.remove('open');
+        navToggle.querySelector('i').className = 'fa-solid fa-bars';
+    });
+});
+
 (function () {
     'use strict';
 
