@@ -557,7 +557,7 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
     font-size: 0.87rem; vertical-align: top; position: relative; z-index: 1;
 }
-.info-table td:first-child { font-weight: 600; color: rgba(255,255,255,0.38); padding-right: 14px; white-space: nowrap; }
+.info-table td:first-child { font-weight: 600; color: rgba(255,255,255,0.38); padding-right: 14px; white-space: normal; }
 .info-table td:last-child  { color: rgba(255,255,255,0.76); font-weight: 500; }
 .info-table tr:last-child td { border-bottom: none; }
 
