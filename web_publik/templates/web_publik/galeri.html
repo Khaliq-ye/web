@@ -120,6 +120,43 @@ html, body { overflow-x: hidden !important; width: 100%; }
     .info-table td:first-child { font-size: 0.74rem !important; }
     .sidebar-widget { padding: 16px 14px !important; }
 }
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+}
+
+/* PENYEBAB UTAMA: filter-tabs mendorong halaman melebar */
+.filter-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    /* Jangan biarkan container sendiri melebar */
+    contain: inline-size !important;
+}
+
+.filter-tabs {
+    /* Boleh scroll horizontal di DALAM container saja */
+    min-width: 0 !important;
+    flex-wrap: nowrap !important;
+}
+
+/* Pastikan sub-grid tidak overflow */
+.sub-grid,
+.sub-main,
+.sub-sidebar {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Semua child langsung container tidak boleh meluber */
+.container > *,
+.sub-grid > * {
+    min-width: 0 !important;
+    max-width: 100% !important;
+}
+
 </style>
 </head>
 <body>
