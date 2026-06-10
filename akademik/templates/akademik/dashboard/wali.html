@@ -344,6 +344,76 @@
     min-width: 420px;
   }
 }
+
+@media (max-width: 768px) {
+
+  /* Sembunyikan header tabel */
+  .wali-table thead {
+    display: none;
+  }
+
+  /* Hapus overflow scroll, tidak perlu lagi */
+  .table-scroll {
+    overflow-x: visible;
+  }
+
+  /* Setiap baris jadi block card */
+  .wali-table tbody tr {
+    display: block;
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(232,86,26,.2);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    padding: 10px 14px;
+  }
+
+  /* Baris kosong tetap center */
+  .wali-table tbody tr.empty-row {
+    text-align: center;
+    padding: 24px !important;
+  }
+  .wali-table tbody tr.empty-row td {
+    display: block;
+    text-align: center !important;
+    border: none;
+  }
+  .wali-table tbody tr.empty-row td::before {
+    display: none;
+  }
+
+  /* Setiap cell jadi satu baris label + nilai */
+  .wali-table tbody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    text-align: left !important;
+    font-size: .82rem;
+  }
+
+  .wali-table tbody td:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .wali-table tbody td:first-child {
+    padding-top: 0;
+  }
+
+  /* Label otomatis dari data-label */
+  .wali-table tbody td::before {
+    content: attr(data-label);
+    font-size: .72rem;
+    color: var(--silver);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    flex-shrink: 0;
+    margin-right: 10px;
+    min-width: 90px;
+  }
+}
 </style>
 {% endblock %}
 
@@ -460,12 +530,12 @@
           <tbody>
             {% for nilai in daftar_nilai %}
             <tr>
-              <td><span class="mapel-name">{{ nilai.mata_pelajaran.nama }}</span></td>
-              <td>{{ nilai.nilai_tugas }}</td>
-              <td>{{ nilai.nilai_uts }}</td>
-              <td>{{ nilai.nilai_uas }}</td>
-              <td><span class="badge-nilai">{{ nilai.nilai_angka }}</span></td>
-              <td><span class="badge-predikat">{{ nilai.predikat }}</span></td>
+              <td data-label="Mata Pelajaran"><span class="mapel-name">{{ nilai.mata_pelajaran.nama }}</span></td>
+              <td data-label="Tugas">{{ nilai.nilai_tugas }}</td>
+              <td data-label="UTS">{{ nilai.nilai_uts }}</td>
+              <td data-label="UAS">{{ nilai.nilai_uas }}</td>
+              <td data-label="Angka"><span class="badge-nilai">{{ nilai.nilai_angka }}</span></td>
+              <td data-label="Predikat"><span class="badge-predikat">{{ nilai.predikat }}</span></td>
             </tr>
             {% empty %}
             <tr class="empty-row"><td colspan="6">Belum ada data nilai.</td></tr>
@@ -497,9 +567,9 @@
           <tbody>
             {% for p in daftar_presensi %}
             <tr>
-              <td><span class="tanggal-text">{{ p.tanggal }}</span></td>
-              <td>{{ p.jadwal.mata_pelajaran.nama }}</td>
-              <td>
+              <td data-label="Tanggal"><span class="tanggal-text">{{ p.tanggal }}</span></td>
+              <td data-label="Mata Pelajaran">{{ p.jadwal.mata_pelajaran.nama }}</td>
+              <td data-label="Status">
                 {% if p.status == 'Hadir' %}
                   <span class="badge-status badge-hadir">{{ p.status }}</span>
                 {% elif p.status == 'Alpa' or p.status == 'Alpha' %}
@@ -510,7 +580,7 @@
                   <span class="badge-status badge-sakit">{{ p.status }}</span>
                 {% endif %}
               </td>
-              <td><span class="ket-text">{{ p.keterangan|default:"—" }}</span></td>
+              <td data-label="Keterangan"><span class="ket-text">{{ p.keterangan|default:"—" }}</span></td>
             </tr>
             {% empty %}
             <tr class="empty-row"><td colspan="4">Belum ada riwayat absensi.</td></tr>
