@@ -102,14 +102,19 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
    OPTIMASI: hapus gridSlide & heroAmbientDrift (berat).
    Ganti dengan gradient statis + 1 animasi ringan pada judul.
 ============================================================ */
+/* DENGAN INI: */
 .page-hero {
     position: relative;
-    padding: 60px 0 90px;
+    padding: 0;
+    min-height: 420px;
     isolation: isolate;
     overflow: hidden;
     background: var(--coal-black);
     text-align: center;
     z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Ambient background — statis, tidak animasi */
@@ -147,10 +152,13 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     pointer-events: none;
     z-index: 0;
 }
+/* DENGAN INI: */
 .page-hero-inner {
     position: relative;
     z-index: 2;
     pointer-events: auto;
+    width: 100%;
+    padding: 40px 24px;
 }
 
 .page-hero-label {
