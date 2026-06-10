@@ -4,28 +4,20 @@
    Requires: style.css + profile.css dimuat lebih dulu
 ============================================================ */
 
-/* ── GLOBAL: blokir scroll horizontal ── */
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
-/* --- FILTER TABS --- */
+/* ============================================================
+   1. FILTER TABS
+============================================================ */
 .filter-container {
     margin-bottom: 30px;
     width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 6px;
-    position: relative;
-    z-index: 10;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
-.filter-container::-webkit-scrollbar { height: 3px; }
-.filter-container::-webkit-scrollbar-thumb {
-    background: rgba(232,82,26,0.3);
-    border-radius: 4px;
-}
+.filter-container::-webkit-scrollbar { display: none; }
+
 .filter-tabs {
     display: inline-flex;
     gap: 10px;
@@ -33,6 +25,7 @@ html, body {
     flex-wrap: nowrap;
     padding: 4px 2px 2px 2px;
 }
+
 .filter-btn {
     display: inline-flex;
     align-items: center;
@@ -42,16 +35,13 @@ html, body {
     color: rgba(255,255,255,0.55);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 30px;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     font-size: 0.88rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
     white-space: nowrap;
     flex-shrink: 0;
-    position: relative;
-    z-index: 10;
-    will-change: transform;
 }
 .filter-btn i { font-size: 0.95rem; transition: color 0.25s; }
 .filter-btn:hover {
@@ -60,7 +50,6 @@ html, body {
     border-color: rgba(232,82,26,0.4);
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(232,82,26,0.15);
-    z-index: 11;
 }
 .filter-btn:hover i { color: var(--fire-orange); }
 .filter-btn.active {
@@ -68,12 +57,13 @@ html, body {
     color: var(--white);
     border-color: transparent;
     box-shadow: 0 6px 20px rgba(192,57,43,0.35);
-    z-index: 10;
 }
 .filter-btn.active i { color: var(--white); }
 .filter-btn:active { transform: scale(0.97); }
 
-/* --- GALLERY GRID --- */
+/* ============================================================
+   2. GALLERY GRID
+============================================================ */
 .galeri-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -83,7 +73,9 @@ html, body {
     box-sizing: border-box;
 }
 
-/* --- GALLERY CARD --- */
+/* ============================================================
+   3. GALLERY CARD
+============================================================ */
 .galeri-card {
     background: var(--coal-mid);
     border: 1px solid rgba(255,255,255,0.06);
@@ -93,7 +85,6 @@ html, body {
     position: relative;
     isolation: isolate;
     min-width: 0;
-    width: 100%;
     box-sizing: border-box;
 }
 .galeri-card:hover {
@@ -102,7 +93,6 @@ html, body {
     box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 20px rgba(232,82,26,0.12);
 }
 
-/* Frame gambar */
 .galeri-frame {
     position: relative;
     width: 100%;
@@ -119,7 +109,6 @@ html, body {
 }
 .galeri-card:hover .galeri-frame img { transform: scale(1.07); }
 
-/* Overlay saat hover */
 .galeri-overlay {
     position: absolute;
     inset: 0;
@@ -160,7 +149,6 @@ html, body {
     pointer-events: none;
 }
 
-/* Tombol zoom */
 .zoom-btn {
     width: 36px;
     height: 36px;
@@ -188,15 +176,11 @@ html, body {
 }
 .zoom-btn:active { transform: scale(0.95); }
 
-/* Info bawah kartu */
 .galeri-info {
     padding: 14px 16px;
-    position: relative;
-    z-index: 0;
-    overflow: hidden;
     min-width: 0;
-    max-width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
     word-break: break-word;
     overflow-wrap: break-word;
 }
@@ -206,11 +190,8 @@ html, body {
     color: var(--white);
     margin-bottom: 10px;
     line-height: 1.4;
-    overflow: hidden;
     word-break: break-word;
     overflow-wrap: break-word;
-    min-width: 0;
-    max-width: 100%;
     white-space: normal;
 }
 .galeri-meta {
@@ -244,24 +225,15 @@ html, body {
     white-space: nowrap;
 }
 
-/* --- CARD DESC --- */
-.card-desc,
-.content-card p {
-    white-space: normal;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-/* --- EMPTY STATE --- */
+/* ============================================================
+   4. EMPTY STATE
+============================================================ */
 .empty-box {
     text-align: center;
     padding: 60px 24px;
     background: rgba(255,255,255,0.02);
     border-radius: 14px;
     border: 2px dashed rgba(255,255,255,0.08);
-    color: var(--silver);
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
@@ -281,7 +253,6 @@ html, body {
     white-space: normal;
     word-break: break-word;
     overflow-wrap: break-word;
-    max-width: 100%;
 }
 .empty-box span {
     font-size: 0.9rem;
@@ -290,11 +261,12 @@ html, body {
     white-space: normal;
     word-break: break-word;
     overflow-wrap: break-word;
-    max-width: 100%;
     line-height: 1.6;
 }
 
-/* --- LIGHTBOX / MODAL PREVIEW --- */
+/* ============================================================
+   5. LIGHTBOX
+============================================================ */
 .lightbox-overlay {
     display: none;
     position: fixed;
@@ -312,13 +284,11 @@ html, body {
 
 .lightbox-close {
     position: absolute;
-    top: 22px;
-    right: 28px;
+    top: 22px; right: 28px;
     background: rgba(255,255,255,0.08);
     border: 1px solid rgba(255,255,255,0.15);
     color: var(--white);
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -327,7 +297,6 @@ html, body {
     cursor: pointer;
     transition: all 0.25s ease;
     z-index: 100001;
-    pointer-events: auto;
 }
 .lightbox-close:hover {
     background: var(--gradient-fire);
@@ -356,7 +325,6 @@ html, body {
     box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px rgba(232,82,26,0.15);
     border: 1px solid rgba(232,82,26,0.2);
     display: block;
-    flex-shrink: 0;
 }
 .lightbox-caption {
     margin-top: 18px;
@@ -371,71 +339,37 @@ html, body {
 }
 
 /* ============================================================
-   FIX GLOBAL — z-index & pointer-events
+   6. Z-INDEX FIX
 ============================================================ */
-.page-hero {
-    position: relative;
-    z-index: 0;
-    isolation: isolate;
-}
+.page-hero { position: relative; z-index: 0; isolation: isolate; }
 .page-hero-grid-overlay,
-.orb, .orb-hero-1, .orb-hero-2, .orb-hero-3,
-.page-hero-deco-text {
-    z-index: 0;
-    pointer-events: none;
+.orb, .orb-hero-1, .orb-hero-2, .orb-hero-3 {
+    z-index: 0; pointer-events: none;
 }
-.page-hero-inner {
-    position: relative;
-    z-index: 1;
-    pointer-events: auto;
-}
+.page-hero-inner { position: relative; z-index: 1; pointer-events: auto; }
 .sub-layout { position: relative; z-index: 2; }
 .sub-grid   { position: relative; z-index: 2; }
 
 .content-card {
-    position: relative;
-    z-index: 1;
-    isolation: isolate;
-    overflow: visible;
+    position: relative; z-index: 1;
+    isolation: isolate; overflow: visible;
 }
-.content-card::before,
-.content-card::after {
-    z-index: 0;
-    pointer-events: none;
+.content-card::before, .content-card::after {
+    z-index: 0; pointer-events: none;
 }
-.content-card > *,
-.content-card h3,
-.content-card p,
-.content-card .card-desc,
-.filter-container,
-.filter-tabs,
-.filter-btn,
-.galeri-grid {
-    position: relative;
-    z-index: 1;
-    pointer-events: auto;
+.content-card > *, .filter-container, .filter-tabs,
+.filter-btn, .galeri-grid {
+    position: relative; z-index: 1; pointer-events: auto;
 }
 .sub-sidebar  { position: relative; z-index: 2; }
-.sidebar-widget {
-    position: relative;
-    z-index: 1;
-    isolation: isolate;
-}
-.sidebar-widget::before,
-.sidebar-widget::after {
-    z-index: 0;
-    pointer-events: none;
-}
-.sidebar-cta .btn {
-    position: relative;
-    z-index: 1;
-    pointer-events: auto;
-}
+.sidebar-widget { position: relative; z-index: 1; isolation: isolate; }
+.sidebar-widget::before, .sidebar-widget::after { z-index: 0; pointer-events: none; }
+.sidebar-cta .btn { position: relative; z-index: 1; pointer-events: auto; }
 .main-header    { z-index: 1000 !important; }
 .toast-container{ z-index: 9999 !important; }
 
 /* ============================================================
-   RESPONSIVE — TABLET (≤ 768px)
+   7. RESPONSIVE — TABLET (≤ 768px)
 ============================================================ */
 @media (max-width: 768px) {
     .galeri-grid {
@@ -462,78 +396,67 @@ html, body {
 }
 
 /* ============================================================
-   RESPONSIVE — HP (≤ 600px)
+   8. RESPONSIVE — HP (≤ 600px)
+   Pola sama persis dengan academic.css
 ============================================================ */
 @media (max-width: 600px) {
 
+    /* Cegah konten meluber — sama seperti academic.css */
     .content-card {
-        padding: 18px 14px;
         overflow: hidden;
-        box-sizing: border-box;
-        max-width: 100%;
+        padding: 20px 16px;
     }
 
-    /* Teks deskripsi */
-    .card-desc,
-    .content-card p {
-        font-size: 0.86rem;
-        line-height: 1.7;
-        white-space: normal;
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
-
-    /* Filter tabs */
+    /* Filter tabs: scroll horizontal 1 baris — sama seperti academic-tabs */
     .filter-container {
         overflow-x: auto;
         padding-bottom: 8px;
+        scrollbar-width: none;
     }
+    .filter-container::-webkit-scrollbar { display: none; }
     .filter-tabs {
         flex-wrap: nowrap;
         gap: 8px;
     }
     .filter-btn {
-        padding: 8px 14px;
-        font-size: 0.78rem;
         flex-shrink: 0;
+        padding: 8px 14px;
+        font-size: 0.82rem;
     }
 
-    /* Galeri grid 2 kolom */
+    /* Galeri grid: 2 kolom — sama seperti ekstra-grid di academic */
     .galeri-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
+        gap: 12px;
     }
-    .galeri-frame { height: 110px; }
+    .galeri-frame { height: 115px; }
 
+    /* Info card */
     .galeri-info {
-        padding: 8px 10px;
+        padding: 10px 12px;
         overflow: hidden;
         min-width: 0;
-        box-sizing: border-box;
     }
     .galeri-info h4 {
-        font-size: 0.76rem;
+        font-size: 0.8rem;
         white-space: normal;
         word-break: break-word;
         overflow-wrap: break-word;
         max-height: none;
-        line-height: 1.3;
     }
     .galeri-meta {
         flex-direction: column;
         align-items: flex-start;
         gap: 3px;
     }
-    .galeri-date   { font-size: 0.62rem; }
-    .verified-tag  { font-size: 0.6rem; padding: 2px 6px; }
+    .galeri-date  { font-size: 0.65rem; }
+    .verified-tag { font-size: 0.62rem; padding: 2px 6px; }
 
     /* Empty box */
-    .empty-box {
-        padding: 32px 14px;
-    }
-    .empty-box i   { font-size: 2.4rem; }
-    .empty-box p   { font-size: 0.9rem; }
-    .empty-box span{ font-size: 0.8rem; line-height: 1.5; }
+    .empty-box { padding: 32px 16px; }
+    .empty-box i { font-size: 2.6rem; }
+    .empty-box p { font-size: 0.92rem; }
+    .empty-box span { font-size: 0.82rem; }
 
     /* Sidebar stat list */
     .stat-list li {
@@ -541,26 +464,15 @@ html, body {
         justify-content: space-between;
         align-items: center;
         flex-wrap: nowrap;
-        gap: 6px;
+        gap: 8px;
         padding: 10px 0;
     }
-    .stat-label {
-        flex: 1;
-        font-size: 0.82rem;
-        min-width: 0;
-        word-break: break-word;
-    }
-    .stat-val {
-        flex-shrink: 0;
-        font-size: 0.7rem;
-        padding: 3px 8px;
-        white-space: nowrap;
-    }
+    .stat-label { flex: 1; font-size: 0.82rem; min-width: 0; word-break: break-word; }
+    .stat-val   { flex-shrink: 0; font-size: 0.7rem; padding: 3px 8px; white-space: nowrap; }
 
-    /* Info table sidebar kontak */
+    /* Info table sidebar kontak — sama persis academic.css */
     .sidebar-widget div[style*="overflow-x"] {
         overflow-x: visible !important;
-        overflow: visible !important;
     }
     .info-table {
         width: 100%;
@@ -569,53 +481,38 @@ html, body {
     }
     .info-table td {
         white-space: normal;
-        word-break: break-all;
+        word-break: break-word;
         overflow-wrap: break-word;
-        hyphens: auto;
-        font-size: 0.8rem !important;
-        padding: 8px 0;
-        line-height: 1.5;
+        font-size: 0.82rem !important;
+        padding: 9px 0;
+        line-height: 1.55;
         vertical-align: top;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .info-table td:first-child {
-        width: 32%;
-        padding-right: 8px;
+        width: 35%;
+        padding-right: 10px;
         color: rgba(255,255,255,0.4);
         font-weight: 600;
-        font-size: 0.76rem !important;
+        font-size: 0.78rem !important;
     }
     .info-table td:last-child {
-        width: 68%;
+        width: 65%;
         color: rgba(255,255,255,0.76);
     }
     .info-table tr:last-child td { border-bottom: none; }
 
     /* Lightbox */
-    #imgPreview {
-        max-width: 95vw;
-        max-height: 60vh;
-    }
-    .lightbox-close {
-        top: 12px; right: 12px;
-        width: 38px; height: 38px;
-    }
-    .lightbox-caption {
-        font-size: 0.86rem;
-        margin-top: 12px;
-        padding: 0 8px;
-    }
+    #imgPreview { max-width: 95vw; max-height: 60vh; }
+    .lightbox-close { top: 12px; right: 12px; width: 38px; height: 38px; }
+    .lightbox-caption { font-size: 0.86rem; margin-top: 12px; padding: 0 8px; }
 }
 
 /* ============================================================
-   HP SANGAT KECIL (≤ 360px)
+   9. HP SANGAT KECIL (≤ 360px)
 ============================================================ */
 @media (max-width: 360px) {
-    .galeri-grid {
-        grid-template-columns: 1fr;
-    }
+    .galeri-grid { grid-template-columns: 1fr; }
     .galeri-frame { height: 160px; }
-    .filter-btn {
-        padding: 7px 12px;
-        font-size: 0.74rem;
-    }
+    .filter-btn { padding: 7px 12px; font-size: 0.76rem; }
 }
