@@ -435,11 +435,6 @@ textarea.form-input {height:85px;resize:vertical;}
   overflow: visible;
 }
 .panel-card::before {
-  border-radius: 18px 18px 0 0;/* FIX: panel-card overflow hidden memotong scroll tabel */
-.panel-card {
-  overflow: visible;
-}
-.panel-card::before {
   border-radius: 18px 18px 0 0;
   pointer-events: none;
 }
@@ -448,7 +443,7 @@ textarea.form-input {height:85px;resize:vertical;}
 .panel-card > *:not(.rapor-table-wrap):not(.data-table-wrap) {
   max-width: 100%;
 }
-}
+
 
 /* Wrapper scroll — global, bukan hanya di mobile */
 .rapor-table-wrap,
