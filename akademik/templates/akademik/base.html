@@ -359,34 +359,62 @@ body {
   *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
 }
 /* ============================================================
-   FIX RESPONSIF TABEL WALI MURID — mobile scroll horizontal
+   FIX RESPONSIF TABEL — semua ukuran layar (HP & Laptop)
 ============================================================ */
+
+/* Wrapper scroll — berlaku global, semua ukuran */
 .table-scroll {
   display: block;
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
 }
 
-.table-scroll > .table-scroll {
-  overflow-x: visible; /* cegah double-nest scroll */
+/* Cegah double-nested scroll (Absensi Terbaru punya 2x wrapper) */
+.table-scroll .table-scroll {
+  overflow-x: visible;
+  width: 100%;
 }
 
-@media (max-width: 900px) {
+/* Tabel utama — pakai width 100% dulu, baru min-width sebagai fallback */
+.wali-table {
+  width: 100%;
+  min-width: 520px;        /* kalau layar terlalu sempit, aktifkan scroll */
+  table-layout: auto;
+}
+
+.wali-table thead th,
+.wali-table tbody td {
+  white-space: nowrap;
+}
+
+/* ── Laptop / Tablet landscape (≥ 1024px) ── */
+@media (min-width: 1024px) {
   .wali-table {
-    min-width: 520px;
-    width: max-content;
+    min-width: unset;      /* di layar lebar, tabel melebar penuh */
+    width: 100%;
   }
   .wali-table thead th,
   .wali-table tbody td {
-    white-space: nowrap;
-    padding: 8px 10px;
+    white-space: normal;   /* teks boleh wrap di layar lebar */
   }
 }
 
-@media (max-width: 480px) {
+/* ── Tablet portrait (600px – 1023px) ── */
+@media (max-width: 1023px) and (min-width: 601px) {
   .wali-table {
-    min-width: 460px;
+    min-width: 560px;
+    font-size: .82rem;
+  }
+  .wali-table thead th { font-size: .74rem; padding: 9px 10px; }
+  .wali-table tbody td { padding: 9px 10px; }
+}
+
+/* ── HP (≤ 600px) ── */
+@media (max-width: 600px) {
+  .wali-table {
+    min-width: 480px;
     font-size: .74rem;
   }
   .wali-table thead th {
@@ -395,6 +423,14 @@ body {
   }
   .wali-table tbody td {
     padding: 7px 8px;
+  }
+}
+
+/* ── HP kecil (≤ 380px) ── */
+@media (max-width: 380px) {
+  .wali-table {
+    min-width: 420px;
+    font-size: .7rem;
   }
 }
   </style>
