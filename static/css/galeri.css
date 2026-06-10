@@ -2,6 +2,10 @@
    galeri.css — KHUSUS HALAMAN GALERI
    SMA Negeri 5 Kota X — Tema Api
    Requires: style.css + profile.css dimuat lebih dulu
+
+   SCOPING: semua rule yang berpotensi bocor ke layout global
+   dibatasi dengan selector .page-galeri (tambahkan class ini
+   pada tag <main class="sub-layout page-galeri">)
 ============================================================ */
 
 /* ============================================================
@@ -347,54 +351,112 @@
 }
 
 /* ============================================================
-   6. Z-INDEX FIX
+   6. Z-INDEX & LAYOUT — SCOPED ke .page-galeri
+   Semua rule di sini menggunakan prefix .page-galeri agar
+   tidak menginterferensi navigator atau halaman lain.
 ============================================================ */
-.page-hero { position: relative; z-index: 0; isolation: isolate; display: flex; align-items: center; justify-content: center; min-height: 420px; overflow: hidden; max-width: 100%; }
-.page-hero-grid-overlay,
-.orb, .orb-hero-1, .orb-hero-2, .orb-hero-3 {
-    z-index: 0; pointer-events: none;
-}
-.page-hero-inner { position: relative; z-index: 1; pointer-events: auto; }
 
-/* Kunci utama: potong overflow di level sub-layout */
-.sub-layout {
-    position: relative; z-index: 2;
+/* Page hero — hanya berlaku di halaman galeri */
+.page-galeri-hero {
+    position: relative;
+    z-index: 0;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 420px;
+    overflow: hidden;
+    max-width: 100%;
+}
+.page-galeri-hero .page-hero-grid-overlay,
+.page-galeri-hero .orb {
+    z-index: 0;
+    pointer-events: none;
+}
+.page-galeri-hero .page-hero-inner {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+/* Sub-layout scoped */
+.page-galeri {
+    position: relative;
+    z-index: 2;
     overflow-x: hidden;
     max-width: 100vw;
 }
-.sub-layout::before {
+.page-galeri::before {
     width: 300px !important;
     left: -150px !important;
 }
-.sub-layout .container {
+.page-galeri > .container {
     max-width: 100%;
     overflow: hidden;
     box-sizing: border-box;
 }
 
-.sub-grid { position: relative; z-index: 2; width: 100%; }
+/* Sub-grid scoped */
+.page-galeri .sub-grid {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+}
 
-.content-card {
-    position: relative; z-index: 1;
+/* Content card scoped — overflow hidden hanya di galeri */
+.page-galeri .content-card {
+    position: relative;
+    z-index: 1;
     isolation: isolate;
     overflow: hidden;
     box-sizing: border-box;
     max-width: 100%;
     width: 100%;
 }
-.content-card::before, .content-card::after {
-    z-index: 0; pointer-events: none;
+.page-galeri .content-card::before,
+.page-galeri .content-card::after {
+    z-index: 0;
+    pointer-events: none;
 }
-.content-card > *, .filter-container, .filter-tabs,
-.filter-btn, .galeri-grid {
-    position: relative; z-index: 1; pointer-events: auto;
+.page-galeri .content-card > *,
+.page-galeri .filter-container,
+.page-galeri .filter-tabs,
+.page-galeri .filter-btn,
+.page-galeri .galeri-grid {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
 }
-.sub-sidebar  { position: relative; z-index: 2; min-width: 0; }
-.sidebar-widget { position: relative; z-index: 1; isolation: isolate; overflow: hidden; }
-.sidebar-widget::before, .sidebar-widget::after { z-index: 0; pointer-events: none; }
-.sidebar-cta .btn { position: relative; z-index: 1; pointer-events: auto; }
-.main-header    { z-index: 1000 !important; }
-.toast-container{ z-index: 9999 !important; }
+
+/* Sidebar scoped */
+.page-galeri .sub-sidebar {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+}
+.page-galeri .sidebar-widget {
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+}
+.page-galeri .sidebar-widget::before,
+.page-galeri .sidebar-widget::after {
+    z-index: 0;
+    pointer-events: none;
+}
+.page-galeri .sidebar-cta .btn {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+}
+
+/* ============================================================
+   CATATAN: Jangan taruh .main-header dan .toast-container
+   di sini. Kedua rule ini harus ada di style.css global:
+     .main-header    { z-index: 1000 !important; }
+     .toast-container{ z-index: 9999 !important; }
+============================================================ */
 
 /* ============================================================
    7. INFO TABLE — GLOBAL (berlaku semua ukuran)
@@ -457,11 +519,11 @@
    9. RESPONSIVE — TABLET (≤ 900px) — 1 KOLOM
 ============================================================ */
 @media (max-width: 900px) {
-    .sub-grid {
+    .page-galeri .sub-grid {
         grid-template-columns: 1fr !important;
         gap: 20px;
     }
-    .sub-sidebar { width: 100%; }
+    .page-galeri .sub-sidebar { width: 100%; }
 }
 
 /* ============================================================
@@ -485,7 +547,7 @@
 @media (max-width: 600px) {
 
     /* Content card */
-    .content-card {
+    .page-galeri .content-card {
         padding: 16px 14px;
         overflow: hidden;
     }
@@ -544,8 +606,8 @@
     .empty-box span { font-size: 0.8rem; }
 
     /* Sidebar widget */
-    .sidebar-widget { padding: 16px 14px; }
-    .sidebar-widget h4 { font-size: 0.85rem !important; margin-bottom: 12px; padding-bottom: 10px; }
+    .page-galeri .sidebar-widget { padding: 16px 14px; }
+    .page-galeri .sidebar-widget h4 { font-size: 0.85rem !important; margin-bottom: 12px; padding-bottom: 10px; }
 
     /* Stat */
     .stat-label { font-size: 0.8rem; }
