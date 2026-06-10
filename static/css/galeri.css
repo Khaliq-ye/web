@@ -570,3 +570,21 @@
     .galeri-frame { height: 160px !important; }
     .filter-btn { padding: 6px 10px; font-size: 0.72rem; }
 }
+
+@media (max-width: 600px) {
+    .content-card,
+    .empty-box,
+    .galeri-grid {
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+    .empty-box span,
+    .empty-box p,
+    .card-desc {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+}
