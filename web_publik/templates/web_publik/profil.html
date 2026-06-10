@@ -177,17 +177,20 @@
 
                     <div class="sidebar-widget reveal">
                         <h4><i class="fa-solid fa-passport"></i> Legalitas Instansi</h4>
+                        <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
                         <table class="info-table">
                             <tr><td>NPSN</td><td>20261109</td></tr>
                             <tr><td>Akreditasi</td><td>A (Unggul)</td></tr>
                             <tr><td>Kurikulum</td><td>Kurikulum Merdeka Belajar</td></tr>
                             <tr><td>Jam Kerja</td><td>Senin - Sabtu (07:30 - 14:00)</td></tr>
                         </table>
+                        </div>
                     </div>
 
                     <div class="sidebar-widget reveal reveal-delay-1">
                         <h4><i class="fa-solid fa-address-book"></i> Kontak Utama</h4>
                         {% if kontak %}
+                        <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
                         <table class="info-table">
                             <tr><td>Telp</td><td>{{ kontak.telepon }}</td></tr>
                             <tr><td>Email</td><td>{{ kontak.email }}</td></tr>
@@ -199,6 +202,7 @@
                             <tr><td>WhatsApp</td><td>+{{ kontak.wa }}</td></tr>
                             {% endif %}
                         </table>
+                        </div>
                         {% else %}
                         <table class="info-table">
                             <tr><td>Telp</td><td>(0376) 23456</td></tr>

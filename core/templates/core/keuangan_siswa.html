@@ -396,28 +396,19 @@
         }
         .keu-count strong { color: var(--fire-gold); }
 
-        /* TABLE — hover row dihapus */
-        .keu-table-wrap { overflow-x: auto; }
-        .keu-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+        /* TABLE */
+        .keu-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .keu-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; table-layout: auto; }
         .keu-table thead tr {
             background: rgba(232,86,26,0.08);
             border-bottom: 1px solid rgba(232,86,26,0.2);
         }
-        .keu-table { width: 100%; border-collapse: collapse; font-size: 0.84rem; table-layout: fixed; }
-        .keu-table colgroup col:nth-child(1) { width: 48px; }
-        .keu-table colgroup col:nth-child(2) { width: 18%; }
-        .keu-table colgroup col:nth-child(3) { width: 14%; }
-        .keu-table colgroup col:nth-child(4) { width: 14%; }
-        .keu-table colgroup col:nth-child(5) { width: 13%; }
-        .keu-table colgroup col:nth-child(6) { width: 13%; }
-        .keu-table colgroup col:nth-child(7) { width: 130px; }
-        .keu-table colgroup col:nth-child(8) { width: 140px; }
         .keu-table thead th {
             padding: 12px 18px; color: var(--fire-gold);
             font-family: var(--font-disp);
             font-size: 0.75rem; letter-spacing: 1.5px;
             text-transform: uppercase; text-align: left;
-            font-weight: 400; white-space: nowrap; overflow: hidden;
+            font-weight: 400; white-space: nowrap;
         }
         .keu-table tbody tr {
             border-bottom: 1px solid rgba(255,255,255,0.04);
@@ -670,9 +661,7 @@
             </div>
             <div class="keu-table-wrap">
                 <table class="keu-table">
-                    <colgroup>
-                        <col><col><col><col><col><col><col><col>
-                    </colgroup>
+
                     <thead>
                         <tr>
                             <th>#</th>

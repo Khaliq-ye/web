@@ -208,6 +208,7 @@
                 <div class="sidebar-widget">
     <h4><i class="fa-solid fa-address-book"></i> Kontak Utama</h4>
     {% if kontak %}
+    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
     <table class="info-table">
         <tr><td>Telp</td><td>{{ kontak.telepon }}</td></tr>
         <tr><td>Email</td><td>{{ kontak.email }}</td></tr>
@@ -219,13 +220,16 @@
         <tr><td>WhatsApp</td><td>+{{ kontak.wa }}</td></tr>
         {% endif %}
     </table>
+    </div>
     {% else %}
     {# Fallback statis jika database belum diisi #}
+    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
     <table class="info-table">
         <tr><td>Telp</td><td>(0376) 23456</td></tr>
         <tr><td>Email</td><td>info@siakadpro.sch.id</td></tr>
         <tr><td>Alamat</td><td>Jl. Pendidikan No. 123, Lombok Timur, NTB</td></tr>
     </table>
+    </div>
     {% endif %}
 </div>
 
