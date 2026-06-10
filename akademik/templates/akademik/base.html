@@ -232,7 +232,7 @@ body {
 /* ============================================================
    PAGE CONTENT
 ============================================================ */
-.page-content { padding: 28px; flex: 1; position: relative; }
+.page-content { padding: 28px; flex: 1; position: relative; min-width: 0; width: 100%; box-sizing: border-box; }
 
 /* ============================================================
    TOAST
@@ -351,9 +351,8 @@ body {
 @media (max-width: 768px) {
   body { flex-direction: column; }
   .sidebar { width: 100%; height: auto; position: static; overflow-y: auto; }
-  .page-content { padding: 16px; }
-  .main-wrap { overflow-x: hidden; max-width: 100vw; }
-  .page-content { overflow-x: hidden; max-width: 100%; }
+  .main-wrap { width: 100%; max-width: 100vw; overflow-x: hidden; min-width: 0; }
+  .page-content { padding: 16px; width: 100%; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
 }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
