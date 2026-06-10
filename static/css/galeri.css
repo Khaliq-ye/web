@@ -2,6 +2,7 @@
    galeri.css — KHUSUS HALAMAN GALERI
    SMA Negeri 5 Kota X — Tema Api
    Requires: style.css + profile.css dimuat lebih dulu
+   v5.1 — FIX: mobile overflow, text clipping, empty-box wrap
 ============================================================ */
 
 /* --- FILTER TABS --- */
@@ -13,6 +14,10 @@
     padding-bottom: 6px;
     position: relative;
     z-index: 10;
+    /* Sembunyikan scrollbar tapi tetap scrollable */
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(232,82,26,0.3) transparent;
 }
 .filter-container::-webkit-scrollbar { height: 3px; }
 .filter-container::-webkit-scrollbar-thumb {
@@ -23,7 +28,10 @@
     display: flex;
     gap: 10px;
     align-items: center;
+    /* FIX: jangan biarkan wrap — scroll horizontal 1 baris */
+    flex-wrap: nowrap;
     width: max-content;
+    min-width: 100%;
     overflow: visible;
     padding-top: 4px;
 }
@@ -42,6 +50,7 @@
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
     white-space: nowrap;
+    flex-shrink: 0;         /* FIX: tombol tidak boleh mengecil */
     position: relative;
     z-index: 10;
     will-change: transform;
@@ -72,6 +81,9 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 20px;
     margin-top: 4px;
+    /* FIX: pastikan grid tidak meluber */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* --- GALLERY CARD --- */
@@ -83,6 +95,10 @@
     transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
     position: relative;
     isolation: isolate;
+    /* FIX: pastikan card tidak meluber dari grid */
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 .galeri-card:hover {
     transform: translateY(-6px);
@@ -181,10 +197,13 @@
     padding: 14px 16px;
     position: relative;
     z-index: 0;
-    /* FIX: cegah teks meluber */
     overflow: hidden;
     word-break: break-word;
     overflow-wrap: break-word;
+    /* FIX: pastikan tidak ada konten yang meluber keluar */
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 .galeri-info h4 {
     font-size: 0.92rem;
@@ -196,6 +215,9 @@
     overflow: hidden;
     word-break: break-word;
     overflow-wrap: break-word;
+    /* FIX: judul tidak boleh meluber */
+    min-width: 0;
+    max-width: 100%;
 }
 .galeri-meta {
     display: flex;
@@ -212,8 +234,11 @@
     display: inline-flex;
     align-items: center;
     gap: 5px;
+    /* FIX: tanggal bisa wrap jika perlu */
+    flex-wrap: wrap;
+    min-width: 0;
 }
-.galeri-date i { color: var(--fire-orange); }
+.galeri-date i { color: var(--fire-orange); flex-shrink: 0; }
 .verified-tag {
     font-size: 0.7rem;
     font-weight: 700;
@@ -225,16 +250,24 @@
     border: 1px solid rgba(34,197,94,0.2);
     padding: 2px 8px;
     border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 /* --- EMPTY STATE --- */
 .empty-box {
     text-align: center;
-    padding: 60px 20px;
+    padding: 60px 24px;          /* FIX: padding horizontal lebih besar */
     background: rgba(255,255,255,0.02);
     border-radius: 14px;
     border: 2px dashed rgba(255,255,255,0.08);
     color: var(--silver);
+    /* FIX: pastikan teks tidak meluber */
+    width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 .empty-box i {
     font-size: 3.5rem;
@@ -247,10 +280,32 @@
     color: var(--white);
     font-size: 1rem;
     margin-bottom: 6px;
+    /* FIX: teks wrap sempurna */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 .empty-box span {
     font-size: 0.9rem;
     color: var(--silver);
+    /* FIX: teks wrap sempurna */
+    display: block;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    line-height: 1.6;
+}
+
+/* --- CARD DESC (deskripsi di atas filter) --- */
+.card-desc {
+    /* FIX: pastikan teks deskripsi tidak terpotong di HP */
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    line-height: 1.75;
 }
 
 /* --- LIGHTBOX / MODAL PREVIEW --- */
@@ -325,17 +380,9 @@
     text-align: center;
     max-width: 600px;
     line-height: 1.5;
-}
-
-/* --- CURSOR DOT --- */
-.cursor-dot {
-    position: fixed;
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 99999;
-    mix-blend-mode: screen;
-    transition: transform 0.1s ease;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    padding: 0 16px;
 }
 
 /* ============================================================
@@ -371,47 +418,31 @@
 
 /* ============================================================
    RESPONSIVE — HP (≤ 600px)
-
-   Perbaikan utama:
-   - content-card diberi overflow:hidden agar konten tidak
-     meluber ke kanan layar
-   - info-table sidebar fluid tanpa scroll horizontal
-   - galeri-grid 2 kolom rapi
-   - filter tabs scroll horizontal 1 baris
 ============================================================ */
 @media (max-width: 600px) {
 
-    /* ── GLOBAL FIX: cegah konten meluber ke kanan ── */
+    /* ── GLOBAL: paksa semua konten tidak meluber ── */
+    body {
+        overflow-x: hidden;
+    }
+
     .content-card {
         overflow: hidden;
-        padding: 20px 16px;
+        padding: 20px 14px;          /* padding lebih kecil di HP */
+        box-sizing: border-box;
+        max-width: 100%;
+        width: 100%;
     }
 
-    /* ── GALERI GRID: 2 kolom di HP ── */
-    .galeri-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-    }
-
-    .galeri-frame { height: 120px; }
-
-    /* Info card teks tidak terpotong */
-    .galeri-info {
-        padding: 10px 12px;
-    }
-    .galeri-info h4 {
-        font-size: 0.82rem;
+    /* ── CARD DESC: teks tidak terpotong ── */
+    .card-desc,
+    .content-card > p {
+        white-space: normal;
         word-break: break-word;
         overflow-wrap: break-word;
-        white-space: normal;
-        max-height: none;
-    }
-    .galeri-date {
-        font-size: 0.68rem;
-    }
-    .verified-tag {
-        font-size: 0.65rem;
-        padding: 2px 6px;
+        max-width: 100%;
+        font-size: 0.88rem;
+        line-height: 1.7;
     }
 
     /* ── FILTER TABS: scroll horizontal 1 baris ── */
@@ -419,15 +450,70 @@
         overflow-x: auto;
         overflow-y: visible;
         padding-bottom: 8px;
+        /* Snappoint agar terasa natural di HP */
+        scroll-snap-type: x mandatory;
     }
     .filter-tabs {
         width: max-content;
         flex-wrap: nowrap;
+        gap: 8px;
     }
     .filter-btn {
         padding: 8px 14px;
-        font-size: 0.82rem;
+        font-size: 0.8rem;
         flex-shrink: 0;
+        scroll-snap-align: start;
+    }
+
+    /* ── GALERI GRID: 2 kolom rapat ── */
+    .galeri-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .galeri-frame { height: 115px; }
+
+    /* ── CARD INFO: teks tidak meluber ── */
+    .galeri-info {
+        padding: 10px 10px;
+        overflow: hidden;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    .galeri-info h4 {
+        font-size: 0.78rem;
+        max-height: none;           /* Biarkan judul tampil penuh */
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        min-width: 0;
+    }
+    .galeri-meta {
+        flex-direction: column;     /* Stack vertikal di HP kecil */
+        align-items: flex-start;
+        gap: 4px;
+    }
+    .galeri-date {
+        font-size: 0.66rem;
+    }
+    .verified-tag {
+        font-size: 0.62rem;
+        padding: 2px 6px;
+    }
+
+    /* ── EMPTY BOX: teks tidak terpotong ── */
+    .empty-box {
+        padding: 40px 16px;
+    }
+    .empty-box i {
+        font-size: 2.8rem;
+    }
+    .empty-box p {
+        font-size: 0.95rem;
+    }
+    .empty-box span {
+        font-size: 0.82rem;
     }
 
     /* ── INFO TABLE sidebar kontak: fluid tanpa scroll ── */
@@ -453,7 +539,7 @@
         width: 36%;
         padding-right: 10px;
         white-space: normal;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
     }
     .info-table td:last-child {
         color: rgba(255, 255, 255, 0.76);
@@ -467,7 +553,29 @@
         overflow-x: visible !important;
     }
 
-    /* Lightbox di HP */
+    /* ── SIDEBAR STAT-LIST: lebar penuh, nilai rata kanan ── */
+    .stat-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 8px;
+        padding: 10px 0;
+    }
+    .stat-label {
+        font-size: 0.82rem;
+        flex: 1;
+        min-width: 0;
+        word-break: break-word;
+    }
+    .stat-val {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    /* ── LIGHTBOX di HP ── */
     #imgPreview {
         max-width: 95vw;
         max-height: 60vh;
@@ -478,6 +586,11 @@
         width: 38px;
         height: 38px;
     }
+    .lightbox-caption {
+        font-size: 0.88rem;
+        margin-top: 12px;
+        padding: 0 8px;
+    }
 }
 
 /* ============================================================
@@ -487,8 +600,12 @@
     .galeri-grid {
         grid-template-columns: 1fr;
     }
+    .galeri-frame { height: 160px; }
+    .filter-btn {
+        padding: 7px 12px;
+        font-size: 0.76rem;
+    }
 }
-
 
 /* ============================================================
    FIX GLOBAL — Tombol tertutup / terhalang di area konten
