@@ -366,13 +366,15 @@
     width: 300px !important;
     left: -150px !important;
 }
-.sub-layout .container {
-    max-width: 100%;
-    box-sizing: border-box;
+@media (max-width: 600px) {
+    .sub-layout .container {
+        max-width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
 }
 
 .sub-grid { position: relative; z-index: 2; width: 100%; }
-.sub-layout .sub-grid { overflow-x: hidden; }
 
 .content-card {
     position: relative; z-index: 1;
@@ -569,22 +571,4 @@
     .galeri-grid { grid-template-columns: 1fr !important; }
     .galeri-frame { height: 160px !important; }
     .filter-btn { padding: 6px 10px; font-size: 0.72rem; }
-}
-
-@media (max-width: 600px) {
-    .content-card,
-    .empty-box,
-    .galeri-grid {
-        max-width: 100%;
-        overflow: hidden;
-    }
-
-    .empty-box span,
-    .empty-box p,
-    .card-desc {
-        white-space: normal;
-        word-break: break-word;
-        overflow-wrap: break-word;
-        max-width: 100%;
-    }
 }
