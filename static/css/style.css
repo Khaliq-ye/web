@@ -885,13 +885,14 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     .nav-menu { gap:6px; }
 }
 @media (max-width: 600px) {
-    /* Cegah semua konten meluber ke kanan secara global */
     body {
         overflow-x: hidden;
     }
     .container {
         overflow: hidden;
         padding: 0 16px;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     .content-card {
         overflow: hidden;
