@@ -53,6 +53,7 @@
           <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;">Tipe</th>
           <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;">Deadline</th>
           <th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;">Jawaban</th>
+<th style="padding:12px 18px;color:#F4731F;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:600;white-space:nowrap;">Aksi</th>
         </tr>
       </thead>
       <tbody>
@@ -87,28 +88,50 @@
             </span>
           </td>
           <!-- KOLOM BARU: Lihat Jawaban -->
-          <td style="padding:14px 18px;">
-            <a href="{% url 'akademik:lihat_jawaban_guru' tugas.id %}"
-               style="display:inline-flex;align-items:center;gap:5px;
-                      background:rgba(240,180,41,.1);color:#fbbf24;
-                      border:1px solid rgba(240,180,41,.25);padding:5px 12px;
-                      border-radius:8px;font-size:12px;font-weight:600;
-                      text-decoration:none;white-space:nowrap;
-                      transition:background .15s;">
-              <i class="fas fa-inbox"></i>
-              Lihat Jawaban
-              {% with jumlah=tugas.jawaban_siswa.count %}
-              {% if jumlah > 0 %}
-              <span style="background:rgba(240,180,41,.25);border-radius:99px;
-                           padding:1px 7px;font-size:11px;">{{ jumlah }}</span>
-              {% endif %}
-              {% endwith %}
-            </a>
-          </td>
+          <!-- ✅ GANTI DENGAN INI (2 kolom) -->
+
+<!-- Kolom Jawaban -->
+<td style="padding:14px 18px;">
+  <a href="{% url 'akademik:lihat_jawaban_guru' tugas.id %}"
+     style="display:inline-flex;align-items:center;gap:5px;
+            background:rgba(240,180,41,.1);color:#fbbf24;
+            border:1px solid rgba(240,180,41,.25);padding:5px 12px;
+            border-radius:8px;font-size:12px;font-weight:600;
+            text-decoration:none;white-space:nowrap;
+            transition:background .15s;">
+    <i class="fas fa-inbox"></i>
+    Lihat Jawaban
+    {% with jumlah=tugas.jawaban_siswa.count %}
+    {% if jumlah > 0 %}
+    <span style="background:rgba(240,180,41,.25);border-radius:99px;
+                 padding:1px 7px;font-size:11px;">{{ jumlah }}</span>
+    {% endif %}
+    {% endwith %}
+  </a>
+</td>
+
+<!-- Kolom Aksi (Hapus Manual) -->
+<td style="padding:14px 18px;">
+  <form method="POST"
+        action="{% url 'akademik:hapus_tugas' tugas.id %}"
+        onsubmit="return confirm('Hapus tugas \'{{ tugas.judul }}\'?\nSemua jawaban siswa juga akan ikut terhapus.')">
+    {% csrf_token %}
+    <button type="submit"
+            style="display:inline-flex;align-items:center;gap:5px;
+                   background:rgba(239,68,68,.1);color:#f87171;
+                   border:1px solid rgba(239,68,68,.25);padding:5px 12px;
+                   border-radius:8px;font-size:12px;font-weight:600;
+                   cursor:pointer;white-space:nowrap;
+                   font-family:'Plus Jakarta Sans',sans-serif;
+                   transition:background .15s;">
+      <i class="fas fa-trash-alt"></i> Hapus
+    </button>
+  </form>
+</td>
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" style="text-align:center;padding:56px 20px;">
+          <td colspan="7" style="text-align:center;padding:56px 20px;">
             <i class="fas fa-laptop" style="font-size:36px;color:rgba(255,255,255,.15);
                display:block;margin-bottom:12px;"></i>
             <span style="color:rgba(255,255,255,.3);font-size:13px;">

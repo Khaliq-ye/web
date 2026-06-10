@@ -74,6 +74,7 @@ urlpatterns = [
     path('api/keuangan/',  views.api_keuangan_siswa,  name='api_keuangan_siswa'),
     path('manajemen-keuangan/', core_views.manajemen_keuangan, name='manajemen_keuangan'),
     path('elearning/jawaban/<int:tugas_id>/', views.lihat_jawaban_guru, name='lihat_jawaban_guru'),
+    path('elearning/hapus/<int:tugas_id>/', views.hapus_tugas, name='hapus_tugas'),
 
     # =========================================================================
     # 9. EXPORT PDF & EXCEL

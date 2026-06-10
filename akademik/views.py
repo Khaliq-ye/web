@@ -1235,8 +1235,11 @@ def input_perilaku(request):
 # 3. E-LEARNING — TUGAS & KUIS
 # ==============================================================================
 
+# ✅ GANTI DENGAN INI
 @login_required
 def e_learning(request):
+    from django.utils import timezone
+
     guru = Guru.objects.filter(user=request.user).first()
     if not guru:
         siswa = Siswa.objects.filter(user=request.user).first()
@@ -1248,12 +1251,25 @@ def e_learning(request):
         guru=guru
     ).select_related('mata_pelajaran').order_by('hari', 'jam_mulai')
 
+    # ── AUTO-DELETE: hapus semua tugas milik guru ini yang sudah lewat deadline ──
+    terhapus = TugasKuis.objects.filter(
+        guru=guru,
+        batas_waktu__lt=timezone.now()
+    )
+    jumlah_terhapus = terhapus.count()
+    terhapus.delete()
+    if jumlah_terhapus > 0:
+        messages.info(
+            request,
+            f"{jumlah_terhapus} tugas/kuis otomatis dihapus karena deadline telah lewat."
+        )
+
     if request.method == 'POST':
-        jenis = request.POST.get('jenis', '').strip()
+        jenis    = request.POST.get('jenis', '').strip()
         mapel_id = request.POST.get('mata_pelajaran', '').strip()
-        judul = request.POST.get('judul', '').strip()
+        judul    = request.POST.get('judul', '').strip()
         deskripsi = request.POST.get('deskripsi', '').strip()
-        batas = request.POST.get('batas_waktu', '').strip()
+        batas    = request.POST.get('batas_waktu', '').strip()
 
         if jenis and mapel_id and judul and batas:
             mapel_obj = get_object_or_404(MataPelajaran, id=mapel_id)
@@ -1291,6 +1307,21 @@ def e_learning(request):
         'tugas_list': tugas_list,
     }
     return render(request, 'akademik/elearning/tugas.html', context)
+
+
+# ✅ TAMBAHKAN FUNGSI BARU INI tepat di bawah fungsi e_learning
+@login_required
+def hapus_tugas(request, tugas_id):
+    guru = Guru.objects.filter(user=request.user).first()
+    if not guru:
+        messages.error(request, "Akses ditolak.")
+        return redirect('web_publik:index')
+
+    tugas = get_object_or_404(TugasKuis, id=tugas_id, guru=guru)
+    judul = tugas.judul
+    tugas.delete()
+    messages.success(request, f"Tugas/Kuis '{judul}' berhasil dihapus.")
+    return redirect('akademik:e_learning')
 
 
 @login_required
