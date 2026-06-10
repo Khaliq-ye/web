@@ -430,35 +430,50 @@ textarea.form-input {height:85px;resize:vertical;}
 }
 .btn-danger:hover {filter:brightness(1.15);}
 
-/* FIX scroll tabel di dalam panel-card */
+/* FIX tabel auto-fit semua layar */
 .panel-card {
-  overflow: clip;
-  overflow-clip-margin: 0px;
+  overflow: hidden;
 }
 
 .rapor-table-wrap,
 .data-table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
   width: 100%;
 }
 
-.rapor-table {
-  min-width: max-content;
-  width: 100%;
-}
-
+.rapor-table,
 .data-table {
-  min-width: max-content;
   width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
 
+.rapor-table thead th,
+.rapor-table tbody td,
+.rapor-table tfoot td {
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  padding: 8px 6px;
+  font-size: clamp(9px, 1.5vw, 12.5px);
+}
 
-/* Wrapper scroll — global, bukan hanya di mobile */
-.rapor-table-wrap,
-.data-table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+.data-table thead th,
+.data-table tbody td {
+  word-break: break-word;
+  white-space: normal;
+  overflow-wrap: break-word;
+  padding: 8px 6px;
+  font-size: clamp(10px, 1.8vw, 13px);
+}
+
+.rapor-table th:first-child,
+.rapor-table td:first-child {
+  width: 30%;
+}
+
+.rapor-table th:not(:first-child),
+.rapor-table td:not(:first-child) {
+  width: calc(70% / 6);
 }
 
 @media (max-width:860px) {
@@ -535,43 +550,7 @@ textarea.form-input {height:85px;resize:vertical;}
   .formula-item  { font-size: 10.5px; }
   .formula-pct   { font-size: .8rem; }
 
-  /* ── TABEL RAPOR — horizontal scroll dengan hint ── */
-  .rapor-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 8px;
-  }
-  .rapor-table {
-    min-width: 480px;    /* cukup lebar agar tidak menjepit */
-    font-size: 11px;
-  }
-  .rapor-table thead th,
-  .rapor-table tbody td,
-  .rapor-table tfoot td {
-    padding: 7px 7px;
-    white-space: nowrap;
-    font-size: 11px;
-  }
-  .rapor-table .nilai-angka { font-size: 1rem; }
-  .predikat-chip { width: 22px; height: 22px; border-radius: 6px; font-size: 10px; }
-
-  /* ── TABEL KEUANGAN ── */
-  .data-table-wrap {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 8px;
-  }
-  .data-table {
-    min-width: 320px;
-    table-layout: auto;
-    font-size: 12px;
-  }
-  .data-table thead th,
-  .data-table tbody td {
-    padding: 8px 10px;
-    white-space: nowrap;
-    font-size: 11.5px;
-  }
+  
 
   /* ── PENGUMUMAN ── */
   .pengumuman-item   { padding: 10px 0; }
