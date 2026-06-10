@@ -438,6 +438,7 @@ textarea.form-input {height:85px;resize:vertical;}
   /* ── TABLE RESPONSIVE FIX ── */
   .data-table {
     min-width: 380px;
+    table-layout: auto;
   }
   .data-table thead th,
   .data-table tbody td {
@@ -603,7 +604,7 @@ textarea.form-input {height:85px;resize:vertical;}
       </div>
 
       {% if nilai_list %}
-      <div style="overflow-x:auto;margin-top:16px;">
+      <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:16px;">
         <table class="rapor-table">
           <thead>
             <tr>
@@ -890,7 +891,7 @@ textarea.form-input {height:85px;resize:vertical;}
           Status Keuangan &amp; Tagihan SPP
         </div>
       </div>
-      <div style="overflow-x:auto;">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
         <table class="data-table">
           
           <thead>
