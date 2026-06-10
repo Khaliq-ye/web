@@ -275,7 +275,7 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     background: var(--coal-dark);
     border: 1px solid rgba(255,255,255,0.06);
     border-radius: 20px; padding: 36px; margin-bottom: 26px;
-    position: relative; isolation: isolate; overflow: visible;
+    position: relative; isolation: isolate; overflow: hidden;
     transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 /* Fire top stripe — statis gradient, tidak scroll */
