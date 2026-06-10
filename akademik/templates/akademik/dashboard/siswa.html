@@ -430,48 +430,180 @@ textarea.form-input {height:85px;resize:vertical;}
 }
 .btn-danger:hover {filter:brightness(1.15);}
 
-@media (max-width:860px) {.main-grid {grid-template-columns:1fr;}}
-@media (max-width:600px) {
-  .absen-grid {grid-template-columns:repeat(2,1fr);}
-  .hero-name {font-size:1.4rem;}
 
-  /* ── TABLE RESPONSIVE FIX ── */
-  .data-table {
-    min-width: 380px;
-    table-layout: auto;
+@media (max-width:860px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width:600px) {
+
+  /* ── HERO ── */
+  .hero-bar { padding: 16px; }
+  .hero-name { font-size: 1.35rem; }
+  .hero-badges { gap: 5px; }
+  .hero-badge { font-size: 10.5px; padding: 2px 8px; }
+
+  /* Hero stats: 3 kolom bukan 5 (overflow ke baris ke-2 natural) */
+  .hero-stats { flex-wrap: wrap; }
+  .hstat {
+    flex: 1 1 calc(33.33% - 1px);
+    min-width: 0;
+    padding: 8px 4px;
+    border-right: 1px solid rgba(255,255,255,.1);
   }
-  .data-table thead th,
-  .data-table tbody td {
-    padding: 8px 10px;
-    font-size: 11.5px;
+  .hstat:nth-child(3)  { border-right: none; }
+  .hstat:nth-child(4)  { border-right: 1px solid rgba(255,255,255,.1); }
+  .hstat:nth-child(5)  { border-right: none; }
+  .hstat-val { font-size: 1.5rem; }
+  .hstat-lbl { font-size: 9.5px; }
+
+  /* ── PANEL CARD ── */
+  .panel-card { padding: 14px; border-radius: 14px; }
+  .panel-header { flex-wrap: nowrap; align-items: flex-start; gap: 6px; margin-bottom: 12px; padding-bottom: 10px; }
+  .panel-title { font-size: .72rem; letter-spacing: 1px; }
+  .panel-title-icon { width: 28px; height: 28px; font-size: .75rem; border-radius: 7px; flex-shrink: 0; }
+
+  /* Tombol di panel-header tidak melebar penuh, tapi tetap tap-friendly */
+  .panel-header .btn-fire,
+  .panel-header .btn-fire-green {
+    padding: 6px 10px;
+    font-size: 11px;
     white-space: nowrap;
   }
+  /* Dua tombol unduh rapor — susun vertikal */
+  .panel-header > div[style*="display:flex"] {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
 
-  /* Tabel rapor nilai — kolom lebih banyak */
+  /* ── BIO TABLE ── */
+  .bio-table td { font-size: 12px; padding: 7px 0; }
+  .bio-table .lbl { width: 44%; }
+
+  /* ── ABSENSI ── */
+  .absen-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .absen-box { padding: 12px 6px; border-radius: 10px; }
+  .absen-box .num { font-size: 1.6rem; }
+  .absen-box .lbl { font-size: 10px; }
+
+  /* ── TUGAS ITEM ── */
+  .tugas-item { gap: 8px; padding: 10px 0; }
+  .tugas-judul { font-size: 12px; }
+  .tugas-mapel { font-size: 10.5px; }
+  .tugas-dl    { font-size: 10.5px; }
+
+  /* ── NILAI TUGAS ITEM ── */
+  .nilai-item { gap: 10px; padding: 12px 0; }
+  .nilai-pill { width: 38px; height: 38px; border-radius: 10px; font-size: 1rem; }
+  .nilai-item-judul { font-size: 12px; }
+  .nilai-item-mapel { font-size: 10.5px; }
+  .nilai-item-catatan { font-size: 11.5px; padding: 7px 10px; }
+
+  /* ── FORMULA STRIP ── */
+  .formula-strip { gap: 4px; padding: 8px 10px; }
+  .formula-item  { font-size: 10.5px; }
+  .formula-pct   { font-size: .8rem; }
+
+  /* ── TABEL RAPOR — horizontal scroll dengan hint ── */
+  .rapor-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+  }
   .rapor-table {
-    min-width: 520px;
+    min-width: 480px;    /* cukup lebar agar tidak menjepit */
+    font-size: 11px;
   }
   .rapor-table thead th,
   .rapor-table tbody td,
   .rapor-table tfoot td {
-    padding: 8px 8px;
-    font-size: 11px;
+    padding: 7px 7px;
     white-space: nowrap;
+    font-size: 11px;
   }
+  .rapor-table .nilai-angka { font-size: 1rem; }
+  .predikat-chip { width: 22px; height: 22px; border-radius: 6px; font-size: 10px; }
 
-  /* Wrapper scroll horizontal */
-  .panel-card div[style*="overflow-x:auto"],
-  .panel-card div[style*="overflow-x: auto"] {
+  /* ── TABEL KEUANGAN ── */
+  .data-table-wrap {
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+  }
+  .data-table {
+    min-width: 320px;
+    table-layout: auto;
+    font-size: 12px;
+  }
+  .data-table thead th,
+  .data-table tbody td {
+    padding: 8px 10px;
+    white-space: nowrap;
+    font-size: 11.5px;
   }
 
-  /* Hero stats biar tidak terlalu sempit */
-  .hstat { padding: 8px 6px; }
-  .hstat-val { font-size: 1.6rem; }
+  /* ── PENGUMUMAN ── */
+  .pengumuman-item   { padding: 10px 0; }
+  .pengumuman-title  { font-size: 12px; }
+  .pengumuman-date   { font-size: 10.5px; }
 
-  /* Formula strip wrap */
-  .formula-strip { gap: 4px; }
-  .formula-item { font-size: 10.5px; }
+  /* ── AGENDA ── */
+  .agenda-item  { gap: 10px; padding: 8px 0; }
+  .agenda-date  { min-width: 36px; border-radius: 7px; padding: 5px 3px; }
+  .agenda-day   { font-size: 16px; }
+  .agenda-mon   { font-size: 9px; }
+  .agenda-text  { font-size: 11.5px; padding-top: 3px; }
+
+  /* ── RINGKASAN NILAI (sidebar, jadi full width di mobile) ── */
+  .panel-card > div[style*="grid-template-columns:1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px;
+  }
+
+  /* ── PERILAKU ── */
+  .perilaku-wrap { gap: 12px; padding: 12px; }
+  .perilaku-score-ring { width: 56px; height: 56px; }
+  .perilaku-score-ring svg { width: 56px; height: 56px; }
+  .perilaku-score-ring .score-num { font-size: 1.1rem; }
+  .perilaku-label { font-size: 13px; }
+  .perilaku-sub   { font-size: 11px; }
+
+  /* Distribusi perilaku — 3 kolom tetap tapi lebih compact */
+  .panel-card > div[style*="grid-template-columns:repeat(3,1fr)"] {
+    gap: 6px !important;
+  }
+  .perilaku-item { gap: 8px; padding: 9px 0; }
+  .perilaku-dot  { width: 26px; height: 26px; border-radius: 7px; font-size: 10px; flex-shrink: 0; }
+  .perilaku-mapel { font-size: 12px; }
+  .perilaku-guru  { font-size: 10.5px; }
+  .perilaku-tgl   { font-size: 10.5px; }
+
+  /* ── RATA STRIP ── */
+  .rata-strip { padding: 10px 12px; }
+  .rata-strip-lbl { font-size: 11.5px; }
+  .rata-strip-val { font-size: 14px; }
+
+  /* ── KONTAK BUTTONS ── */
+  .btn-ghost-fire,
+  .btn-wa-fire,
+  .btn-bug-fire {
+    padding: 10px 14px;
+    font-size: 12.5px;
+  }
+
+  /* ── MODAL ── */
+  .s-modal-box    { border-radius: 14px; }
+  .s-modal-head   { padding: 14px 16px; }
+  .s-modal-body   { padding: 16px; }
+  .form-input     { font-size: 14px; } /* 14px minimum agar iOS tidak auto-zoom */
+  textarea.form-input { height: 80px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state { padding: 18px 8px; font-size: 12.5px; }
+
+  /* ── BADGE GLOBAL ── */
+  .badge { font-size: 10px; padding: 2px 7px; }
 }
 </style>
 {% endblock %}
@@ -604,8 +736,8 @@ textarea.form-input {height:85px;resize:vertical;}
       </div>
 
       {% if nilai_list %}
-      <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; margin-top:16px;">
-        <table class="rapor-table">
+      <div class="rapor-table-wrap" style="margin-top:16px;">
+  <table class="rapor-table">
           <thead>
             <tr>
               <th>Mata Pelajaran</th>
@@ -663,6 +795,7 @@ textarea.form-input {height:85px;resize:vertical;}
           </tfoot>
           {% endif %}
         </table>
+        
       </div>
       {% else %}
       <div class="empty-state" style="margin-top:16px;">
@@ -891,8 +1024,8 @@ textarea.form-input {height:85px;resize:vertical;}
           Status Keuangan &amp; Tagihan SPP
         </div>
       </div>
-      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
-        <table class="data-table">
+      <div class="data-table-wrap">
+  <table class="data-table">
           
           <thead>
             <tr><th>Jenis Tagihan</th><th>Jumlah</th><th>Status</th></tr>
