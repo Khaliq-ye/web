@@ -1,10 +1,6 @@
 /* ============================================================
    SMA NEGERI 5 KOTA X — academic.css
-   Komponen khusus halaman Akademik
-   
    REQUIRES: profile.css + style.css loaded first
-   Tema: Fire Dark Luxury — identik dengan profile.css
-   Semua warna mewarisi var dari profile.css
 ============================================================ */
 
 /* ============================================================
@@ -26,9 +22,13 @@
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: default;
+    /* FIX: pastikan konten tidak meluber keluar kotak */
+    box-sizing: border-box;
+    min-width: 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
-/* Fire border kiri — identik program-badge di profile.css */
 .feat-box::before {
     content: '';
     position: absolute;
@@ -39,7 +39,6 @@
     border-radius: 3px 0 0 3px;
 }
 
-/* Bottom fire bar saat hover */
 .feat-box::after {
     content: '';
     position: absolute;
@@ -77,6 +76,9 @@
     color: var(--white);
     font-family: var(--font-body);
     line-height: 1.3;
+    /* FIX: judul tidak meluber */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .feat-box p {
@@ -85,10 +87,13 @@
     color: rgba(255, 255, 255, 0.45);
     line-height: 1.55;
     font-family: var(--font-body);
+    /* FIX: paragraf tidak meluber */
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 /* ============================================================
-   2. TAB FILTER — identik dengan galeri filter btn di profile.css
+   2. TAB FILTER
 ============================================================ */
 .academic-tabs {
     display: flex;
@@ -97,7 +102,6 @@
     flex-wrap: wrap;
 }
 
-/* Separator bawah bergaya fire */
 .academic-tabs::after {
     content: '';
     display: block;
@@ -158,8 +162,6 @@
 }
 
 .tab-btn.active::before { opacity: 1; }
-
-/* Tab text children juga perlu z-index agar di atas ::before */
 .tab-btn > * { position: relative; z-index: 1; }
 
 .tab-panel { display: none; }
@@ -171,7 +173,7 @@
 }
 
 /* ============================================================
-   3. SCHEDULE TABLE — fire themed, identik table-fire di profile.css
+   3. SCHEDULE TABLE
 ============================================================ */
 .table-responsive {
     overflow-x: auto;
@@ -225,7 +227,6 @@
     font-weight: 700;
 }
 
-/* Room tag — identik mapel-badge di profile.css */
 .room-tag {
     display: inline-flex;
     align-items: center;
@@ -244,8 +245,7 @@
 }
 
 /* ============================================================
-   4. EKSTRA / EXTRACURRICULAR GRID
-   identik teacher-item di profile.css
+   4. EKSTRA GRID
 ============================================================ */
 .ekstra-grid {
     display: grid;
@@ -266,7 +266,6 @@
     cursor: default;
 }
 
-/* Gradient overlay saat hover — identik teacher-item::before */
 .ekstra-item::before {
     content: '';
     position: absolute;
@@ -276,7 +275,6 @@
     transition: opacity 0.38s;
 }
 
-/* Bottom fire bar — galeri-card effect */
 .ekstra-item::after {
     content: '';
     position: absolute;
@@ -297,7 +295,6 @@
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35), var(--shadow-fire);
 }
 
-/* Icon circle — identik teacher-avatar */
 .ekstra-item i {
     font-size: 1.7rem;
     color: var(--fire-orange);
@@ -347,7 +344,6 @@
 
 /* ============================================================
    5. SIDEBAR AGENDA LIST
-   identik agenda-item di profile.css tapi versi sidebar compact
 ============================================================ */
 .agenda-list-sidebar {
     display: flex;
@@ -386,7 +382,6 @@
     transform: translateX(5px);
 }
 
-/* Date badge — identik agenda-date-box di profile.css */
 .date-badge-fire {
     background: linear-gradient(135deg, var(--fire-red-deep), var(--fire-orange));
     min-width: 48px;
@@ -437,7 +432,7 @@
 }
 
 /* ============================================================
-   6. DOWNLOAD LIST — fire styled
+   6. DOWNLOAD LIST
 ============================================================ */
 .download-list {
     list-style: none;
@@ -478,7 +473,6 @@
     transform: translateX(4px);
 }
 
-/* PDF icon */
 .download-link > i:first-child {
     font-size: 1.4rem;
     color: var(--fire-red);
@@ -514,7 +508,6 @@
     font-family: var(--font-body);
 }
 
-/* Download arrow icon */
 .dl-icon {
     font-size: 0.8rem !important;
     color: rgba(255, 255, 255, 0.25) !important;
@@ -529,17 +522,37 @@
 }
 
 /* ============================================================
-   7. RESPONSIVE
+   7. RESPONSIVE — TABLET (≤ 768px)
 ============================================================ */
 @media (max-width: 768px) {
-    .curriculum-features { grid-template-columns: 1fr; }
-    .academic-tabs { flex-direction: column; gap: 6px; }
-    .tab-btn { border-radius: 10px; justify-content: center; }
+
+    /* Curriculum: 1 kolom agar teks tidak terpotong */
+    .curriculum-features {
+        grid-template-columns: 1fr;
+    }
+
+    /* Feat-box: pastikan lebar tidak meluber */
+    .feat-box {
+        width: 100%;
+        max-width: 100%;
+    }
+
     .ekstra-grid { grid-template-columns: repeat(2, 1fr); }
+
+    /* Tab: wrap normal di tablet */
+    .academic-tabs {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .tab-btn {
+        border-radius: 10px;
+        justify-content: center;
+    }
 
     .table-responsive {
         border-radius: 10px;
         -webkit-overflow-scrolling: touch;
+        overflow-x: auto;
     }
     .schedule-table {
         min-width: 480px;
@@ -557,13 +570,47 @@
 }
 
 /* ============================================================
-   RESPONSIVE FIX MOBILE — schedule-table & tab buttons
-   Khusus HP, tidak pengaruhi desktop sama sekali
+   8. RESPONSIVE — HP (≤ 600px)
+   
+   Perbaikan utama:
+   - Teks di feat-box tidak terpotong ke kanan
+   - Tabel jadwal berubah jadi kartu vertikal
+   - Tab TKJ/RPL scroll horizontal 1 baris
 ============================================================ */
-
 @media (max-width: 600px) {
 
-    /* Hilangkan scroll horizontal wrapper tabel */
+    /* ── GLOBAL FIX: cegah konten apapun meluber ke kanan ── */
+    .content-card {
+        overflow: hidden;         /* potong konten yang meluber */
+        padding: 20px 16px;       /* padding lebih kecil di HP */
+    }
+
+    /* ── FEAT-BOX: 1 kolom penuh, teks wrap ── */
+    .curriculum-features {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .feat-box {
+        width: 100%;
+        max-width: 100%;
+        padding: 18px 16px;
+        /* Paksa semua teks di dalam wrap */
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
+
+    .feat-box p,
+    .feat-box h5 {
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        max-width: 100%;
+    }
+
+    /* ── TABEL JADWAL: ubah jadi kartu vertikal ── */
+
+    /* Hilangkan wrapper scroll horizontal */
     .table-responsive {
         overflow-x: visible;
         border: none;
@@ -571,13 +618,19 @@
         background: transparent;
     }
 
-    /* Sembunyikan baris header tabel —
-       digantikan label otomatis dari data-label di tiap td */
+    /* Sembunyikan header tabel —
+       digantikan label dari data-label di tiap <td> */
     .schedule-table thead {
         display: none;
     }
 
-    /* Setiap baris <tr> jadi kartu vertikal sendiri */
+    /* Reset min-width yang dipasang di breakpoint 768px */
+    .schedule-table {
+        min-width: unset;
+        width: 100%;
+    }
+
+    /* Setiap <tr> jadi kartu vertikal */
     .schedule-table tbody tr {
         display: flex;
         flex-direction: column;
@@ -592,7 +645,7 @@
         transition: border-color 0.25s ease, background 0.25s ease;
     }
 
-    /* Garis aksen merah-oranye di sisi kiri tiap kartu */
+    /* Garis aksen kiri tiap kartu */
     .schedule-table tbody tr::before {
         content: '';
         position: absolute;
@@ -602,13 +655,12 @@
         border-radius: 3px 0 0 3px;
     }
 
-    /* Hover efek kartu */
     .schedule-table tbody tr:hover {
         background: rgba(232, 86, 26, 0.07);
         border-color: rgba(232, 86, 26, 0.3);
     }
 
-    /* Setiap <td> jadi baris: [label di kiri] [nilai di kanan] */
+    /* Setiap <td> jadi baris: [label] [nilai] */
     .schedule-table tbody td {
         display: flex;
         align-items: flex-start;
@@ -622,7 +674,7 @@
         word-break: break-word;
     }
 
-    /* Label kolom diambil otomatis dari data-label="..." di HTML */
+    /* Label dari atribut data-label="..." di HTML */
     .schedule-table tbody td::before {
         content: attr(data-label);
         font-family: 'Bebas Neue', sans-serif;
@@ -636,7 +688,7 @@
         line-height: 1.4;
     }
 
-    /* Baris pertama (nama mata pelajaran) jadi judul kartu */
+    /* Baris nama mata pelajaran = judul kartu */
     .schedule-table tbody td:first-child {
         font-size: 0.97rem;
         font-weight: 700;
@@ -644,7 +696,6 @@
         align-items: center;
     }
 
-    /* Room tag tetap berbentuk pill */
     .room-tag {
         font-size: 0.72rem;
         padding: 3px 10px;
@@ -652,8 +703,7 @@
         word-break: break-word;
     }
 
-    /* Tab TKJ/RPL jadi scroll horizontal satu baris
-       supaya tidak wrap ke bawah di HP */
+    /* ── TAB TKJ/RPL: scroll horizontal 1 baris ── */
     .academic-tabs {
         flex-wrap: nowrap;
         overflow-x: auto;
@@ -669,11 +719,19 @@
         flex-shrink: 0;
         padding: 8px 14px;
         font-size: 0.82rem;
+        border-radius: 50px;
+    }
+
+    /* ── EKSTRA GRID: tetap 2 kolom di 600px ── */
+    .ekstra-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 }
 
-/* Layar sangat kecil ≤ 360px —
-   ekstra grid dan curriculum features turun ke 1 kolom */
+/* ============================================================
+   9. HP SANGAT KECIL (≤ 360px)
+============================================================ */
 @media (max-width: 360px) {
     .ekstra-grid {
         grid-template-columns: 1fr;
