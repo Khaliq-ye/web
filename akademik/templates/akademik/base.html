@@ -352,6 +352,8 @@ body {
   body { flex-direction: column; }
   .sidebar { width: 100%; height: auto; position: static; overflow-y: auto; }
   .page-content { padding: 16px; }
+  .main-wrap { overflow-x: hidden; max-width: 100vw; }
+  .page-content { overflow-x: hidden; max-width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }

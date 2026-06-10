@@ -430,6 +430,32 @@ textarea.form-input {height:85px;resize:vertical;}
 }
 .btn-danger:hover {filter:brightness(1.15);}
 
+/* FIX: panel-card overflow hidden memotong scroll tabel */
+.panel-card {
+  overflow: visible;
+}
+.panel-card::before {
+  border-radius: 18px 18px 0 0;/* FIX: panel-card overflow hidden memotong scroll tabel */
+.panel-card {
+  overflow: visible;
+}
+.panel-card::before {
+  border-radius: 18px 18px 0 0;
+  pointer-events: none;
+}
+
+/* Pastikan konten dalam card tidak keluar batas visual */
+.panel-card > *:not(.rapor-table-wrap):not(.data-table-wrap) {
+  max-width: 100%;
+}
+}
+
+/* Wrapper scroll — global, bukan hanya di mobile */
+.rapor-table-wrap,
+.data-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 @media (max-width:860px) {
   .main-grid { grid-template-columns: 1fr; }
