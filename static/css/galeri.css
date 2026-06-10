@@ -366,12 +366,10 @@
     width: 300px !important;
     left: -150px !important;
 }
-@media (max-width: 600px) {
-    .sub-layout .container {
-        max-width: 100%;
-        overflow: hidden;
-        box-sizing: border-box;
-    }
+.sub-layout .container {
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .sub-grid { position: relative; z-index: 2; width: 100%; }
