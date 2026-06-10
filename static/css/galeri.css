@@ -349,7 +349,7 @@
 /* ============================================================
    6. Z-INDEX FIX
 ============================================================ */
-.page-hero { position: relative; z-index: 0; isolation: isolate; }
+.page-hero { position: relative; z-index: 0; isolation: isolate; display: flex; align-items: center; justify-content: center; }
 .page-hero-grid-overlay,
 .orb, .orb-hero-1, .orb-hero-2, .orb-hero-3 {
     z-index: 0; pointer-events: none;
