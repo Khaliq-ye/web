@@ -257,6 +257,8 @@
     white-space: normal;
     word-break: break-word;
     overflow-wrap: break-word;
+    width: 100%;
+    max-width: 100%;
 }
 .empty-box span {
     font-size: 0.9rem;
@@ -266,6 +268,8 @@
     word-break: break-word;
     overflow-wrap: break-word;
     line-height: 1.6;
+    width: 100%;
+    max-width: 100%;
 }
 
 /* ============================================================
@@ -351,13 +355,32 @@
     z-index: 0; pointer-events: none;
 }
 .page-hero-inner { position: relative; z-index: 1; pointer-events: auto; }
-.sub-layout { position: relative; z-index: 2; overflow-x: hidden; }
-.sub-grid   { position: relative; z-index: 2; }
+
+/* Kunci utama: potong overflow di level sub-layout */
+.sub-layout {
+    position: relative; z-index: 2;
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+.sub-layout::before {
+    width: 300px !important;
+    left: -150px !important;
+}
+.sub-layout .container {
+    max-width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.sub-grid { position: relative; z-index: 2; width: 100%; }
 
 .content-card {
     position: relative; z-index: 1;
-    isolation: isolate; overflow: hidden;
+    isolation: isolate;
+    overflow: hidden;
     box-sizing: border-box;
+    max-width: 100%;
+    width: 100%;
 }
 .content-card::before, .content-card::after {
     z-index: 0; pointer-events: none;

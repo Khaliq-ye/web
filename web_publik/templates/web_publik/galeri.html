@@ -18,8 +18,32 @@
 
     <style>
 *, *::before, *::after { box-sizing: border-box; }
-html, body { overflow-x: hidden; max-width: 100%; }
-.container { width: 100%; padding-left: 16px; padding-right: 16px; box-sizing: border-box; }
+html, body { overflow-x: hidden !important; width: 100%; }
+
+.container {
+    width: 100%;
+    max-width: min(1240px, 100%);
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.sub-layout { overflow-x: hidden !important; width: 100%; }
+
+.content-card,
+.content-card * { max-width: 100%; box-sizing: border-box; }
+
+.card-desc,
+.empty-box p,
+.empty-box span {
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+}
 </style>
 </head>
 <body>
