@@ -11,11 +11,148 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    
     <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5.0">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}?v=5.0">
-    <link rel="stylesheet" href="{% static 'css/galeri.css' %}?v=6.0">
-    
+    <link rel="stylesheet" href="{% static 'css/galeri.css' %}?v=7.0">
+
+    <style>
+    /* ── INLINE FIX: override langsung, tidak perlu tunggu cache ── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: hidden; max-width: 100%; }
+
+    .container { width: 100%; padding-left: 16px; padding-right: 16px; box-sizing: border-box; }
+
+    /* Sub grid: 2 kolom di laptop, 1 kolom di HP */
+    .sub-grid {
+        display: grid;
+        grid-template-columns: 1.38fr 0.62fr;
+        gap: 36px;
+        align-items: start;
+    }
+    @media (max-width: 900px) {
+        .sub-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Content card tidak meluber */
+    .content-card {
+        overflow: hidden;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+
+    /* Card desc wrap */
+    .card-desc {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+
+    /* Filter tabs: scroll horizontal dalam 1 baris */
+    .filter-container {
+        width: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        margin-bottom: 20px;
+    }
+    .filter-container::-webkit-scrollbar { display: none; }
+    .filter-tabs {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        gap: 8px;
+        padding: 2px 2px 4px 2px;
+    }
+    .filter-btn { flex-shrink: 0; white-space: nowrap; }
+
+    /* Galeri grid fluid */
+    .galeri-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Empty box teks wrap */
+    .empty-box { box-sizing: border-box; overflow: hidden; }
+    .empty-box p, .empty-box span {
+        display: block;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+
+    /* Info table kontak: HAPUS overflow-x:auto, pakai fixed */
+    .info-table-wrap { overflow: visible !important; }
+    .info-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+    .info-table td {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        vertical-align: top;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        font-size: 0.87rem;
+        line-height: 1.55;
+    }
+    .info-table td:first-child {
+        width: 30%;
+        padding-right: 10px;
+        color: rgba(255,255,255,0.4);
+        font-weight: 600;
+    }
+    .info-table td:last-child {
+        width: 70%;
+        color: rgba(255,255,255,0.76);
+    }
+    .info-table tr:last-child td { border-bottom: none; }
+
+    /* Stat list */
+    .stat-list { list-style: none; padding: 0; }
+    .stat-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        padding: 11px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        flex-wrap: nowrap;
+    }
+    .stat-list li:last-child { border-bottom: none; }
+    .stat-label { flex: 1; min-width: 0; word-break: break-word; font-size: 0.88rem; color: rgba(255,255,255,0.48); }
+    .stat-val { flex-shrink: 0; white-space: nowrap; }
+
+    /* HP ≤ 600px */
+    @media (max-width: 600px) {
+        .container { padding-left: 12px; padding-right: 12px; }
+        .content-card { padding: 18px 14px; }
+        .galeri-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .galeri-frame { height: 110px !important; }
+        .galeri-info { padding: 8px 10px; }
+        .galeri-info h4 { font-size: 0.76rem; white-space: normal; word-break: break-word; }
+        .galeri-meta { flex-direction: column; align-items: flex-start; gap: 3px; }
+        .galeri-date { font-size: 0.62rem; }
+        .verified-tag { font-size: 0.6rem; padding: 2px 6px; }
+        .filter-btn { padding: 7px 13px; font-size: 0.78rem; }
+        .empty-box { padding: 30px 14px; }
+        .info-table td { font-size: 0.8rem !important; padding: 8px 0; }
+        .info-table td:first-child { width: 35%; font-size: 0.76rem !important; }
+        .info-table td:last-child { width: 65%; }
+    }
+
+    /* HP ≤ 360px */
+    @media (max-width: 360px) {
+        .galeri-grid { grid-template-columns: 1fr; }
+        .galeri-frame { height: 160px !important; }
+    }
+    </style>
 </head>
 <body>
 
@@ -39,14 +176,11 @@
 </div>
 {% endif %}
 
-<!-- ═══════════════════════════════════════════
-     HEADER
-═══════════════════════════════════════════ -->
 <header class="main-header" id="mainHeader">
     <div class="container header-wrapper">
         <a href="{% url 'web_publik:index' %}" class="logo" style="display:flex;align-items:center;gap:12px;">
             <img src="{% static 'images/logo-profil-sekolah.png' %}" alt="Logo SMA Negeri 5 Kota X"
-     style="height:36px;width:auto;object-fit:contain;">
+                 style="height:36px;width:auto;object-fit:contain;">
             SMA<span> Negeri 5 Kota X</span>
         </a>
         <nav class="nav-bar">
@@ -65,27 +199,16 @@
             </ul>
         </nav>
         <button class="nav-toggle" id="navToggle" aria-label="Buka menu navigasi">
-    <i class="fa-solid fa-bars"></i>
-</button>
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
 </header>
 
-<!-- ═══════════════════════════════════════════
-     PAGE HERO  ← SEMUA ELEMEN WAJIB ADA
-═══════════════════════════════════════════ -->
 <section class="page-hero">
-
- 
     <div class="page-hero-grid-overlay"></div>
-
-  
     <div class="orb orb-hero-1"></div>
     <div class="orb orb-hero-2"></div>
     <div class="orb orb-hero-3"></div>
-
-
-
-
     <div class="container page-hero-inner">
         <span class="page-hero-label">
             <i class="fa-solid fa-images"></i> Dokumentasi Resmi
@@ -99,14 +222,10 @@
     </div>
 </section>
 
-<!-- ═══════════════════════════════════════════
-     MAIN CONTENT
-═══════════════════════════════════════════ -->
 <main class="sub-layout">
     <div class="container">
         <div class="sub-grid">
 
-            <!-- MAIN -->
             <div class="sub-main">
                 <div class="content-card">
                     <h3>
@@ -115,7 +234,6 @@
                     </h3>
                     <p class="card-desc">Gunakan sistem filter interaktif di bawah ini untuk melihat arsip dokumentasi resmi infrastruktur dan efektivitas kegiatan belajar mengajar.</p>
 
-                    <!-- FILTER TABS -->
                     <div class="filter-container">
                         <div class="filter-tabs">
                             <button class="filter-btn active" onclick="filterGaleri(event, 'all')">
@@ -133,7 +251,6 @@
                         </div>
                     </div>
 
-                    <!-- GALLERY GRID -->
                     <div class="galeri-grid">
                         {% for foto in daftar_galeri %}
                         <div class="galeri-card" data-category="{{ foto.kategori }}">
@@ -181,7 +298,6 @@
                 </div>
             </div>
 
-            <!-- SIDEBAR -->
             <aside class="sub-sidebar">
                 <div class="sidebar-widget">
                     <h4><i class="fa-solid fa-chart-pie"></i> Arsip Dokumentasi</h4>
@@ -206,32 +322,27 @@
                 </div>
 
                 <div class="sidebar-widget">
-    <h4><i class="fa-solid fa-address-book"></i> Kontak Utama</h4>
-    {% if kontak %}
-    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
-    <table class="info-table">
-        <tr><td>Telp</td><td>{{ kontak.telepon }}</td></tr>
-        <tr><td>Email</td><td>{{ kontak.email }}</td></tr>
-        <tr><td>Alamat</td><td>{{ kontak.alamat }}</td></tr>
-        {% if kontak.website %}
-        <tr><td>Website</td><td><a href="{{ kontak.website }}" target="_blank" style="color:inherit;">{{ kontak.website }}</a></td></tr>
-        {% endif %}
-        {% if kontak.wa %}
-        <tr><td>WhatsApp</td><td>+{{ kontak.wa }}</td></tr>
-        {% endif %}
-    </table>
-    </div>
-    {% else %}
-    {# Fallback statis jika database belum diisi #}
-    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch;">
-    <table class="info-table">
-        <tr><td>Telp</td><td>(0376) 23456</td></tr>
-        <tr><td>Email</td><td>info@siakadpro.sch.id</td></tr>
-        <tr><td>Alamat</td><td>Jl. Pendidikan No. 123, Lombok Timur, NTB</td></tr>
-    </table>
-    </div>
-    {% endif %}
-</div>
+                    <h4><i class="fa-solid fa-address-book"></i> Kontak Utama</h4>
+                    {% if kontak %}
+                    <table class="info-table">
+                        <tr><td>Telp</td><td>{{ kontak.telepon }}</td></tr>
+                        <tr><td>Email</td><td>{{ kontak.email }}</td></tr>
+                        <tr><td>Alamat</td><td>{{ kontak.alamat }}</td></tr>
+                        {% if kontak.website %}
+                        <tr><td>Website</td><td><a href="{{ kontak.website }}" target="_blank" style="color:inherit;word-break:break-all;">{{ kontak.website }}</a></td></tr>
+                        {% endif %}
+                        {% if kontak.wa %}
+                        <tr><td>WhatsApp</td><td>+{{ kontak.wa }}</td></tr>
+                        {% endif %}
+                    </table>
+                    {% else %}
+                    <table class="info-table">
+                        <tr><td>Telp</td><td>(0376) 23456</td></tr>
+                        <tr><td>Email</td><td>info@siakadpro.sch.id</td></tr>
+                        <tr><td>Alamat</td><td>Jl. Pendidikan No. 123, Lombok Timur, NTB</td></tr>
+                    </table>
+                    {% endif %}
+                </div>
 
                 <div class="sidebar-widget sidebar-cta">
                     <h4><i class="fa-solid fa-graduation-cap"></i> PPDB 2026/2027</h4>
@@ -247,9 +358,6 @@
     </div>
 </main>
 
-<!-- ═══════════════════════════════════════════
-     FOOTER
-═══════════════════════════════════════════ -->
 <footer class="main-footer">
     <div class="footer-fire-top"></div>
     <div class="container">
@@ -290,9 +398,6 @@
     </div>
 </footer>
 
-<!-- ═══════════════════════════════════════════
-     LIGHTBOX MODAL
-═══════════════════════════════════════════ -->
 <div id="galeriModal" class="lightbox-overlay" onclick="if(event.target===this)tutupPreview()">
     <button class="lightbox-close" onclick="tutupPreview()">
         <i class="fa-solid fa-xmark"></i>
@@ -303,37 +408,30 @@
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     SCRIPTS
-═══════════════════════════════════════════ -->
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-
-    /* ── 5. Hamburger Toggle ── */
-const navToggle = document.getElementById('navToggle');
-const navBar = document.querySelector('.nav-bar');
-if (navToggle && navBar) {
-    navToggle.addEventListener('click', function() {
-        navBar.classList.toggle('open');
-        this.querySelector('i').className = navBar.classList.contains('open')
-            ? 'fa-solid fa-xmark'
-            : 'fa-solid fa-bars';
-    });
-    document.querySelectorAll('.nav-menu a').forEach(link => {
-        link.addEventListener('click', () => {
-            navBar.classList.remove('open');
-            navToggle.querySelector('i').className = 'fa-solid fa-bars';
+    const navToggle = document.getElementById('navToggle');
+    const navBar = document.querySelector('.nav-bar');
+    if (navToggle && navBar) {
+        navToggle.addEventListener('click', function() {
+            navBar.classList.toggle('open');
+            this.querySelector('i').className = navBar.classList.contains('open')
+                ? 'fa-solid fa-xmark'
+                : 'fa-solid fa-bars';
         });
-    });
-}
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                navBar.classList.remove('open');
+                navToggle.querySelector('i').className = 'fa-solid fa-bars';
+            });
+        });
+    }
 
-    /* 1. Header shadow on scroll */
     const header = document.getElementById('mainHeader');
     window.addEventListener('scroll', () => {
         header.classList.toggle('scrolled', window.scrollY > 60);
     }, { passive: true });
 
-    /* 2. Auto-dismiss toast */
     setTimeout(() => {
         document.querySelectorAll('.toast-item').forEach(t => {
             t.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
@@ -343,7 +441,6 @@ if (navToggle && navBar) {
         });
     }, 5000);
 
-    /* 3. Stagger animate gallery cards on load */
     const cards = document.querySelectorAll('.galeri-card');
     cards.forEach((card, i) => {
         card.style.opacity = '0';
@@ -356,11 +453,9 @@ if (navToggle && navBar) {
     });
 });
 
-/* 4. Filter gallery */
 function filterGaleri(event, category) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     event.currentTarget.classList.add('active');
-
     const items = document.querySelectorAll('.galeri-card');
     let visible = 0;
     items.forEach(item => {
@@ -378,14 +473,12 @@ function filterGaleri(event, category) {
             visible++;
         }
     });
-
     const alert = document.getElementById('js-empty-alert');
     if (alert) alert.style.display = visible === 0 ? 'block' : 'none';
 }
 
-/* 5. Lightbox */
 function bukaPreview(imgUrl, judul) {
-    document.getElementById('imgPreview').src    = imgUrl;
+    document.getElementById('imgPreview').src = imgUrl;
     document.getElementById('captionPreview').textContent = judul;
     document.getElementById('galeriModal').classList.add('active');
     document.body.style.overflow = 'hidden';
