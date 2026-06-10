@@ -372,6 +372,7 @@
 }
 
 .sub-grid { position: relative; z-index: 2; width: 100%; }
+.sub-layout .sub-grid { overflow-x: hidden; }
 
 .content-card {
     position: relative; z-index: 1;
