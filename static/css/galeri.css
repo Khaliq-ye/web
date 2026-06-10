@@ -10,11 +10,13 @@
 .filter-container {
     margin-bottom: 30px;
     width: 100%;
+    max-width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
     padding-bottom: 6px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    box-sizing: border-box;
 }
 .filter-container::-webkit-scrollbar { display: none; }
 
@@ -24,6 +26,7 @@
     align-items: center;
     flex-wrap: nowrap;
     padding: 4px 2px 2px 2px;
+    min-width: max-content;
 }
 
 .filter-btn {
@@ -237,6 +240,7 @@
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+    grid-column: 1 / -1;
 }
 .empty-box i {
     font-size: 3.5rem;
@@ -347,12 +351,13 @@
     z-index: 0; pointer-events: none;
 }
 .page-hero-inner { position: relative; z-index: 1; pointer-events: auto; }
-.sub-layout { position: relative; z-index: 2; }
+.sub-layout { position: relative; z-index: 2; overflow-x: hidden; }
 .sub-grid   { position: relative; z-index: 2; }
 
 .content-card {
     position: relative; z-index: 1;
-    isolation: isolate; overflow: visible;
+    isolation: isolate; overflow: hidden;
+    box-sizing: border-box;
 }
 .content-card::before, .content-card::after {
     z-index: 0; pointer-events: none;
@@ -361,15 +366,83 @@
 .filter-btn, .galeri-grid {
     position: relative; z-index: 1; pointer-events: auto;
 }
-.sub-sidebar  { position: relative; z-index: 2; }
-.sidebar-widget { position: relative; z-index: 1; isolation: isolate; }
+.sub-sidebar  { position: relative; z-index: 2; min-width: 0; }
+.sidebar-widget { position: relative; z-index: 1; isolation: isolate; overflow: hidden; }
 .sidebar-widget::before, .sidebar-widget::after { z-index: 0; pointer-events: none; }
 .sidebar-cta .btn { position: relative; z-index: 1; pointer-events: auto; }
 .main-header    { z-index: 1000 !important; }
 .toast-container{ z-index: 9999 !important; }
 
 /* ============================================================
-   7. RESPONSIVE — TABLET (≤ 768px)
+   7. INFO TABLE — GLOBAL (berlaku semua ukuran)
+============================================================ */
+.info-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+.info-table td {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    vertical-align: top;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.87rem;
+    line-height: 1.55;
+}
+.info-table td:first-child {
+    width: 30%;
+    padding-right: 10px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 600;
+}
+.info-table td:last-child {
+    width: 70%;
+    color: rgba(255,255,255,0.76);
+}
+.info-table tr:last-child td { border-bottom: none; }
+
+/* ============================================================
+   8. STAT LIST — GLOBAL
+============================================================ */
+.stat-list { list-style: none; padding: 0; width: 100%; }
+.stat-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+.stat-list li:last-child { border-bottom: none; }
+.stat-label {
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.48);
+    overflow: hidden;
+}
+.stat-val { flex-shrink: 0; white-space: nowrap; }
+
+/* ============================================================
+   9. RESPONSIVE — TABLET (≤ 900px) — 1 KOLOM
+============================================================ */
+@media (max-width: 900px) {
+    .sub-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+    .sub-sidebar { width: 100%; }
+}
+
+/* ============================================================
+   10. RESPONSIVE — TABLET KECIL (≤ 768px)
 ============================================================ */
 @media (max-width: 768px) {
     .galeri-grid {
@@ -378,141 +451,99 @@
     }
     .galeri-frame { height: 140px; }
     .lightbox-close { top: 12px; right: 12px; }
-
-    .info-table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
-    .info-table td {
-        word-break: break-word;
-        white-space: normal;
-        overflow-wrap: break-word;
-        font-size: clamp(10px, 2vw, 13px);
-        padding: 6px 4px;
-    }
-    .info-table td:first-child { width: 30%; }
-    .info-table td:last-child  { width: 70%; }
+    .info-table td { font-size: clamp(10px, 2vw, 13px); padding: 6px 0; }
+    .info-table td:first-child { width: 32%; }
+    .info-table td:last-child  { width: 68%; }
 }
 
 /* ============================================================
-   8. RESPONSIVE — HP (≤ 600px)
-   Pola sama persis dengan academic.css
+   11. RESPONSIVE — HP (≤ 600px)
 ============================================================ */
 @media (max-width: 600px) {
 
-    /* Cegah konten meluber — sama seperti academic.css */
+    /* Content card */
     .content-card {
+        padding: 16px 14px;
         overflow: hidden;
-        padding: 20px 16px;
     }
 
-    /* Filter tabs: scroll horizontal 1 baris — sama seperti academic-tabs */
-    .filter-container {
-        overflow-x: auto;
-        padding-bottom: 8px;
-        scrollbar-width: none;
-    }
-    .filter-container::-webkit-scrollbar { display: none; }
-    .filter-tabs {
-        flex-wrap: nowrap;
-        gap: 8px;
-    }
-    .filter-btn {
-        flex-shrink: 0;
-        padding: 8px 14px;
-        font-size: 0.82rem;
-    }
-
-    /* Galeri grid: 2 kolom — sama seperti ekstra-grid di academic */
-    .galeri-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-    .galeri-frame { height: 115px; }
-
-    /* Info card */
-    .galeri-info {
-        padding: 10px 12px;
-        overflow: hidden;
-        min-width: 0;
-    }
-    .galeri-info h4 {
-        font-size: 0.8rem;
+    /* Desc teks */
+    .card-desc {
+        font-size: 0.84rem !important;
+        margin-bottom: 14px;
         white-space: normal;
         word-break: break-word;
         overflow-wrap: break-word;
-        max-height: none;
+    }
+
+    /* Filter */
+    .filter-container {
+        margin-bottom: 16px;
+    }
+    .filter-btn {
+        padding: 7px 13px;
+        font-size: 0.78rem;
+    }
+
+    /* Galeri grid: 2 kolom */
+    .galeri-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px;
+    }
+    .galeri-frame { height: 110px !important; }
+
+    .galeri-info {
+        padding: 8px 10px;
+        overflow: hidden;
+    }
+    .galeri-info h4 {
+        font-size: 0.74rem;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        margin-bottom: 6px;
     }
     .galeri-meta {
         flex-direction: column;
         align-items: flex-start;
         gap: 3px;
+        padding-top: 6px;
     }
-    .galeri-date  { font-size: 0.65rem; }
-    .verified-tag { font-size: 0.62rem; padding: 2px 6px; }
+    .galeri-date { font-size: 0.62rem; }
+    .verified-tag { font-size: 0.58rem; padding: 1px 5px; }
 
     /* Empty box */
-    .empty-box { padding: 32px 16px; }
-    .empty-box i { font-size: 2.6rem; }
-    .empty-box p { font-size: 0.92rem; }
-    .empty-box span { font-size: 0.82rem; }
+    .empty-box {
+        padding: 28px 14px;
+    }
+    .empty-box i { font-size: 2.6rem; margin-bottom: 10px; }
+    .empty-box p { font-size: 0.88rem; margin-bottom: 4px; }
+    .empty-box span { font-size: 0.8rem; }
 
-    /* Sidebar stat list */
-    .stat-list li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: nowrap;
-        gap: 8px;
-        padding: 10px 0;
-    }
-    .stat-label { flex: 1; font-size: 0.82rem; min-width: 0; word-break: break-word; }
-    .stat-val   { flex-shrink: 0; font-size: 0.7rem; padding: 3px 8px; white-space: nowrap; }
+    /* Sidebar widget */
+    .sidebar-widget { padding: 16px 14px; }
+    .sidebar-widget h4 { font-size: 0.85rem !important; margin-bottom: 12px; padding-bottom: 10px; }
 
-    /* Info table sidebar kontak — sama persis academic.css */
-    .sidebar-widget div[style*="overflow-x"] {
-        overflow-x: visible !important;
-    }
-    .info-table {
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: collapse;
-    }
-    .info-table td {
-        white-space: normal;
-        word-break: break-word;
-        overflow-wrap: break-word;
-        font-size: 0.82rem !important;
-        padding: 9px 0;
-        line-height: 1.55;
-        vertical-align: top;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
-    }
-    .info-table td:first-child {
-        width: 35%;
-        padding-right: 10px;
-        color: rgba(255,255,255,0.4);
-        font-weight: 600;
-        font-size: 0.78rem !important;
-    }
-    .info-table td:last-child {
-        width: 65%;
-        color: rgba(255,255,255,0.76);
-    }
-    .info-table tr:last-child td { border-bottom: none; }
+    /* Stat */
+    .stat-label { font-size: 0.8rem; }
+    .stat-val   { font-size: 0.66rem; padding: 2px 8px; }
+
+    /* Info table */
+    .info-table td { font-size: 0.76rem !important; padding: 7px 0; }
+    .info-table td:first-child { width: 33%; font-size: 0.72rem !important; }
+    .info-table td:last-child  { width: 67%; }
 
     /* Lightbox */
     #imgPreview { max-width: 95vw; max-height: 60vh; }
-    .lightbox-close { top: 12px; right: 12px; width: 38px; height: 38px; }
-    .lightbox-caption { font-size: 0.86rem; margin-top: 12px; padding: 0 8px; }
+    .lightbox-close { top: 10px; right: 10px; width: 36px; height: 36px; }
+    .lightbox-caption { font-size: 0.82rem; margin-top: 10px; padding: 0 8px; }
 }
 
 /* ============================================================
-   9. HP SANGAT KECIL (≤ 360px)
+   12. HP SANGAT KECIL (≤ 360px)
 ============================================================ */
 @media (max-width: 360px) {
-    .galeri-grid { grid-template-columns: 1fr; }
-    .galeri-frame { height: 160px; }
-    .filter-btn { padding: 7px 12px; font-size: 0.76rem; }
+    .galeri-grid { grid-template-columns: 1fr !important; }
+    .galeri-frame { height: 160px !important; }
+    .filter-btn { padding: 6px 10px; font-size: 0.72rem; }
 }
