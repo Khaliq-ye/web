@@ -293,6 +293,57 @@
   .tab-bar{ gap:2px; }
   .tab-btn{ padding:8px 10px; font-size:.78rem; }
 }
+/* ✅ TAMBAHKAN INI — paksa scroll horizontal tabel di HP */
+@media (max-width: 600px) {
+  .table-scroll {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .wali-table {
+    min-width: 480px; /* tabel tidak diperas, scroll horizontal */
+    font-size: .76rem;
+  }
+  .wali-table thead th,
+  .wali-table tbody td {
+    padding: 8px 10px;
+    white-space: nowrap;
+  }
+  /* Grid dashboard jadi 1 kolom penuh */
+  .grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 14px;
+  }
+  .grid-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px;
+  }
+  /* Hero lebih compact */
+  .wali-hero {
+    padding: 18px 16px;
+  }
+  .wali-hero-title {
+    font-size: 1.3rem;
+  }
+  /* Stat card lebih compact */
+  .hero-stat {
+    min-width: 56px;
+    padding: 8px 10px;
+  }
+  .hero-stat-num {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+  .wali-table {
+    min-width: 420px;
+  }
+}
 </style>
 {% endblock %}
 
@@ -393,11 +444,17 @@
         <i class="fas fa-graduation-cap"></i>
         <h4 class="wali-card-title">Nilai Rapor — {{ siswa_terkait.nama_lengkap }}</h4>
       </div>
+      <!-- ✅ GANTI -->
       <div class="table-scroll">
-  <table class="wali-table">
+        <table class="wali-table">
           <thead>
             <tr>
-              <th>Mata Pelajaran</th><th>Tugas</th><th>UTS</th><th>UAS</th><th>Angka</th><th>Predikat</th>
+              <th>Mata Pelajaran</th>
+              <th>Tugas</th>
+              <th>UTS</th>
+              <th>UAS</th>
+              <th>Angka</th>
+              <th>Predikat</th>
             </tr>
           </thead>
           <tbody>
@@ -426,9 +483,16 @@
         <span class="wali-card-sub">10 terakhir</span>
       </div>
       <div class="table-scroll">
-  <table class="wali-table">
+<!-- ✅ GANTI -->
+      <div class="table-scroll">
+        <table class="wali-table">
           <thead>
-            <tr><th>Tanggal</th><th>Mata Pelajaran</th><th>Status</th><th>Keterangan</th></tr>
+            <tr>
+              <th>Tanggal</th>
+              <th>Mata Pelajaran</th>
+              <th>Status</th>
+              <th>Keterangan</th>
+            </tr>
           </thead>
           <tbody>
             {% for p in daftar_presensi %}
@@ -566,8 +630,8 @@
       <span class="wali-card-sub">Rata-rata: <strong style="color:var(--gold);">{{ rata_nilai }}</strong></span>
       {% endif %}
     </div>
-    <<div class="table-scroll">
-  <table class="wali-table">
+    <div class="table-scroll">
+      <table class="wali-table">
         <thead>
           <tr>
             <th>Mata Pelajaran</th><th>Tugas</th><th>UTS</th><th>UAS</th>
