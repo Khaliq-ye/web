@@ -8,12 +8,9 @@
 .filter-container {
     margin-bottom: 30px;
     width: 100%;
-    /* FIX: overflow-x scroll tapi overflow-y visible agar tombol
-       yang naik saat hover tidak terpotong di bagian atas */
     overflow-x: auto;
     overflow-y: visible;
     padding-bottom: 6px;
-    /* FIX: angkat filter container di atas ::before card (fire stripe) */
     position: relative;
     z-index: 10;
 }
@@ -27,9 +24,8 @@
     gap: 10px;
     align-items: center;
     width: max-content;
-    /* FIX: pastikan area tabs juga overflow visible ke atas */
     overflow: visible;
-    padding-top: 4px; /* ruang agar shadow tombol tidak terpotong */
+    padding-top: 4px;
 }
 .filter-btn {
     display: inline-flex;
@@ -46,11 +42,8 @@
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4,0,0.2,1);
     white-space: nowrap;
-    /* FIX: z-index tinggi agar selalu di atas ::before card */
     position: relative;
     z-index: 10;
-    /* FIX: will-change memaksa browser buat compositing layer
-       tersendiri sehingga tidak tersembunyi di bawah elemen lain */
     will-change: transform;
 }
 .filter-btn i { font-size: 0.95rem; transition: color 0.25s; }
@@ -60,7 +53,6 @@
     border-color: rgba(232,82,26,0.4);
     transform: translateY(-2px);
     box-shadow: 0 4px 14px rgba(232,82,26,0.15);
-    /* FIX: saat hover z-index naik lagi memastikan berada paling atas */
     z-index: 11;
 }
 .filter-btn:hover i { color: var(--fire-orange); }
@@ -89,7 +81,6 @@
     border-radius: 14px;
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-    /* FIX: stacking context agar overlay tidak bocor keluar kartu */
     position: relative;
     isolation: isolate;
 }
@@ -105,20 +96,18 @@
     width: 100%;
     height: 175px;
     background: var(--coal-dark);
-    /* FIX: clip agar overlay tidak meluber */
     overflow: hidden;
 }
 .galeri-frame img {
     width: 100%; height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
-    /* FIX: pointer-events none supaya klik tidak nyangkut di img */
     pointer-events: none;
     display: block;
 }
 .galeri-card:hover .galeri-frame img { transform: scale(1.07); }
 
-/* Overlay saat hover — FIX utama */
+/* Overlay saat hover */
 .galeri-overlay {
     position: absolute;
     inset: 0;
@@ -128,7 +117,6 @@
         rgba(13,13,13,0.2) 55%,
         transparent 100%
     );
-    /* FIX: gunakan visibility + opacity agar pointer-events bisa aktif saat visible */
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.35s ease, visibility 0.35s ease;
@@ -136,15 +124,12 @@
     align-items: flex-end;
     justify-content: space-between;
     padding: 12px;
-    /* FIX: pastikan overlay berada di atas img tapi di bawah tombol */
     z-index: 1;
-    /* FIX: nonaktifkan pointer saat tersembunyi */
     pointer-events: none;
 }
 .galeri-card:hover .galeri-overlay {
     opacity: 1;
     visibility: visible;
-    /* FIX: aktifkan pointer-events saat overlay terlihat */
     pointer-events: auto;
 }
 
@@ -160,11 +145,10 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    /* FIX: badge tidak boleh kena klik zoom */
     pointer-events: none;
 }
 
-/* FIX UTAMA tombol zoom */
+/* Tombol zoom */
 .zoom-btn {
     width: 36px;
     height: 36px;
@@ -179,12 +163,9 @@
     font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.2s ease;
-    /* FIX: tombol harus selalu bisa diklik saat overlay aktif */
     position: relative;
     z-index: 3;
-    /* FIX: pointer-events eksplisit */
     pointer-events: auto;
-    /* FIX: pastikan tidak ada konflik dengan elemen lain */
     flex-shrink: 0;
 }
 .zoom-btn:hover {
@@ -267,12 +248,10 @@
 }
 
 /* --- LIGHTBOX / MODAL PREVIEW --- */
-/* FIX: gunakan display grid agar layout tidak collapse */
 .lightbox-overlay {
     display: none;
     position: fixed;
     inset: 0;
-    /* FIX: z-index lebih tinggi dari semua elemen */
     z-index: 99999;
     background: rgba(0,0,0,0.92);
     backdrop-filter: blur(14px);
@@ -280,7 +259,6 @@
     align-items: center;
     flex-direction: column;
     padding: 40px 20px;
-    /* FIX: overflow hidden agar konten tidak keluar layar */
     overflow: hidden;
 }
 .lightbox-overlay.active {
@@ -304,7 +282,6 @@
     cursor: pointer;
     transition: all 0.25s ease;
     z-index: 100001;
-    /* FIX: pastikan tombol close selalu bisa diklik */
     pointer-events: auto;
 }
 .lightbox-close:hover {
@@ -318,7 +295,6 @@
     flex-direction: column;
     align-items: center;
     animation: lightboxIn 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards;
-    /* FIX: batas lebar agar gambar tidak overflow */
     max-width: 100%;
     width: 100%;
 }
@@ -335,7 +311,6 @@
     box-shadow: 0 30px 80px rgba(0,0,0,0.7), 0 0 40px rgba(232,82,26,0.15);
     border: 1px solid rgba(232,82,26,0.2);
     display: block;
-    /* FIX: cegah img meregang aneh di safari */
     flex-shrink: 0;
 }
 .lightbox-caption {
@@ -348,7 +323,7 @@
     line-height: 1.5;
 }
 
-/* --- CURSOR DOT (deduplication dari style.css) --- */
+/* --- CURSOR DOT --- */
 .cursor-dot {
     position: fixed;
     width: 8px; height: 8px;
@@ -371,7 +346,6 @@
         right: 12px;
     }
 
-    /* Tabel info kontak auto-fit */
     .info-table {
         width: 100%;
         table-layout: fixed;
@@ -402,16 +376,11 @@
 
 /* ============================================================
    FIX GLOBAL — Tombol tertutup / terhalang di area konten
-   Root cause: elemen positioned (::before/::after, page-hero,
-   orb, deco-text) tidak punya z-index → mengambang di atas
-   konten halaman dan mencegat klik tombol.
 ============================================================ */
 
-/* Pastikan page-hero dan dekorasinya tidak meluber ke bawah */
 .page-hero {
     position: relative;
     z-index: 0;
-    /* Isolasi agar stacking context tidak bocor ke .sub-layout */
     isolation: isolate;
 }
 .page-hero-grid-overlay,
@@ -420,7 +389,6 @@
 .orb-hero-2,
 .orb-hero-3,
 .page-hero-deco-text {
-    /* Semua dekorasi hero tetap di dalam hero, tidak meluber */
     z-index: 0;
     pointer-events: none;
 }
@@ -430,7 +398,6 @@
     pointer-events: auto;
 }
 
-/* Sub-layout dan konten utama harus di atas hero */
 .sub-layout {
     position: relative;
     z-index: 2;
@@ -440,22 +407,18 @@
     z-index: 2;
 }
 
-/* content-card: pastikan pseudo-element tidak menutupi konten */
 .content-card {
     position: relative;
     z-index: 1;
-    /* Isolasi stacking context internal kartu */
     isolation: isolate;
     overflow: visible;
 }
 .content-card::before,
 .content-card::after {
-    /* Pseudo-element dekoratif harus di belakang konten */
     z-index: 0;
     pointer-events: none;
 }
 
-/* Semua konten interaktif di dalam content-card harus di atas pseudo */
 .content-card > *,
 .content-card h3,
 .content-card p,
@@ -469,7 +432,6 @@
     pointer-events: auto;
 }
 
-/* Sidebar juga harus di atas dekorasi */
 .sub-sidebar {
     position: relative;
     z-index: 2;
@@ -490,12 +452,87 @@
     pointer-events: auto;
 }
 
-/* Header tetap di paling atas */
 .main-header {
     z-index: 1000 !important;
 }
 
-/* Toast di atas semua */
 .toast-container {
     z-index: 9999 !important;
+}
+
+
+/* ============================================================
+   RESPONSIVE FIX MOBILE — info-table sidebar kontak
+   Ditambahkan di bawah semua CSS yang sudah ada.
+
+   Masalah: tabel kontak (Telp, Email, Alamat, dll) di sidebar
+   halaman Galeri overflow atau terpotong di layar HP karena
+   kolom label terlalu sempit dan nilai tidak bisa wrap.
+
+   Solusi: jadikan tabel fluid dua kolom dengan word-wrap
+   otomatis. Tidak ada scroll horizontal lagi.
+============================================================ */
+
+/* Base fix — berlaku di semua ukuran layar */
+.info-table {
+    width: 100%;
+    table-layout: auto;       /* lebar kolom mengikuti konten */
+    border-collapse: collapse;
+    word-break: break-word;
+}
+
+.info-table td {
+    vertical-align: top;
+    padding: 11px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.87rem;
+    line-height: 1.6;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+/* Kolom label: Telp, Email, Alamat, dll */
+.info-table td:first-child {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    width: 38%;
+    padding-right: 12px;
+    white-space: nowrap;      /* label tetap 1 baris */
+}
+
+/* Kolom nilai: nomor, alamat, dll */
+.info-table td:last-child {
+    color: rgba(255, 255, 255, 0.76);
+    font-weight: 500;
+    width: 62%;
+}
+
+.info-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* HP kecil ≤ 480px — label boleh wrap, font sedikit lebih kecil */
+@media (max-width: 480px) {
+
+    .info-table td:first-child {
+        white-space: normal;  /* izinkan wrap di HP sangat kecil */
+        width: 36%;
+        font-size: 0.8rem;
+    }
+
+    .info-table td:last-child {
+        width: 64%;
+        font-size: 0.82rem;
+    }
+
+    .info-table td {
+        padding: 9px 0;
+    }
+
+    /* Hapus overflow-x dari div wrapper yang ada di HTML
+       agar tidak muncul scrollbar horizontal di sidebar */
+    .sidebar-widget div[style*="overflow-x"] {
+        overflow-x: visible !important;
+    }
 }

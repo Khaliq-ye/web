@@ -556,14 +556,129 @@
     }
 }
 
-@media (max-width: 480px) {
-    .ekstra-grid { grid-template-columns: 1fr; }
-    .schedule-table {
-        min-width: 420px;
+/* ============================================================
+   RESPONSIVE FIX MOBILE — schedule-table & tab buttons
+   Khusus HP, tidak pengaruhi desktop sama sekali
+============================================================ */
+
+@media (max-width: 600px) {
+
+    /* Hilangkan scroll horizontal wrapper tabel */
+    .table-responsive {
+        overflow-x: visible;
+        border: none;
+        border-radius: 0;
+        background: transparent;
     }
-    .schedule-table thead th,
+
+    /* Sembunyikan baris header tabel —
+       digantikan label otomatis dari data-label di tiap td */
+    .schedule-table thead {
+        display: none;
+    }
+
+    /* Setiap baris <tr> jadi kartu vertikal sendiri */
+    .schedule-table tbody tr {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: rgba(255, 255, 255, 0.025);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 14px;
+        margin-bottom: 12px;
+        padding: 16px 18px;
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.25s ease, background 0.25s ease;
+    }
+
+    /* Garis aksen merah-oranye di sisi kiri tiap kartu */
+    .schedule-table tbody tr::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0;
+        width: 3px; height: 100%;
+        background: linear-gradient(to bottom, #C8102E, #E8561A, #F5C518);
+        border-radius: 3px 0 0 3px;
+    }
+
+    /* Hover efek kartu */
+    .schedule-table tbody tr:hover {
+        background: rgba(232, 86, 26, 0.07);
+        border-color: rgba(232, 86, 26, 0.3);
+    }
+
+    /* Setiap <td> jadi baris: [label di kiri] [nilai di kanan] */
     .schedule-table tbody td {
-        padding: 8px 10px;
-        font-size: 0.78rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 0;
+        border: none;
+        font-size: 0.875rem;
+        color: rgba(255, 255, 255, 0.65);
+        line-height: 1.5;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    /* Label kolom diambil otomatis dari data-label="..." di HTML */
+    .schedule-table tbody td::before {
+        content: attr(data-label);
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #F5C518;
+        min-width: 90px;
+        flex-shrink: 0;
+        padding-top: 2px;
+        line-height: 1.4;
+    }
+
+    /* Baris pertama (nama mata pelajaran) jadi judul kartu */
+    .schedule-table tbody td:first-child {
+        font-size: 0.97rem;
+        font-weight: 700;
+        color: #FFFFFF;
+        align-items: center;
+    }
+
+    /* Room tag tetap berbentuk pill */
+    .room-tag {
+        font-size: 0.72rem;
+        padding: 3px 10px;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    /* Tab TKJ/RPL jadi scroll horizontal satu baris
+       supaya tidak wrap ke bawah di HP */
+    .academic-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        gap: 8px;
+        scrollbar-width: none;
+    }
+    .academic-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tab-btn {
+        flex-shrink: 0;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+}
+
+/* Layar sangat kecil ≤ 360px —
+   ekstra grid dan curriculum features turun ke 1 kolom */
+@media (max-width: 360px) {
+    .ekstra-grid {
+        grid-template-columns: 1fr;
+    }
+    .curriculum-features {
+        grid-template-columns: 1fr;
     }
 }
