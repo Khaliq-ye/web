@@ -358,6 +358,45 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
 }
+/* ============================================================
+   FIX RESPONSIF TABEL WALI MURID — mobile scroll horizontal
+============================================================ */
+.table-scroll {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-scroll > .table-scroll {
+  overflow-x: visible; /* cegah double-nest scroll */
+}
+
+@media (max-width: 900px) {
+  .wali-table {
+    min-width: 520px;
+    width: max-content;
+  }
+  .wali-table thead th,
+  .wali-table tbody td {
+    white-space: nowrap;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .wali-table {
+    min-width: 460px;
+    font-size: .74rem;
+  }
+  .wali-table thead th {
+    font-size: .66rem;
+    padding: 7px 8px;
+  }
+  .wali-table tbody td {
+    padding: 7px 8px;
+  }
+}
   </style>
 
   {% block extra_css %}{% endblock %}
