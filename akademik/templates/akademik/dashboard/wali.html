@@ -22,7 +22,7 @@
 @media (max-width: 768px) {
   .wali-table {
     font-size: .76rem;
-    min-width: 520px; /* paksa scroll horizontal, jangan diperas */
+    min-width: 520px;
   }
   .wali-table thead th {
     font-size: .68rem;
@@ -42,17 +42,14 @@
   .tanggal-text { font-size: .76rem; }
   .ket-text { font-size: .72rem; }
 
-  /* Grid jadi 1 kolom di HP */
   .grid-2 { grid-template-columns: 1fr !important; }
   .grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
 
-  /* Hero stats wrap */
   .wali-hero { flex-direction: column; gap: 14px; }
   .wali-hero-stats { flex-wrap: wrap; gap: 8px; }
   .hero-stat { min-width: 64px; padding: 10px 12px; }
   .hero-stat-num { font-size: 1.3rem; }
 
-  /* Tab bar scroll horizontal */
   .tab-bar {
     flex-wrap: nowrap !important;
     overflow-x: auto;
@@ -169,7 +166,6 @@
   width:40px; height:40px; border-radius:9px;
   display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;
 }
-/* Icon color variants */
 .stat-mini-icon.icon-safe   { background:rgba(34,197,94,.12);  color:#4ade80; }
 .stat-mini-icon.icon-danger { background:rgba(200,16,46,.12);  color:#f87171; }
 .stat-mini-icon.icon-gold   { background:rgba(245,197,24,.12); color:var(--gold); }
@@ -178,7 +174,6 @@
 .stat-mini-icon.icon-green  { background:rgba(34,197,94,.12);  color:#4ade80; }
 
 .stat-mini-num { font-family:var(--disp); font-size:1.5rem; letter-spacing:1px; line-height:1; }
-/* Number color variants */
 .stat-mini-num.c-safe   { color:#4ade80; }
 .stat-mini-num.c-danger { color:#f87171; }
 .stat-mini-num.c-gold   { color:var(--gold); }
@@ -293,7 +288,7 @@
   .tab-bar{ gap:2px; }
   .tab-btn{ padding:8px 10px; font-size:.78rem; }
 }
-/* ✅ TAMBAHKAN INI — paksa scroll horizontal tabel di HP */
+
 @media (max-width: 600px) {
   .table-scroll {
     display: block;
@@ -302,7 +297,7 @@
     -webkit-overflow-scrolling: touch;
   }
   .wali-table {
-    min-width: 480px; /* tabel tidak diperas, scroll horizontal */
+    min-width: 480px;
     font-size: .76rem;
   }
   .wali-table thead th,
@@ -310,7 +305,6 @@
     padding: 8px 10px;
     white-space: nowrap;
   }
-  /* Grid dashboard jadi 1 kolom penuh */
   .grid-2 {
     grid-template-columns: 1fr !important;
     gap: 14px;
@@ -319,37 +313,21 @@
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px;
   }
-  /* Hero lebih compact */
-  .wali-hero {
-    padding: 18px 16px;
-  }
-  .wali-hero-title {
-    font-size: 1.3rem;
-  }
-  /* Stat card lebih compact */
-  .hero-stat {
-    min-width: 56px;
-    padding: 8px 10px;
-  }
-  .hero-stat-num {
-    font-size: 1.1rem;
-  }
+  .wali-hero { padding: 18px 16px; }
+  .wali-hero-title { font-size: 1.3rem; }
+  .hero-stat { min-width: 56px; padding: 8px 10px; }
+  .hero-stat-num { font-size: 1.1rem; }
 }
 
 @media (max-width: 380px) {
-  .grid-3 {
-    grid-template-columns: 1fr !important;
-  }
-  .wali-table {
-    min-width: 420px;
-  }
+  .grid-3 { grid-template-columns: 1fr !important; }
+  .wali-table { min-width: 420px; }
 }
 </style>
 {% endblock %}
 
 {% block content %}
 
-{# ── Tentukan tab aktif ── #}
 {% with active_tab=request.GET.tab|default:"dashboard" %}
 
 {# ── Hero ── #}
@@ -397,13 +375,13 @@
 {% endif %}
 
 
-{# TAB: DASHBOARD #}
+{# ═══════════════════════════════════════
+   TAB: DASHBOARD
+═══════════════════════════════════════ #}
 {% if active_tab == 'dashboard' %}
 
   {% if siswa_terkait %}
   <div class="grid-3" style="margin-bottom:22px;">
-
-    
 
     <div class="stat-mini">
       <div class="stat-mini-icon icon-amber">
@@ -438,13 +416,13 @@
   </div>
 
   <div class="grid-2">
-    {# Nilai terbaru #}
+
+    {# ── Nilai Rapor ── #}
     <div class="wali-card">
       <div class="wali-card-header">
         <i class="fas fa-graduation-cap"></i>
         <h4 class="wali-card-title">Nilai Rapor — {{ siswa_terkait.nama_lengkap }}</h4>
       </div>
-      <!-- ✅ GANTI -->
       <div class="table-scroll">
         <table class="wali-table">
           <thead>
@@ -475,15 +453,13 @@
       </div>
     </div>
 
-    {# Absensi terbaru #}
+    {# ── Absensi Terbaru ── #}
     <div class="wali-card">
       <div class="wali-card-header">
         <i class="fas fa-calendar-check"></i>
         <h4 class="wali-card-title">Absensi Terbaru</h4>
         <span class="wali-card-sub">10 terakhir</span>
       </div>
-      <div class="table-scroll">
-<!-- ✅ GANTI -->
       <div class="table-scroll">
         <table class="wali-table">
           <thead>
@@ -519,6 +495,7 @@
         </table>
       </div>
     </div>
+
   </div>
 
   {% else %}
@@ -527,7 +504,11 @@
     Pilih salah satu anak di atas untuk melihat ringkasan akademik.
   </div>
   {% endif %}
-{# TAB: ABSENSI #}
+
+
+{# ═══════════════════════════════════════
+   TAB: ABSENSI
+═══════════════════════════════════════ #}
 {% elif active_tab == 'absensi' %}
 
   {% if siswa_terkait %}
@@ -584,7 +565,7 @@
       <h4 class="wali-card-title">Riwayat Lengkap Absensi — {{ siswa_terkait.nama_lengkap }}</h4>
     </div>
     <div class="table-scroll">
-  <table class="wali-table">
+      <table class="wali-table">
         <thead>
           <tr><th>Tanggal</th><th>Mata Pelajaran</th><th>Status</th><th>Keterangan</th></tr>
         </thead>
@@ -618,7 +599,10 @@
   <div class="empty-state"><i class="fas fa-child"></i>Pilih anak terlebih dahulu.</div>
   {% endif %}
 
-{# TAB: NILAI & RAPOR #}
+
+{# ═══════════════════════════════════════
+   TAB: NILAI & RAPOR
+═══════════════════════════════════════ #}
 {% elif active_tab == 'nilai' %}
 
   {% if siswa_terkait %}
@@ -660,7 +644,10 @@
   <div class="empty-state"><i class="fas fa-child"></i>Pilih anak terlebih dahulu.</div>
   {% endif %}
 
-{# TAB: KEUANGAN #}
+
+{# ═══════════════════════════════════════
+   TAB: KEUANGAN
+═══════════════════════════════════════ #}
 {% elif active_tab == 'keuangan' %}
 
   {% if siswa_terkait %}
@@ -698,7 +685,7 @@
       <h4 class="wali-card-title">Riwayat Tagihan — {{ siswa_terkait.nama_lengkap }}</h4>
     </div>
     <div class="table-scroll">
-  <table class="wali-table">
+      <table class="wali-table">
         <thead>
           <tr><th>Jenis Tagihan</th><th>Jumlah</th><th>Status</th><th>Tanggal</th><th>Keterangan</th></tr>
         </thead>
@@ -728,7 +715,10 @@
   <div class="empty-state"><i class="fas fa-child"></i>Pilih anak terlebih dahulu.</div>
   {% endif %}
 
-{# TAB: JADWAL & AGENDA #}
+
+{# ═══════════════════════════════════════
+   TAB: JADWAL & AGENDA
+═══════════════════════════════════════ #}
 {% elif active_tab == 'jadwal' %}
 
   <div class="grid-2">
@@ -782,7 +772,10 @@
 
   </div>
 
-{# TAB: KOMUNIKASI #}
+
+{# ═══════════════════════════════════════
+   TAB: KOMUNIKASI
+═══════════════════════════════════════ #}
 {% elif active_tab == 'komunikasi' %}
 
   <div class="grid-2">

@@ -1,845 +1,655 @@
-{% extends "akademik/base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SMA NEGERI 5 KOTA X{% endblock %}</title>
 
-{% block title %}Portal Wali Murid — SMA NEGERI 5 KOTA X{% endblock %}
-{% block topbar_label %}Portal Wali Murid{% endblock %}
-{% block topbar_sub %}SMA NEGERI 5 KOTA X{% endblock %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-{% block extra_css %}
-<style>
+  <style>
+/* ============================================================
+   CSS VARIABLES — Fire Dark (seragam kepsek + staf)
+============================================================ */
 :root {
-  --tab-active-bg: rgba(232,86,26,.12);
-  --tab-active-border: var(--orange);
+  --red:    #C8102E;
+  --deep:   #8B0000;
+  --orange: #E8561A;
+  --amber:  #F4731F;
+  --gold:   #F5C518;
+  --black:  #0D0D0D;
+  --dark:   #161616;
+  --mid:    #1F1F1F;
+  --card:   #2A2A2A;
+  --silver: #9E9E9E;
+  --white:  #FFFFFF;
+  --green:  #22c55e;
+  --grad:   linear-gradient(135deg,#8B0000,#E8561A 55%,#F5C518);
+  --bfire:  1px solid rgba(232,86,26,.28);
+  --bdim:   1px solid rgba(255,255,255,.06);
+  --font:   'Plus Jakarta Sans', sans-serif;
+  --disp:   'Bebas Neue', sans-serif;
 }
 
-/* ── Responsif Tabel ── */
-.table-scroll {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family: var(--font);
+  background: var(--black);
+  color: var(--white);
+  display: flex;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 14px;
+}
+
+/* ============================================================
+   SIDEBAR
+============================================================ */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg,#0D0500,#1A0800 50%,#0D0500);
+  border-right: var(--bfire);
+  display: flex; flex-direction: column;
+  flex-shrink: 0; height: 100vh;
+  position: sticky; top: 0;
+  overflow: hidden;
+  z-index: 200;
+}
+.sidebar-brand {
+  padding: 22px 18px 18px;
+  border-bottom: var(--bfire);
+  background: rgba(0,0,0,.4);
+  flex-shrink: 0;
+}
+.brand-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; margin-bottom: 4px;
+}
+.brand-logo-icon {
+  width: 36px; height: 36px;
   border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; flex-shrink: 0;
+  background: var(--grad);
+  color: var(--white);
+}
+.brand-name {
+  font-family: var(--disp);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  color: var(--white);
+  line-height: 1.15;
+}
+.brand-name span { color: var(--orange); }
+.brand-sub {
+  font-size: .68rem;
+  color: rgba(255,255,255,.3);
+  letter-spacing: .5px;
+  padding-left: 46px;
 }
 
-@media (max-width: 768px) {
-  .wali-table {
-    font-size: .76rem;
-    min-width: 520px;
-  }
-  .wali-table thead th {
-    font-size: .68rem;
-    padding: 8px 8px;
-    white-space: nowrap;
-  }
-  .wali-table tbody td {
-    padding: 8px 8px;
-    white-space: nowrap;
-  }
-  .mapel-name { font-size: .78rem; }
-  .badge-nilai,
-  .badge-predikat,
-  .badge-status,
-  .badge-lunas,
-  .badge-belum { font-size: .68rem; padding: 2px 6px; }
-  .tanggal-text { font-size: .76rem; }
-  .ket-text { font-size: .72rem; }
-
-  .grid-2 { grid-template-columns: 1fr !important; }
-  .grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
-
-  .wali-hero { flex-direction: column; gap: 14px; }
-  .wali-hero-stats { flex-wrap: wrap; gap: 8px; }
-  .hero-stat { min-width: 64px; padding: 10px 12px; }
-  .hero-stat-num { font-size: 1.3rem; }
-
-  .tab-bar {
-    flex-wrap: nowrap !important;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-bottom: 4px;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-  .tab-bar::-webkit-scrollbar { display: none; }
-  .tab-btn { flex-shrink: 0; font-size: .76rem; padding: 8px 10px; }
+/* Sidebar user card */
+.sidebar-user {
+  margin: 14px 12px 0;
+  background: rgba(232,86,26,.07);
+  border: var(--bfire);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+.sidebar-user-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%; overflow: hidden;
+  background: var(--grad);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; color: var(--white);
+  flex-shrink: 0;
+}
+.sidebar-user-name {
+  font-size: .82rem; font-weight: 700; color: var(--white);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 160px;
+}
+.sidebar-user-role {
+  font-size: .7rem; color: var(--amber); font-weight: 600; margin-top: 2px;
 }
 
-@media (max-width: 480px) {
-  .grid-3 { grid-template-columns: 1fr !important; }
-  .wali-table { min-width: 460px; }
+.sidebar-section-label {
+  padding: 12px 18px 4px;
+  font-family: var(--disp);
+  font-size: .72rem; letter-spacing: 2.5px;
+  color: var(--amber); text-transform: uppercase;
+  flex-shrink: 0;
+}
+.sidebar-nav {
+  flex: 1; padding: 0 10px;
+  display: flex; flex-direction: column; gap: 2px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.nav-item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 8px 13px;
+  border-radius: 9px;
+  text-decoration: none; color: rgba(255,255,255,.6);
+  font-size: .86rem; font-weight: 500;
+  transition: opacity .15s, transform .15s;
+  will-change: transform;
+  background: transparent;
+  border: none; cursor: pointer;
+  font-family: var(--font);
+  width: 100%; text-align: left;
+}
+.nav-item:hover { background: rgba(232,86,26,.08); color: var(--gold); transform: translateX(3px); }
+.nav-item.active { background: rgba(232,86,26,.12); color: var(--gold); border: var(--bfire); }
+.nav-item i { width: 18px; text-align: center; font-size: .9rem; flex-shrink: 0; }
+
+.nav-item-db {
+  display: flex; align-items: center; gap: 11px;
+  padding: 12px 14px; border-radius: 9px;
+  text-decoration: none; background: var(--grad);
+  color: var(--white) !important;
+  font-size: .88rem; font-weight: 700;
+  letter-spacing: .5px; margin: 4px 0;
+  box-shadow: 0 4px 18px rgba(200,16,46,.35);
+  transition: filter .15s;
+  will-change: filter;
+}
+.nav-item-db:hover { filter: brightness(1.12); }
+.nav-item-db i { width: 18px; text-align: center; font-size: 1rem; }
+
+.sidebar-footer {
+  padding: 14px 10px;
+  border-top: var(--bdim);
+  flex-shrink: 0;
+}
+.role-badge {
+  background: rgba(245,197,24,.08);
+  border: 1px solid rgba(245,197,24,.3);
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 10px;
+  display: flex; align-items: center; gap: 9px;
+}
+.role-badge i { color: var(--gold); }
+.role-badge-text { font-size: .8rem; }
+.role-badge-text strong { color: var(--white); display: block; font-size: .83rem; }
+.role-badge-text span { color: var(--silver); font-size: .72rem; }
+.btn-logout {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  width: 100%; padding: 10px;
+  background: rgba(200,16,46,.12);
+  border: 1px solid rgba(200,16,46,.28);
+  color: #ff6b6b; border-radius: 9px;
+  font-family: var(--font); font-size: .86rem; font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  will-change: background;
+  text-decoration: none;
+}
+.btn-logout:hover { background: rgba(200,16,46,.3); color: var(--white); }
+
+/* ============================================================
+   MAIN WRAP
+============================================================ */
+.main-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  overflow-x: hidden; min-width: 0;
 }
 
-/* ── Hero ── */
-.wali-hero {
-  background: linear-gradient(135deg,#1A0800,#3a1200 40%,#1A0800);
+.topbar {
+  background: rgba(13,13,13,.97);
+  border-bottom: var(--bfire);
+  height: 62px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px;
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-left {
+  font-family: var(--disp);
+  font-size: 1rem; letter-spacing: 1.5px;
+  color: rgba(255,255,255,.5);
+}
+.topbar-left strong { color: var(--orange); }
+.topbar-right { display: flex; align-items: center; gap: 14px; }
+.topbar-dot {
+  width: 8px; height: 8px;
+  background: var(--green); border-radius: 50%;
+  animation: dotPulse 2.5s ease-in-out infinite;
+  will-change: opacity;
+}
+@keyframes dotPulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.topbar-status { font-size: .78rem; color: var(--silver); }
+
+/* ============================================================
+   PAGE CONTENT
+============================================================ */
+.page-content { padding: 28px; flex: 1; position: relative; }
+
+/* ============================================================
+   TOAST
+============================================================ */
+.toast-container {
+  position: fixed; top: 18px; right: 18px; z-index: 10000;
+  display: flex; flex-direction: column; gap: 10px;
+  width: 340px; max-width: 94vw;
+  pointer-events: none;
+}
+.toast-item {
+  pointer-events: auto;
+  background: var(--dark); border: var(--bdim);
+  border-left: 4px solid var(--orange);
+  padding: 14px 16px; border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.5);
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  animation: toastIn .35s ease forwards;
+  will-change: transform, opacity;
+}
+@keyframes toastIn { from{opacity:0;transform:translateX(110%)} to{opacity:1;transform:translateX(0)} }
+.toast-content { display: flex; align-items: center; gap: 10px; }
+.toast-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--grad);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; flex-shrink: 0;
+}
+.toast-text p { font-size: .86rem; font-weight: 600; color: var(--white); margin: 0; }
+.toast-close { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--silver); padding: 0; }
+.toast-close:hover { color: var(--white); }
+.toast-item.success { border-left-color: var(--green); }
+.toast-item.error, .toast-item.danger { border-left-color: #f87171; }
+.toast-item.warning { border-left-color: var(--gold); }
+
+/* ============================================================
+   FLOATING MODAL (untuk menu siswa via AJAX)
+============================================================ */
+.siakad-modal {
+  display: flex;
+  position: fixed; z-index: 1000;
+  left: 0; top: 0; width: 100%; height: 100%;
+  background: rgba(13,13,13,.8);
+  align-items: center; justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .15s ease, visibility 0s linear .15s;
+  will-change: opacity;
+}
+.siakad-modal.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .15s ease, visibility 0s linear 0s;
+}
+.modal-content-box {
+  background: var(--dark);
   border: var(--bfire);
   border-top: 3px solid var(--orange);
+  border-radius: 18px;
+  width: 85%; max-width: 900px; max-height: 85vh;
+  box-shadow: 0 24px 60px rgba(0,0,0,.7);
+  display: flex; flex-direction: column; overflow: hidden;
+  transform: translateY(-20px);
+  transition: transform .15s ease;
+  will-change: transform;
+}
+.siakad-modal.show .modal-content-box {
+  transform: translateY(0);
+}
+.modal-header-box {
+  padding: 18px 24px;
+  background: rgba(255,255,255,.02);
+  border-bottom: var(--bdim);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.modal-header-box h2 {
+  font-family: var(--disp);
+  font-size: 1rem; font-weight: 400;
+  letter-spacing: 1.5px; text-transform: uppercase;
   color: var(--white);
-  padding: 28px 30px;
-  border-radius: 14px;
-  margin-bottom: 24px;
-  box-shadow: 0 8px 32px rgba(232,86,26,.12);
-  position: relative; overflow: hidden;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  display: flex; align-items: center; gap: 10px;
 }
-.wali-hero::before {
-  content:''; position:absolute; top:-40px; right:-40px;
-  width:180px; height:180px;
-  background:radial-gradient(circle,rgba(232,86,26,.15) 0%,transparent 70%);
-  border-radius:50%; pointer-events:none;
+.modal-header-box h2 i { color: var(--orange); font-size: .9rem; }
+.modal-close-btn {
+  background: rgba(255,255,255,.06); border: var(--bdim);
+  color: var(--silver);
+  width: 34px; height: 34px; border-radius: 8px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  transition: color .15s, transform .15s;
+  will-change: transform;
 }
-.wali-hero-title { font-family:var(--disp); font-size:1.7rem; letter-spacing:2px; font-weight:400; margin:0 0 6px 0; }
-.wali-hero-title span { color:var(--orange); }
-.wali-hero-sub { margin:0; opacity:.75; font-size:.88rem; }
-.wali-hero-sub strong { color:var(--gold); opacity:1; }
-.wali-hero-stats { display:flex; gap:16px; flex-shrink:0; }
-.hero-stat {
-  background:rgba(255,255,255,.06); border:var(--bfire); border-radius:10px;
-  padding:12px 18px; text-align:center; min-width:80px;
+.modal-close-btn:hover { color: var(--orange); transform: rotate(90deg); }
+.modal-body-box {
+  padding: 24px; overflow-y: auto;
+  font-size: 14px;
+  color: rgba(255,255,255,.7);
 }
-.hero-stat-num { font-family:var(--disp); font-size:1.6rem; letter-spacing:1px; color:var(--gold); }
-.hero-stat-num.danger { color:#f87171; }
-.hero-stat-label { font-size:.68rem; color:var(--silver); letter-spacing:.5px; text-transform:uppercase; margin-top:2px; }
-
-/* ── Siswa Selector ── */
-.siswa-bar {
-  background:var(--dark); border:var(--bdim); border-radius:12px;
-  padding:16px 20px; margin-bottom:20px;
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+.modal-body-box::-webkit-scrollbar { width: 4px; }
+.modal-body-box::-webkit-scrollbar-track { background: var(--dark); }
+.modal-body-box::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 2px; }
+.loading-state {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 48px 0; gap: 14px;
+  color: var(--silver);
 }
-.siswa-bar-label { font-size:.78rem; color:var(--silver); font-weight:600; text-transform:uppercase; letter-spacing:.5px; flex-shrink:0; }
-.siswa-chips { display:flex; gap:8px; flex-wrap:wrap; flex:1; }
-.siswa-chip {
-  display:inline-flex; align-items:center; gap:8px;
-  padding:7px 14px; border-radius:20px;
-  border:var(--bfire); color:rgba(255,255,255,.6);
-  font-size:.82rem; font-weight:600; text-decoration:none;
-  transition:all .15s; background:transparent;
+.loading-state i { color: var(--orange); font-size: 28px; }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media (max-width: 768px) {
+  body { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; overflow-y: auto; }
+  .page-content { padding: 16px; }
+  .main-wrap { overflow-x: hidden; max-width: 100vw; }
+  .page-content { overflow-x: hidden; max-width: 100%; }
 }
-.siswa-chip:hover { background:rgba(232,86,26,.08); color:var(--gold); }
-.siswa-chip.selected { background:var(--grad); border-color:transparent; color:var(--white); box-shadow:0 3px 12px rgba(200,16,46,.3); }
-.siswa-chip-avatar {
-  width:22px; height:22px; border-radius:50%;
-  background:rgba(255,255,255,.2);
-  display:flex; align-items:center; justify-content:center;
-  font-size:.7rem; font-weight:700;
+@media (prefers-reduced-motion: reduce) {
+  *,*::before,*::after { animation-duration:.01ms!important; transition-duration:.01ms!important; }
 }
+  </style>
 
-/* ── Tab Bar ── */
-.tab-bar {
-  display:flex; gap:4px; margin-bottom:24px;
-  background:var(--dark); border:var(--bdim); border-radius:12px; padding:6px;
-  flex-wrap:wrap;
-}
-.tab-btn {
-  display:flex; align-items:center; gap:7px;
-  padding:9px 16px; border-radius:8px; border:none;
-  color:rgba(255,255,255,.5); font-family:var(--font);
-  font-size:.84rem; font-weight:600; cursor:pointer;
-  background:transparent; text-decoration:none;
-  transition:all .15s; white-space:nowrap;
-}
-.tab-btn:hover { color:var(--gold); background:rgba(232,86,26,.06); }
-.tab-btn.active { background:rgba(232,86,26,.14); color:var(--gold); border:var(--bfire); }
-.tab-btn i { font-size:.82rem; }
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
 
-/* ── Cards ── */
-.wali-card {
-  background:var(--dark); border:var(--bdim); border-radius:14px;
-  padding:22px; box-shadow:0 4px 20px rgba(0,0,0,.3); margin-bottom:22px;
-}
-.wali-card-header {
-  display:flex; align-items:center; gap:10px; margin-bottom:16px;
-  padding-bottom:14px; border-bottom:1px solid rgba(255,255,255,.06);
-}
-.wali-card-header i { color:var(--orange); font-size:.9rem; width:18px; text-align:center; }
-.wali-card-title { font-family:var(--disp); font-size:.95rem; letter-spacing:1.5px; font-weight:400; color:var(--white); margin:0; }
-.wali-card-sub { color:var(--silver); font-size:.8rem; margin:0 0 0 auto; }
-
-.grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(380px,1fr)); gap:20px; }
-.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; }
-
-/* ── Stat mini cards ── */
-.stat-mini {
-  background:rgba(255,255,255,.03); border:var(--bdim); border-radius:10px;
-  padding:16px; display:flex; align-items:center; gap:14px;
-}
-.stat-mini-icon {
-  width:40px; height:40px; border-radius:9px;
-  display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0;
-}
-.stat-mini-icon.icon-safe   { background:rgba(34,197,94,.12);  color:#4ade80; }
-.stat-mini-icon.icon-danger { background:rgba(200,16,46,.12);  color:#f87171; }
-.stat-mini-icon.icon-gold   { background:rgba(245,197,24,.12); color:var(--gold); }
-.stat-mini-icon.icon-blue   { background:rgba(96,165,250,.12); color:#93c5fd; }
-.stat-mini-icon.icon-amber  { background:rgba(232,86,26,.12);  color:var(--amber); }
-.stat-mini-icon.icon-green  { background:rgba(34,197,94,.12);  color:#4ade80; }
-
-.stat-mini-num { font-family:var(--disp); font-size:1.5rem; letter-spacing:1px; line-height:1; }
-.stat-mini-num.c-safe   { color:#4ade80; }
-.stat-mini-num.c-danger { color:#f87171; }
-.stat-mini-num.c-gold   { color:var(--gold); }
-.stat-mini-num.c-blue   { color:#93c5fd; }
-.stat-mini-num.c-amber  { color:var(--amber); }
-.stat-mini-num.c-green  { color:#4ade80; }
-
-.stat-mini-label { font-size:.74rem; color:var(--silver); margin-top:3px; }
-
-/* ── Table ── */
-.wali-table { width:100%; border-collapse:collapse; font-size:.84rem; color:rgba(255,255,255,.75); }
-.wali-table thead tr { background:rgba(255,255,255,.04); border-bottom:1px solid rgba(232,86,26,.2); }
-.wali-table thead th { padding:10px 12px; color:var(--silver); font-weight:600; font-size:.75rem; letter-spacing:.5px; text-transform:uppercase; }
-.wali-table thead th:not(:first-child) { text-align:center; }
-.wali-table tbody tr { border-bottom:1px solid rgba(255,255,255,.04); }
-.wali-table tbody tr:hover { background:rgba(255,255,255,.02); }
-.wali-table tbody td { padding:10px 12px; }
-.wali-table tbody td:not(:first-child) { text-align:center; }
-.mapel-name { font-weight:600; color:var(--white); font-size:.86rem; }
-.badge-nilai { display:inline-block; padding:3px 9px; border-radius:5px; font-weight:700; font-size:.8rem; background:rgba(232,86,26,.15); border:1px solid rgba(232,86,26,.3); color:var(--amber); }
-.badge-predikat { font-weight:700; color:var(--gold); font-size:.82rem; }
-.badge-hadir { background:rgba(34,197,94,.15); border:1px solid rgba(34,197,94,.3); color:#4ade80; }
-.badge-alpha { background:rgba(200,16,46,.15); border:1px solid rgba(200,16,46,.3); color:#f87171; }
-.badge-izin  { background:rgba(245,197,24,.15); border:1px solid rgba(245,197,24,.3); color:var(--gold); }
-.badge-sakit { background:rgba(96,165,250,.15); border:1px solid rgba(96,165,250,.3); color:#93c5fd; }
-.badge-status { display:inline-block; padding:3px 9px; border-radius:20px; font-size:.76rem; font-weight:700; }
-.ket-text { color:var(--silver); font-size:.8rem; }
-.tanggal-text { font-weight:500; color:rgba(255,255,255,.8); }
-.empty-row td { text-align:center !important; padding:32px !important; color:var(--silver); font-style:italic; font-size:.84rem; }
-
-/* ── Tagihan ── */
-.tagihan-row-lunas { border-left:3px solid var(--green) !important; }
-.tagihan-row-belum { border-left:3px solid #f87171 !important; }
-.badge-lunas { background:rgba(34,197,94,.15); border:1px solid rgba(34,197,94,.3); color:#4ade80; display:inline-block; padding:3px 9px; border-radius:20px; font-size:.75rem; font-weight:700; }
-.badge-belum { background:rgba(200,16,46,.15); border:1px solid rgba(200,16,46,.3); color:#f87171; display:inline-block; padding:3px 9px; border-radius:20px; font-size:.75rem; font-weight:700; }
-
-/* ── Jadwal ── */
-.jadwal-day-label {
-  font-family:var(--disp); font-size:.8rem; letter-spacing:2px;
-  color:var(--amber); text-transform:uppercase; padding:10px 0 6px;
-}
-.jadwal-row { display:flex; align-items:center; gap:12px; padding:9px 12px; border-radius:8px; margin-bottom:4px; background:rgba(255,255,255,.02); border:var(--bdim); }
-.jadwal-time { font-size:.76rem; color:var(--silver); min-width:90px; flex-shrink:0; }
-.jadwal-mapel { font-weight:600; color:var(--white); font-size:.86rem; flex:1; }
-.jadwal-guru { font-size:.75rem; color:var(--silver); }
-
-/* ── Pengumuman ── */
-.pengumuman-item {
-  display:flex; gap:14px; padding:14px; border-radius:10px;
-  background:rgba(255,255,255,.02); border:var(--bdim); margin-bottom:10px;
-  transition:background .15s;
-}
-.pengumuman-item:hover { background:rgba(232,86,26,.04); }
-.pengumuman-dot { width:8px; height:8px; border-radius:50%; background:var(--orange); flex-shrink:0; margin-top:5px; }
-.pengumuman-title { font-weight:600; font-size:.88rem; color:var(--white); margin-bottom:4px; }
-.pengumuman-date { font-size:.74rem; color:var(--silver); }
-.pengumuman-body { font-size:.82rem; color:rgba(255,255,255,.6); margin-top:5px; line-height:1.5; }
-
-/* ── Komunikasi ── */
-.kontak-card {
-  background:rgba(255,255,255,.02); border:var(--bfire); border-radius:10px;
-  padding:16px; display:flex; align-items:center; gap:14px; margin-bottom:10px;
-}
-.kontak-avatar {
-  width:42px; height:42px; border-radius:50%; background:var(--grad);
-  display:flex; align-items:center; justify-content:center;
-  font-weight:700; font-size:.9rem; flex-shrink:0;
-}
-.kontak-name { font-weight:700; font-size:.88rem; color:var(--white); }
-.kontak-role { font-size:.74rem; color:var(--amber); margin-top:2px; }
-.kontak-hp { font-size:.78rem; color:var(--silver); margin-top:3px; }
-.btn-wa {
-  margin-left:auto; display:inline-flex; align-items:center; gap:6px;
-  padding:7px 14px; background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.3);
-  color:#4ade80; border-radius:8px; font-size:.8rem; font-weight:700;
-  text-decoration:none; transition:background .15s; flex-shrink:0;
-}
-.btn-wa:hover { background:rgba(34,197,94,.25); color:var(--white); }
-
-/* ── Agenda ── */
-.agenda-item {
-  display:flex; gap:14px; padding:12px; border-radius:10px;
-  background:rgba(255,255,255,.02); border:var(--bdim); margin-bottom:8px;
-}
-.agenda-date-box {
-  background:var(--grad); border-radius:8px; min-width:48px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:8px 6px; flex-shrink:0;
-}
-.agenda-day { font-family:var(--disp); font-size:1.3rem; line-height:1; color:var(--white); }
-.agenda-mon { font-size:.65rem; color:rgba(255,255,255,.8); text-transform:uppercase; letter-spacing:.5px; }
-.agenda-title { font-weight:600; font-size:.88rem; color:var(--white); margin-bottom:3px; }
-.agenda-desc { font-size:.78rem; color:var(--silver); }
-
-/* ── Empty state ── */
-.empty-state {
-  text-align:center; padding:40px; color:var(--silver);
-  background:rgba(255,255,255,.02); border:2px dashed rgba(232,86,26,.2);
-  border-radius:10px; font-size:.88rem;
-}
-.empty-state i { font-size:1.8rem; margin-bottom:10px; display:block; color:rgba(232,86,26,.35); }
-
-/* ── Progress bar ── */
-.progress-wrap { background:rgba(255,255,255,.06); border-radius:20px; height:8px; overflow:hidden; margin-top:6px; }
-.progress-fill { height:100%; border-radius:20px; background:var(--grad); width:0%; transition:width .6s ease; }
-.progress-fill.fill-green { background:rgba(34,197,94,.6); }
-
-@media(max-width:768px){
-  .grid-2,.grid-3{ grid-template-columns:1fr; }
-  .wali-hero{ flex-direction:column; }
-  .wali-hero-stats{ flex-wrap:wrap; }
-  .tab-bar{ gap:2px; }
-  .tab-btn{ padding:8px 10px; font-size:.78rem; }
-}
-
-@media (max-width: 600px) {
-  .table-scroll {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .wali-table {
-    min-width: 480px;
-    font-size: .76rem;
-  }
-  .wali-table thead th,
-  .wali-table tbody td {
-    padding: 8px 10px;
-    white-space: nowrap;
-  }
-  .grid-2 {
-    grid-template-columns: 1fr !important;
-    gap: 14px;
-  }
-  .grid-3 {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px;
-  }
-  .wali-hero { padding: 18px 16px; }
-  .wali-hero-title { font-size: 1.3rem; }
-  .hero-stat { min-width: 56px; padding: 8px 10px; }
-  .hero-stat-num { font-size: 1.1rem; }
-}
-
-@media (max-width: 380px) {
-  .grid-3 { grid-template-columns: 1fr !important; }
-  .wali-table { min-width: 420px; }
-}
-</style>
-{% endblock %}
-
-{% block content %}
-
-{% with active_tab=request.GET.tab|default:"dashboard" %}
-
-{# ── Hero ── #}
-<div class="wali-hero">
-  <div>
-    <h2 class="wali-hero-title">Portal <span>Wali Murid</span></h2>
-    <p class="wali-hero-sub">Selamat Datang, Bapak/Ibu <strong>{{ wali.nama_lengkap }}</strong></p>
-  </div>
-  {% if siswa_terkait %}
-  <div class="wali-hero-stats">
-    <div class="hero-stat">
-      <div class="hero-stat-num">{{ total_hadir }}</div>
-      <div class="hero-stat-label">Hadir</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num danger">{{ total_alpha }}</div>
-      <div class="hero-stat-label">Alpha</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">{{ total_izin }}</div>
-      <div class="hero-stat-label">Izin</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num">{{ total_sakit }}</div>
-      <div class="hero-stat-label">Sakit</div>
-    </div>
-  </div>
-  {% endif %}
-</div>
-
-{# ── Selector Anak ── #}
-{% if daftar_anak %}
-<div class="siswa-bar">
-  <span class="siswa-bar-label"><i class="fas fa-child" style="margin-right:6px;color:var(--amber);"></i>Pilih Anak:</span>
-  <div class="siswa-chips">
-    {% for anak in daftar_anak %}
-    <a href="?anak_id={{ anak.id }}&tab={{ active_tab }}"
-       class="siswa-chip {% if siswa_terkait.id == anak.id %}selected{% endif %}">
-      <span class="siswa-chip-avatar">{{ anak.nama_lengkap|slice:":1"|upper }}</span>
-      {{ anak.nama_lengkap }} <span style="font-size:.72rem;opacity:.7;">· {{ anak.nisn }}</span>
-    </a>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
-
-
-{# ═══════════════════════════════════════
-   TAB: DASHBOARD
-═══════════════════════════════════════ #}
-{% if active_tab == 'dashboard' %}
-
-  {% if siswa_terkait %}
-  <div class="grid-3" style="margin-bottom:22px;">
-
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-amber">
-        <i class="fas fa-book-open"></i>
-      </div>
-      <div>
-        <div class="stat-mini-num c-amber">{{ total_mapel }}</div>
-        <div class="stat-mini-label">Mata Pelajaran</div>
-      </div>
-    </div>
-
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-blue">
-        <i class="fas fa-star"></i>
-      </div>
-      <div>
-        <div class="stat-mini-num c-blue">{{ rata_nilai|default:"—" }}</div>
-        <div class="stat-mini-label">Rata-rata Nilai</div>
-      </div>
-    </div>
-
-    <div class="stat-mini">
-      <div class="stat-mini-icon {% if total_tagihan_belum > 0 %}icon-danger{% else %}icon-safe{% endif %}">
-        <i class="fas fa-receipt"></i>
-      </div>
-      <div>
-        <div class="stat-mini-num {% if total_tagihan_belum > 0 %}c-danger{% else %}c-safe{% endif %}">{{ total_tagihan_belum }}</div>
-        <div class="stat-mini-label">Tagihan Belum Lunas</div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="grid-2">
-
-    {# ── Nilai Rapor ── #}
-    <div class="wali-card">
-      <div class="wali-card-header">
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a href="#" class="brand-logo">
+      <div class="brand-logo-icon">
         <i class="fas fa-graduation-cap"></i>
-        <h4 class="wali-card-title">Nilai Rapor — {{ siswa_terkait.nama_lengkap }}</h4>
       </div>
-      <div class="table-scroll">
-        <table class="wali-table">
-          <thead>
-            <tr>
-              <th>Mata Pelajaran</th>
-              <th>Tugas</th>
-              <th>UTS</th>
-              <th>UAS</th>
-              <th>Angka</th>
-              <th>Predikat</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for nilai in daftar_nilai %}
-            <tr>
-              <td><span class="mapel-name">{{ nilai.mata_pelajaran.nama }}</span></td>
-              <td>{{ nilai.nilai_tugas }}</td>
-              <td>{{ nilai.nilai_uts }}</td>
-              <td>{{ nilai.nilai_uas }}</td>
-              <td><span class="badge-nilai">{{ nilai.nilai_angka }}</span></td>
-              <td><span class="badge-predikat">{{ nilai.predikat }}</span></td>
-            </tr>
-            {% empty %}
-            <tr class="empty-row"><td colspan="6">Belum ada data nilai.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    {# ── Absensi Terbaru ── #}
-    <div class="wali-card">
-      <div class="wali-card-header">
-        <i class="fas fa-calendar-check"></i>
-        <h4 class="wali-card-title">Absensi Terbaru</h4>
-        <span class="wali-card-sub">10 terakhir</span>
-      </div>
-      <div class="table-scroll">
-        <table class="wali-table">
-          <thead>
-            <tr>
-              <th>Tanggal</th>
-              <th>Mata Pelajaran</th>
-              <th>Status</th>
-              <th>Keterangan</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in daftar_presensi %}
-            <tr>
-              <td><span class="tanggal-text">{{ p.tanggal }}</span></td>
-              <td>{{ p.jadwal.mata_pelajaran.nama }}</td>
-              <td>
-                {% if p.status == 'Hadir' %}
-                  <span class="badge-status badge-hadir">{{ p.status }}</span>
-                {% elif p.status == 'Alpa' or p.status == 'Alpha' %}
-                  <span class="badge-status badge-alpha">{{ p.status }}</span>
-                {% elif p.status == 'Izin' %}
-                  <span class="badge-status badge-izin">{{ p.status }}</span>
-                {% else %}
-                  <span class="badge-status badge-sakit">{{ p.status }}</span>
-                {% endif %}
-              </td>
-              <td><span class="ket-text">{{ p.keterangan|default:"—" }}</span></td>
-            </tr>
-            {% empty %}
-            <tr class="empty-row"><td colspan="4">Belum ada riwayat absensi.</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-
-  {% else %}
-  <div class="empty-state">
-    <i class="fas fa-child"></i>
-    Pilih salah satu anak di atas untuk melihat ringkasan akademik.
-  </div>
-  {% endif %}
-
-
-{# ═══════════════════════════════════════
-   TAB: ABSENSI
-═══════════════════════════════════════ #}
-{% elif active_tab == 'absensi' %}
-
-  {% if siswa_terkait %}
-  <div class="grid-3" style="margin-bottom:22px;">
-
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-safe"><i class="fas fa-check-circle"></i></div>
-      <div>
-        <div class="stat-mini-num c-safe">{{ total_hadir }}</div>
-        <div class="stat-mini-label">Hadir</div>
-      </div>
-    </div>
-
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-gold"><i class="fas fa-file-medical"></i></div>
-      <div>
-        <div class="stat-mini-num c-gold">{{ total_sakit }}</div>
-        <div class="stat-mini-label">Sakit</div>
-      </div>
-    </div>
-
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-blue"><i class="fas fa-envelope-open"></i></div>
-      <div>
-        <div class="stat-mini-num c-blue">{{ total_izin }}</div>
-        <div class="stat-mini-label">Izin</div>
-      </div>
-    </div>
-
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-danger"><i class="fas fa-times-circle"></i></div>
-      <div>
-        <div class="stat-mini-num c-danger">{{ total_alpha }}</div>
-        <div class="stat-mini-label">Alpha</div>
-      </div>
-    </div>
-
-    <div class="stat-mini" style="grid-column:span 2;">
-      <div class="stat-mini-icon icon-amber"><i class="fas fa-percent"></i></div>
-      <div style="flex:1;">
-        <div class="stat-mini-num c-amber">{{ persen_hadir }}%</div>
-        <div class="stat-mini-label">Persentase Kehadiran</div>
-        <div class="progress-wrap">
-          <div class="progress-fill" data-width="{{ persen_hadir }}"></div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="wali-card">
-    <div class="wali-card-header">
-      <i class="fas fa-list-alt"></i>
-      <h4 class="wali-card-title">Riwayat Lengkap Absensi — {{ siswa_terkait.nama_lengkap }}</h4>
-    </div>
-    <div class="table-scroll">
-      <table class="wali-table">
-        <thead>
-          <tr><th>Tanggal</th><th>Mata Pelajaran</th><th>Status</th><th>Keterangan</th></tr>
-        </thead>
-        <tbody>
-          {% for p in semua_presensi %}
-          <tr>
-            <td><span class="tanggal-text">{{ p.tanggal }}</span></td>
-            <td>{{ p.jadwal.mata_pelajaran.nama }}</td>
-            <td>
-              {% if p.status == 'Hadir' %}
-                <span class="badge-status badge-hadir">{{ p.status }}</span>
-              {% elif p.status == 'Alpa' or p.status == 'Alpha' %}
-                <span class="badge-status badge-alpha">{{ p.status }}</span>
-              {% elif p.status == 'Izin' %}
-                <span class="badge-status badge-izin">{{ p.status }}</span>
-              {% else %}
-                <span class="badge-status badge-sakit">{{ p.status }}</span>
-              {% endif %}
-            </td>
-            <td><span class="ket-text">{{ p.keterangan|default:"—" }}</span></td>
-          </tr>
-          {% empty %}
-          <tr class="empty-row"><td colspan="4">Belum ada riwayat absensi yang terekam.</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <div class="brand-name">SMA <span>NEGERI 5 KOTA X</span></div>
+    </a>
+    <div class="brand-sub">
+      {% if role == 'Siswa' %}Portal Akademik Siswa
+      {% elif role == 'Wali Murid' %}Portal Wali Murid
+      {% elif user.username == 'kepsek' %}Portal Kepala Sekolah
+      {% else %}Portal Guru & Staf{% endif %}
     </div>
   </div>
 
-  {% else %}
-  <div class="empty-state"><i class="fas fa-child"></i>Pilih anak terlebih dahulu.</div>
-  {% endif %}
-
-
-{# ═══════════════════════════════════════
-   TAB: NILAI & RAPOR
-═══════════════════════════════════════ #}
-{% elif active_tab == 'nilai' %}
-
-  {% if siswa_terkait %}
-  <div class="wali-card">
-    <div class="wali-card-header">
-      <i class="fas fa-graduation-cap"></i>
-      <h4 class="wali-card-title">Nilai Rapor Semester Aktif — {{ siswa_terkait.nama_lengkap }}</h4>
-      {% if rata_nilai %}
-      <span class="wali-card-sub">Rata-rata: <strong style="color:var(--gold);">{{ rata_nilai }}</strong></span>
-      {% endif %}
+  <!-- User card -->
+  <div class="sidebar-user">
+    <div class="sidebar-user-avatar">
+      {% if role == 'Wali Murid' %}{{ wali.nama_lengkap|slice:":1"|upper }}
+      {% elif role == 'Siswa' %}{{ siswa.nama_lengkap|slice:":1"|upper|default:request.user.username|slice:":1"|upper }}
+      {% else %}{{ request.user.username|slice:":1"|upper }}{% endif %}
     </div>
-    <div class="table-scroll">
-      <table class="wali-table">
-        <thead>
-          <tr>
-            <th>Mata Pelajaran</th><th>Tugas</th><th>UTS</th><th>UAS</th>
-            <th>Nilai Akhir</th><th>Predikat</th><th>Keterangan</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for nilai in daftar_nilai %}
-          <tr>
-            <td><span class="mapel-name">{{ nilai.mata_pelajaran.nama }}</span></td>
-            <td>{{ nilai.nilai_tugas }}</td>
-            <td>{{ nilai.nilai_uts }}</td>
-            <td>{{ nilai.nilai_uas }}</td>
-            <td><span class="badge-nilai">{{ nilai.nilai_angka }}</span></td>
-            <td><span class="badge-predikat">{{ nilai.predikat }}</span></td>
-            <td><span class="ket-text">{{ nilai.keterangan|default:"—" }}</span></td>
-          </tr>
-          {% empty %}
-          <tr class="empty-row"><td colspan="7">Belum ada entri nilai rapor semester aktif.</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div>
+      <div class="sidebar-user-name">
+        {% if role == 'Siswa' %}{{ siswa.nama_lengkap|default:request.user.username }}
+        {% elif role == 'Wali Murid' %}{{ wali.nama_lengkap|default:request.user.username }}
+        {% else %}{{ request.user.get_full_name|default:request.user.username }}{% endif %}
+      </div>
+      <div class="sidebar-user-role">
+        {% if role == 'Siswa' %}Peserta Didik
+        {% elif role == 'Wali Murid' %}Wali Murid
+        {% elif user.username == 'kepsek' %}Kepala Sekolah
+        {% else %}Tenaga Pengajar{% endif %}
+      </div>
     </div>
   </div>
-  {% else %}
-  <div class="empty-state"><i class="fas fa-child"></i>Pilih anak terlebih dahulu.</div>
-  {% endif %}
 
+  <div class="sidebar-section-label">Menu Utama</div>
+  <nav class="sidebar-nav">
 
-{# ═══════════════════════════════════════
-   TAB: KEUANGAN
-═══════════════════════════════════════ #}
-{% elif active_tab == 'keuangan' %}
+    {% if role == 'Wali Murid' %}
+    {# ═══ NAVIGATOR KHUSUS WALI MURID — berdiri sendiri, tidak campur role lain ═══ #}
+      <a href="{% url 'akademik:dashboard_wali' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard_wali' and not request.GET.tab %}active{% endif %}">
+        <i class="fas fa-th-large"></i> <span>Dashboard Wali</span>
+      </a>
 
-  {% if siswa_terkait %}
-  <div class="grid-3" style="margin-bottom:22px;">
+      <div class="sidebar-section-label" style="padding-top:14px;">Pantau Anak</div>
+      <a href="{% url 'akademik:dashboard_wali' %}?tab=absensi" class="nav-item {% if request.GET.tab == 'absensi' %}active{% endif %}">
+        <i class="fas fa-calendar-check"></i> <span>Pemantauan Absensi</span>
+      </a>
+      <a href="{% url 'akademik:dashboard_wali' %}?tab=nilai" class="nav-item {% if request.GET.tab == 'nilai' %}active{% endif %}">
+        <i class="fas fa-graduation-cap"></i> <span>Nilai &amp; Rapor</span>
+      </a>
 
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-safe"><i class="fas fa-check-double"></i></div>
-      <div>
-        <div class="stat-mini-num c-safe">{{ total_tagihan_lunas }}</div>
-        <div class="stat-mini-label">Tagihan Lunas</div>
+      <div class="sidebar-section-label" style="padding-top:14px;">Layanan Sekolah</div>
+      <a href="{% url 'akademik:dashboard_wali' %}?tab=keuangan" class="nav-item {% if request.GET.tab == 'keuangan' %}active{% endif %}">
+        <i class="fas fa-wallet"></i> <span>Manajemen Keuangan</span>
+      </a>
+      <a href="{% url 'akademik:dashboard_wali' %}?tab=jadwal" class="nav-item {% if request.GET.tab == 'jadwal' %}active{% endif %}">
+        <i class="fas fa-calendar-alt"></i> <span>Jadwal &amp; Agenda</span>
+      </a>
+      <a href="{% url 'akademik:dashboard_wali' %}?tab=komunikasi" class="nav-item {% if request.GET.tab == 'komunikasi' %}active{% endif %}">
+        <i class="fas fa-comments"></i> <span>Komunikasi</span>
+      </a>
+
+    {% elif role == 'Siswa' %}
+    {# ═══ NAVIGATOR SISWA ═══ #}
+      <a href="{% url 'akademik:dashboard_siswa' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard_siswa' %}active{% endif %}">
+        <i class="fas fa-th-large"></i> <span>Dashboard Utama</span>
+      </a>
+
+      <div class="sidebar-section-label" style="padding-top:14px;">Akademik Saya</div>
+      <button type="button" class="nav-item" onclick="bukaModalMelayang('jadwal')">
+        <i class="fas fa-calendar-alt"></i> <span>Jadwal Pelajaran</span>
+      </button>
+      <button type="button" class="nav-item" onclick="bukaModalMelayang('presensi')">
+        <i class="fas fa-user-check"></i> <span>Presensi & Absen</span>
+      </button>
+      <button type="button" class="nav-item" onclick="bukaModalMelayang('nilai')">
+        <i class="fas fa-graduation-cap"></i> <span>Nilai & Rapor</span>
+      </button>
+
+      <div class="sidebar-section-label" style="padding-top:14px;">Pembelajaran</div>
+      <button type="button" class="nav-item" onclick="bukaModalMelayang('elearning')">
+        <i class="fas fa-laptop-code"></i> <span>E-Learning (Tugas)</span>
+      </button>
+      <button type="button" class="nav-item" onclick="bukaModalMelayang('keuangan')">
+        <i class="fas fa-wallet"></i> <span>Informasi Keuangan</span>
+      </button>
+
+    {% elif user.username == 'kepsek' %}
+    {# ═══ NAVIGATOR KEPSEK ═══ #}
+      <a href="{% url 'akademik:dashboard_kepsek' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard_kepsek' %}active{% endif %}">
+        <i class="fas fa-chart-line"></i> <span>Dashboard Kepsek</span>
+      </a>
+      <a href="/admin/" target="_blank" class="nav-item-db">
+        <i class="fas fa-database"></i> <span>Pusat Kontrol Database</span>
+        <i class="fas fa-arrow-up-right-from-square" style="margin-left:auto;font-size:.7rem;opacity:.7"></i>
+      </a>
+      <a href="{% url 'web_publik:profil' %}" target="_blank" class="nav-item">
+        <i class="fas fa-school"></i> <span>Lihat Web Publik ↗</span>
+      </a>
+
+    {% else %}
+    {# ═══ NAVIGATOR GURU / STAF ═══ #}
+      <a href="{% url 'akademik:dashboard_guru' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard_guru' %}active{% endif %}">
+        <i class="fas fa-th-large"></i> <span>Dashboard Utama</span>
+      </a>
+
+      <div class="sidebar-section-label" style="padding-top:14px;">Manajemen KBM</div>
+      <a href="{% url 'akademik:jadwal_pelajaran' %}" class="nav-item {% if request.resolver_match.url_name == 'jadwal_pelajaran' %}active{% endif %}">
+        <i class="fas fa-calendar-alt"></i> <span>Jadwal & Agenda</span>
+      </a>
+      <a href="{% url 'akademik:jurnal_mengajar' %}" class="nav-item {% if request.resolver_match.url_name == 'jurnal_mengajar' %}active{% endif %}">
+        <i class="fas fa-book-open"></i> <span>Jurnal Mengajar</span>
+      </a>
+      <a href="{% url 'akademik:materi_ajar' %}" class="nav-item {% if request.resolver_match.url_name == 'materi_ajar' %}active{% endif %}">
+        <i class="fas fa-folder-plus"></i> <span>Materi Ajar (Silabus)</span>
+      </a>
+
+      <div class="sidebar-section-label" style="padding-top:14px;">Akademik & Rapor</div>
+      <a href="{% url 'akademik:presensi' %}" class="nav-item {% if request.resolver_match.url_name == 'presensi' %}active{% endif %}">
+        <i class="fas fa-user-check"></i> <span>Presensi Siswa</span>
+      </a>
+      <a href="{% url 'akademik:input_nilai' %}" class="nav-item {% if request.resolver_match.url_name == 'input_nilai' %}active{% endif %}">
+        <i class="fas fa-pen-nib"></i> <span>Input Nilai Ujian</span>
+      </a>
+      <a href="{% url 'akademik:e_rapor' %}" class="nav-item {% if request.resolver_match.url_name == 'e_rapor' %}active{% endif %}">
+        <i class="fas fa-file-invoice"></i> <span>E-Rapor Digital</span>
+      </a>
+
+      <div class="sidebar-section-label" style="padding-top:14px;">E-Learning & CBT</div>
+      <a href="{% url 'akademik:e_learning' %}" class="nav-item {% if request.resolver_match.url_name == 'e_learning' %}active{% endif %}">
+        <i class="fas fa-laptop-code"></i> <span>Tugas & Kuis</span>
+      </a>
+    {% endif %}
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="role-badge">
+      <i class="fas fa-shield-halved"></i>
+      <div class="role-badge-text">
+        <strong>
+          {% if role == 'Siswa' %}{{ siswa.nama_lengkap|default:request.user.username|truncatechars:22 }}
+          {% elif role == 'Wali Murid' %}{{ wali.nama_lengkap|default:request.user.username|truncatechars:22 }}
+          {% else %}{{ request.user.get_full_name|default:request.user.username|truncatechars:22 }}{% endif %}
+        </strong>
+        <span>
+          {% if role == 'Siswa' %}Siswa · {{ siswa.nisn|default:"—" }}
+          {% elif role == 'Wali Murid' %}Wali Murid
+          {% elif user.username == 'kepsek' %}Kepala Sekolah
+          {% else %}Guru / Staf{% endif %}
+        </span>
       </div>
     </div>
 
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-danger"><i class="fas fa-exclamation-circle"></i></div>
-      <div>
-        <div class="stat-mini-num c-danger">{{ total_tagihan_belum }}</div>
-        <div class="stat-mini-label">Belum Lunas</div>
-      </div>
-    </div>
+    {% if role == 'Wali Murid' %}
+    <form action="{% url 'akademik:logout' %}" method="post" style="margin:0;">
+      {% csrf_token %}
+      <button type="submit" class="btn-logout">
+        <i class="fas fa-right-from-bracket"></i> Keluar / Logout
+      </button>
+    </form>
+    {% else %}
+    <a href="{% url 'akademik:logout' %}" class="btn-logout">
+      <i class="fas fa-right-from-bracket"></i> Keluar / Logout
+    </a>
+    {% endif %}
+  </div>
+</aside>
 
-    <div class="stat-mini">
-      <div class="stat-mini-icon icon-gold"><i class="fas fa-coins"></i></div>
-      <div>
-        <div class="stat-mini-num c-gold">{{ total_tagihan }}</div>
-        <div class="stat-mini-label">Total Tagihan</div>
-      </div>
-    </div>
+<!-- ═══════════ MAIN WRAP ═══════════ -->
+<div class="main-wrap">
 
+  <div class="topbar">
+    <div class="topbar-left">{% block topbar_label %}Portal Akademik{% endblock %} &nbsp;|&nbsp; <strong>{% block topbar_sub %}SMA NEGERI 5 KOTA X{% endblock %}</strong></div>
+    <div class="topbar-right">
+      <div class="topbar-dot"></div>
+      <span class="topbar-status">Live · TA 2025/2026</span>
+    </div>
   </div>
 
-  <div class="wali-card">
-    <div class="wali-card-header">
-      <i class="fas fa-receipt"></i>
-      <h4 class="wali-card-title">Riwayat Tagihan — {{ siswa_terkait.nama_lengkap }}</h4>
-    </div>
-    <div class="table-scroll">
-      <table class="wali-table">
-        <thead>
-          <tr><th>Jenis Tagihan</th><th>Jumlah</th><th>Status</th><th>Tanggal</th><th>Keterangan</th></tr>
-        </thead>
-        <tbody>
-          {% for tagihan in daftar_tagihan %}
-          <tr class="{% if tagihan.status == 'Lunas' %}tagihan-row-lunas{% else %}tagihan-row-belum{% endif %}">
-            <td><span class="mapel-name">{{ tagihan.jenis_tagihan }}</span></td>
-            <td>Rp {{ tagihan.jumlah_tagihan|default:0|floatformat:0 }}</td>
-            <td>
-              {% if tagihan.status == 'Lunas' %}
-              <span class="badge-lunas"><i class="fas fa-check" style="margin-right:4px;"></i>Lunas</span>
-              {% else %}
-              <span class="badge-belum"><i class="fas fa-clock" style="margin-right:4px;"></i>Tertunggak</span>
-              {% endif %}
-            </td>
-            <td><span class="tanggal-text">{{ tagihan.tanggal_perubahan }}</span></td>
-            <td><span class="ket-text">{{ tagihan.keterangan|default:"—" }}</span></td>
-          </tr>
-          {% empty %}
-          <tr class="empty-row"><td colspan="5">Belum ada data tagihan keuangan.</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-  {% else %}
-  <div class="empty-state"><i class="fas fa-child"></i>Pilih anak terlebih dahulu.</div>
-  {% endif %}
+  <div class="page-content">
 
-
-{# ═══════════════════════════════════════
-   TAB: JADWAL & AGENDA
-═══════════════════════════════════════ #}
-{% elif active_tab == 'jadwal' %}
-
-  <div class="grid-2">
-
-    {# Jadwal Pelajaran #}
-    <div class="wali-card">
-      <div class="wali-card-header">
-        <i class="fas fa-calendar-alt"></i>
-        <h4 class="wali-card-title">Jadwal Pelajaran{% if siswa_terkait %} — {{ siswa_terkait.nama_lengkap }}{% endif %}</h4>
-      </div>
-      {% if daftar_jadwal %}
-        {% regroup daftar_jadwal by hari as jadwal_by_hari %}
-        {% for hari_group in jadwal_by_hari %}
-        <div class="jadwal-day-label">{{ hari_group.grouper }}</div>
-        {% for j in hari_group.list %}
-        <div class="jadwal-row">
-          <span class="jadwal-time"><i class="fas fa-clock" style="margin-right:5px;color:var(--amber);"></i>{{ j.jam_mulai }} – {{ j.jam_selesai }}</span>
-          <span class="jadwal-mapel">{{ j.mata_pelajaran.nama }}</span>
-          <span class="jadwal-guru">{{ j.guru.nama_lengkap }}</span>
-        </div>
-        {% endfor %}
-        {% endfor %}
-      {% else %}
-        <div class="empty-state" style="margin-top:10px;"><i class="fas fa-calendar-times"></i>Belum ada jadwal pelajaran.</div>
-      {% endif %}
-    </div>
-
-    {# Agenda Sekolah #}
-    <div class="wali-card">
-      <div class="wali-card-header">
-        <i class="fas fa-calendar-week"></i>
-        <h4 class="wali-card-title">Agenda Sekolah</h4>
-      </div>
-      {% if daftar_agenda %}
-        {% for agenda in daftar_agenda %}
-        <div class="agenda-item">
-          <div class="agenda-date-box">
-            <div class="agenda-day">{{ agenda.tanggal|date:"d" }}</div>
-            <div class="agenda-mon">{{ agenda.tanggal|date:"M" }}</div>
+    {% if messages %}
+    <div class="toast-container">
+      {% for message in messages %}
+      <div class="toast-item {{ message.tags }}">
+        <div class="toast-content">
+          <div class="toast-icon">
+            {% if message.tags == 'success' %}<i class="fas fa-check"></i>
+            {% elif message.tags == 'error' or message.tags == 'danger' %}<i class="fas fa-xmark"></i>
+            {% else %}<i class="fas fa-info"></i>{% endif %}
           </div>
-          <div>
-            <div class="agenda-title">{{ agenda.judul }}</div>
-            <div class="agenda-desc">{{ agenda.deskripsi|default:""|truncatechars:80 }}</div>
-          </div>
+          <div class="toast-text"><p>{{ message }}</p></div>
         </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-state" style="margin-top:10px;"><i class="fas fa-calendar-plus"></i>Belum ada agenda sekolah.</div>
-      {% endif %}
+        <button class="toast-close" onclick="this.parentElement.remove()">&times;</button>
+      </div>
+      {% endfor %}
     </div>
+    <script>
+      setTimeout(function() {
+        document.querySelectorAll('.toast-item').forEach(function(t) {
+          t.style.transition = 'opacity .5s, transform .5s';
+          t.style.opacity = '0'; t.style.transform = 'translateX(110%)';
+          setTimeout(function(){ if(t.parentNode) t.remove(); }, 500);
+        });
+      }, 6000);
+    </script>
+    {% endif %}
+
+    {% block content %}{% endblock %}
 
   </div>
+</div>
 
-
-{# ═══════════════════════════════════════
-   TAB: KOMUNIKASI
-═══════════════════════════════════════ #}
-{% elif active_tab == 'komunikasi' %}
-
-  <div class="grid-2">
-
-    {# Kontak Wali Kelas #}
-    <div class="wali-card">
-      <div class="wali-card-header">
-        <i class="fas fa-chalkboard-teacher"></i>
-        <h4 class="wali-card-title">Kontak Wali Kelas</h4>
-      </div>
-      {% if wali_kelas %}
-      <div class="kontak-card">
-        <div class="kontak-avatar">{{ wali_kelas.nama_lengkap|slice:":1"|upper }}</div>
-        <div>
-          <div class="kontak-name">{{ wali_kelas.nama_lengkap }}</div>
-          <div class="kontak-role">Wali Kelas{% if siswa_terkait.kelas %} — {{ siswa_terkait.kelas.nama_kelas }}{% endif %}</div>
-          {% if wali_kelas.no_hp %}
-          <div class="kontak-hp"><i class="fas fa-phone" style="margin-right:5px;"></i>{{ wali_kelas.no_hp }}</div>
-          {% endif %}
-        </div>
-        {% if no_hp_wali_kelas %}
-        <a href="https://wa.me/{{ no_hp_wali_kelas }}" target="_blank" class="btn-wa">
-          <i class="fab fa-whatsapp"></i> WhatsApp
-        </a>
-        {% endif %}
-      </div>
-      {% else %}
-      <div class="empty-state"><i class="fas fa-user-slash"></i>Data wali kelas belum tersedia.</div>
-      {% endif %}
+<!-- ═══════════ FLOATING MODAL (Siswa AJAX) ═══════════ -->
+<div id="siakadFloatingModal" class="siakad-modal" onclick="tutupModalMelayang(event)">
+  <div class="modal-content-box">
+    <div class="modal-header-box">
+      <h2 id="modalTitleText"><i class="fas fa-database"></i> Detail Data</h2>
+      <button class="modal-close-btn" onclick="document.getElementById('siakadFloatingModal').classList.remove('show')">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
-
-    {# Pengumuman Sekolah #}
-    <div class="wali-card">
-      <div class="wali-card-header">
-        <i class="fas fa-bullhorn"></i>
-        <h4 class="wali-card-title">Pengumuman Terbaru</h4>
-      </div>
-      {% if daftar_pengumuman %}
-        {% for pengumuman in daftar_pengumuman %}
-        <div class="pengumuman-item">
-          <div class="pengumuman-dot"></div>
-          <div>
-            <div class="pengumuman-title">{{ pengumuman.judul }}</div>
-            <div class="pengumuman-date"><i class="fas fa-clock" style="margin-right:4px;"></i>{{ pengumuman.tanggal|default:pengumuman.created_at }}</div>
-            {% if pengumuman.isi %}
-            <div class="pengumuman-body">{{ pengumuman.isi|truncatechars:120 }}</div>
-            {% endif %}
-          </div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-state"><i class="fas fa-bullhorn"></i>Belum ada pengumuman aktif.</div>
-      {% endif %}
-    </div>
-
+    <div class="modal-body-box" id="modalDynamicBody"></div>
   </div>
-
-{% endif %}{# end tab #}
-{% endwith %}
+</div>
 
 <script>
-document.querySelectorAll('.progress-fill[data-width]').forEach(function(el) {
-  el.style.width = el.getAttribute('data-width') + '%';
-});
+function bukaModalMelayang(jenisData) {
+  var modal    = document.getElementById('siakadFloatingModal');
+  var titleText = document.getElementById('modalTitleText');
+  var bodyBox  = document.getElementById('modalDynamicBody');
+
+  modal.classList.add('show');
+  bodyBox.innerHTML = '<div class="loading-state"><i class="fas fa-circle-notch fa-spin"></i><p>Sedang memuat data dari database…</p></div>';
+
+  var targetUrl = '';
+  if (jenisData === 'jadwal') {
+    titleText.innerHTML = '<i class="fas fa-calendar-alt"></i> Jadwal Pelajaran Siswa';
+    targetUrl = '/akademik/api/jadwal/';
+  } else if (jenisData === 'presensi') {
+    titleText.innerHTML = '<i class="fas fa-user-check"></i> Log Presensi & Absensi';
+    targetUrl = '/akademik/api/presensi/';
+  } else if (jenisData === 'nilai') {
+    titleText.innerHTML = '<i class="fas fa-graduation-cap"></i> Kartu Hasil Studi & Nilai Rapor';
+    targetUrl = '/akademik/api/nilai/';
+  } else if (jenisData === 'elearning') {
+    titleText.innerHTML = '<i class="fas fa-laptop-code"></i> Tugas & Kelas E-Learning';
+    targetUrl = '/akademik/api/elearning/';
+  } else if (jenisData === 'keuangan') {
+    titleText.innerHTML = '<i class="fas fa-wallet"></i> Status Informasi Keuangan';
+    targetUrl = '/akademik/api/keuangan/';
+  }
+
+  fetch(targetUrl)
+    .then(function(r) {
+      if (!r.ok) throw new Error('Data gagal diambil / Belum tersedia');
+      return r.text();
+    })
+    .then(function(html) { bodyBox.innerHTML = html; })
+    .catch(function(err) {
+      bodyBox.innerHTML =
+        '<div style="text-align:center;color:#f87171;padding:36px 0">' +
+        '<i class="fas fa-exclamation-triangle" style="font-size:32px;margin-bottom:10px;display:block"></i>' +
+        '<p style="font-weight:700">Gagal Memuat Data</p>' +
+        '<p style="color:var(--silver);font-size:13px;margin-top:4px">' + err.message + '. Pastikan URL endpoint sudah disiapkan di views.py.</p>' +
+        '</div>';
+    });
+}
+
+function tutupModalMelayang(e) {
+  if (e.target.id === 'siakadFloatingModal') {
+    document.getElementById('siakadFloatingModal').classList.remove('show');
+  }
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') document.getElementById('siakadFloatingModal').classList.remove('show');
+}, { passive: true });
 </script>
 
-{% endblock %}
+{% block extra_js %}{% endblock %}
+</body>
+</html>
