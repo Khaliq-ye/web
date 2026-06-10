@@ -884,6 +884,31 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     .hero-text h1 { font-size:2.4rem; }
     .nav-menu { gap:6px; }
 }
+@media (max-width: 600px) {
+    /* Cegah semua konten meluber ke kanan secara global */
+    body {
+        overflow-x: hidden;
+    }
+    .container {
+        overflow: hidden;
+        padding: 0 16px;
+    }
+    .content-card {
+        overflow: hidden;
+        padding: 20px 16px;
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+    .card-desc,
+    .content-card p,
+    .empty-box p,
+    .empty-box span {
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+}
 
 .nav-toggle {
     display: none;
