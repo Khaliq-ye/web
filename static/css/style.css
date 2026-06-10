@@ -848,7 +848,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
 /* ─── PAGE HERO HIGHLIGHT (profil, akademik, galeri) ──── */
 .page-hero h1 .highlight {
-    padding-top: 0;
+    padding-top: 120px;
     background: linear-gradient(90deg, #E8561A, #F5C518, #C8102E);
     background-size: 200% 100%;
     -webkit-background-clip: text;
@@ -885,14 +885,13 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     .nav-menu { gap:6px; }
 }
 @media (max-width: 600px) {
+    /* Cegah semua konten meluber ke kanan secara global */
     body {
         overflow-x: hidden;
     }
     .container {
         overflow: hidden;
         padding: 0 16px;
-        max-width: 100%;
-        box-sizing: border-box;
     }
     .content-card {
         overflow: hidden;
@@ -900,7 +899,6 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
         box-sizing: border-box;
         max-width: 100%;
     }
-
     .card-desc,
     .content-card p,
     .empty-box p,
