@@ -370,6 +370,26 @@
         top: 12px;
         right: 12px;
     }
+
+    /* Tabel info kontak auto-fit */
+    .info-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+    }
+    .info-table td {
+        word-break: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+        font-size: clamp(10px, 2vw, 13px);
+        padding: 6px 4px;
+    }
+    .info-table td:first-child {
+        width: 30%;
+    }
+    .info-table td:last-child {
+        width: 70%;
+    }
 }
 @media (max-width: 480px) {
     .galeri-grid { grid-template-columns: 1fr 1fr; }

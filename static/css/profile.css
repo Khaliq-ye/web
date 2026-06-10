@@ -779,6 +779,45 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     .teachers-grid { grid-template-columns: repeat(2,1fr); }
     .gallery-grid, .galeri-grid { grid-template-columns: repeat(2,1fr); }
     .header-flex { flex-direction: column; align-items: flex-start; gap: 12px; }
+
+    /* Info table auto-fit semua layar */
+    .info-table {
+        width: 100%;
+        table-layout: fixed;
+    }
+    .info-table td {
+        word-break: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+        font-size: clamp(10px, 2vw, 13px) !important;
+        padding: 8px 0;
+    }
+    .info-table td:first-child {
+        width: 35%;
+        white-space: normal !important;
+        padding-right: 10px;
+    }
+    .info-table td:last-child {
+        width: 65%;
+    }
+
+    /* Tabel akademik auto-fit */
+    .table-fire {
+        width: 100%;
+        table-layout: fixed;
+    }
+    .table-fire thead th,
+    .table-fire tbody td {
+        word-break: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+        padding: 10px 10px;
+        font-size: clamp(9px, 1.8vw, 13px);
+    }
+    .table-fire thead th:first-child,
+    .table-fire tbody td:first-child {
+        width: 35%;
+    }
 }
 @media (max-width: 480px) {
     .page-hero h1 { font-size: 1.75rem; }
