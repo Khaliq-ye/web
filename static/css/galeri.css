@@ -174,15 +174,17 @@
     transform: scale(1.12);
     box-shadow: 0 4px 14px rgba(192,57,43,0.5);
 }
-.zoom-btn:active {
-    transform: scale(0.95);
-}
+.zoom-btn:active { transform: scale(0.95); }
 
 /* Info bawah kartu */
 .galeri-info {
     padding: 14px 16px;
     position: relative;
     z-index: 0;
+    /* FIX: cegah teks meluber */
+    overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 .galeri-info h4 {
     font-size: 0.92rem;
@@ -192,6 +194,8 @@
     line-height: 1.4;
     max-height: 2.8em;
     overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 .galeri-meta {
     display: flex;
@@ -199,6 +203,8 @@
     align-items: center;
     border-top: 1px solid rgba(255,255,255,0.06);
     padding-top: 10px;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 .galeri-date {
     font-size: 0.75rem;
@@ -261,9 +267,7 @@
     padding: 40px 20px;
     overflow: hidden;
 }
-.lightbox-overlay.active {
-    display: flex;
-}
+.lightbox-overlay.active { display: flex; }
 
 .lightbox-close {
     position: absolute;
@@ -334,7 +338,9 @@
     transition: transform 0.1s ease;
 }
 
-/* --- RESPONSIVE GALERI --- */
+/* ============================================================
+   RESPONSIVE — TABLET (≤ 768px)
+============================================================ */
 @media (max-width: 768px) {
     .galeri-grid {
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -346,6 +352,7 @@
         right: 12px;
     }
 
+    /* Info table sidebar kontak */
     .info-table {
         width: 100%;
         table-layout: fixed;
@@ -358,18 +365,127 @@
         font-size: clamp(10px, 2vw, 13px);
         padding: 6px 4px;
     }
+    .info-table td:first-child { width: 30%; }
+    .info-table td:last-child  { width: 70%; }
+}
+
+/* ============================================================
+   RESPONSIVE — HP (≤ 600px)
+
+   Perbaikan utama:
+   - content-card diberi overflow:hidden agar konten tidak
+     meluber ke kanan layar
+   - info-table sidebar fluid tanpa scroll horizontal
+   - galeri-grid 2 kolom rapi
+   - filter tabs scroll horizontal 1 baris
+============================================================ */
+@media (max-width: 600px) {
+
+    /* ── GLOBAL FIX: cegah konten meluber ke kanan ── */
+    .content-card {
+        overflow: hidden;
+        padding: 20px 16px;
+    }
+
+    /* ── GALERI GRID: 2 kolom di HP ── */
+    .galeri-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .galeri-frame { height: 120px; }
+
+    /* Info card teks tidak terpotong */
+    .galeri-info {
+        padding: 10px 12px;
+    }
+    .galeri-info h4 {
+        font-size: 0.82rem;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        max-height: none;
+    }
+    .galeri-date {
+        font-size: 0.68rem;
+    }
+    .verified-tag {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
+
+    /* ── FILTER TABS: scroll horizontal 1 baris ── */
+    .filter-container {
+        overflow-x: auto;
+        overflow-y: visible;
+        padding-bottom: 8px;
+    }
+    .filter-tabs {
+        width: max-content;
+        flex-wrap: nowrap;
+    }
+    .filter-btn {
+        padding: 8px 14px;
+        font-size: 0.82rem;
+        flex-shrink: 0;
+    }
+
+    /* ── INFO TABLE sidebar kontak: fluid tanpa scroll ── */
+    .info-table {
+        width: 100%;
+        table-layout: auto;
+        border-collapse: collapse;
+        word-break: break-word;
+    }
+    .info-table td {
+        vertical-align: top;
+        padding: 9px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        font-size: 0.82rem;
+        line-height: 1.6;
+        white-space: normal;
+        overflow-wrap: break-word;
+        word-break: break-word;
+    }
     .info-table td:first-child {
-        width: 30%;
+        color: rgba(255, 255, 255, 0.4);
+        font-weight: 600;
+        width: 36%;
+        padding-right: 10px;
+        white-space: normal;
+        font-size: 0.8rem;
     }
     .info-table td:last-child {
-        width: 70%;
+        color: rgba(255, 255, 255, 0.76);
+        font-weight: 500;
+        width: 64%;
     }
-}
-@media (max-width: 480px) {
-    .galeri-grid { grid-template-columns: 1fr 1fr; }
+    .info-table tr:last-child td { border-bottom: none; }
+
+    /* Hilangkan wrapper overflow-x dari div di HTML */
+    .sidebar-widget div[style*="overflow-x"] {
+        overflow-x: visible !important;
+    }
+
+    /* Lightbox di HP */
     #imgPreview {
         max-width: 95vw;
         max-height: 60vh;
+    }
+    .lightbox-close {
+        top: 12px;
+        right: 12px;
+        width: 38px;
+        height: 38px;
+    }
+}
+
+/* ============================================================
+   HP SANGAT KECIL (≤ 360px)
+============================================================ */
+@media (max-width: 360px) {
+    .galeri-grid {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -455,84 +571,6 @@
 .main-header {
     z-index: 1000 !important;
 }
-
 .toast-container {
     z-index: 9999 !important;
-}
-
-
-/* ============================================================
-   RESPONSIVE FIX MOBILE — info-table sidebar kontak
-   Ditambahkan di bawah semua CSS yang sudah ada.
-
-   Masalah: tabel kontak (Telp, Email, Alamat, dll) di sidebar
-   halaman Galeri overflow atau terpotong di layar HP karena
-   kolom label terlalu sempit dan nilai tidak bisa wrap.
-
-   Solusi: jadikan tabel fluid dua kolom dengan word-wrap
-   otomatis. Tidak ada scroll horizontal lagi.
-============================================================ */
-
-/* Base fix — berlaku di semua ukuran layar */
-.info-table {
-    width: 100%;
-    table-layout: auto;       /* lebar kolom mengikuti konten */
-    border-collapse: collapse;
-    word-break: break-word;
-}
-
-.info-table td {
-    vertical-align: top;
-    padding: 11px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    font-size: 0.87rem;
-    line-height: 1.6;
-    white-space: normal;
-    overflow-wrap: break-word;
-    word-break: break-word;
-}
-
-/* Kolom label: Telp, Email, Alamat, dll */
-.info-table td:first-child {
-    color: rgba(255, 255, 255, 0.4);
-    font-weight: 600;
-    width: 38%;
-    padding-right: 12px;
-    white-space: nowrap;      /* label tetap 1 baris */
-}
-
-/* Kolom nilai: nomor, alamat, dll */
-.info-table td:last-child {
-    color: rgba(255, 255, 255, 0.76);
-    font-weight: 500;
-    width: 62%;
-}
-
-.info-table tr:last-child td {
-    border-bottom: none;
-}
-
-/* HP kecil ≤ 480px — label boleh wrap, font sedikit lebih kecil */
-@media (max-width: 480px) {
-
-    .info-table td:first-child {
-        white-space: normal;  /* izinkan wrap di HP sangat kecil */
-        width: 36%;
-        font-size: 0.8rem;
-    }
-
-    .info-table td:last-child {
-        width: 64%;
-        font-size: 0.82rem;
-    }
-
-    .info-table td {
-        padding: 9px 0;
-    }
-
-    /* Hapus overflow-x dari div wrapper yang ada di HTML
-       agar tidak muncul scrollbar horizontal di sidebar */
-    .sidebar-widget div[style*="overflow-x"] {
-        overflow-x: visible !important;
-    }
 }
