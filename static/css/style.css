@@ -269,11 +269,15 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     animation:heroFadeIn 0.7s 0.25s ease both;
 }
 .hero-image-container {
-    display:flex; justify-content:center; align-items:center;
+    display:flex; justify-content:center; align-items:flex-start;
     position:relative;
+    max-height: 500px;
+    overflow: visible;
 }
 .hero-img-fluid {
-    width:100%; max-width:460px; height:auto;
+    width:100%; max-width:400px; height:auto;
+    max-height: 480px;
+    object-fit: contain;
     filter: none;
     position:relative; z-index:2;
     animation: floatImg 4s ease-in-out infinite;
