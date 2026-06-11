@@ -106,7 +106,7 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
 .page-hero {
     position: relative;
     padding: 0;
-    min-height: 480px;
+    min-height: 540px;
     isolation: isolate;
     overflow: hidden;
     background: var(--coal-black);
@@ -115,7 +115,6 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     display: flex;
     align-items: center;
     justify-content: center;
-    padding-top: 70px;
 }
 
 /* Ambient background — statis, tidak animasi */
