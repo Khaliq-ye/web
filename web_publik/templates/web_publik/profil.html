@@ -275,6 +275,20 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
+        /* ── Fade-in hero saat halaman dibuka ── */
+const pageHero = document.querySelector('.page-hero');
+if (pageHero) {
+    pageHero.style.opacity = '0';
+    pageHero.style.transform = 'translateY(20px)';
+    pageHero.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            pageHero.style.opacity = '1';
+            pageHero.style.transform = 'translateY(0)';
+        }, 80);
+    });
+}
+
         /* ── 5. Hamburger Toggle ── */
 const navToggle = document.getElementById('navToggle');
 const navBar = document.querySelector('.nav-bar');
