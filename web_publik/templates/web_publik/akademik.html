@@ -352,6 +352,39 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
 
+        /* ── Fade-in hero saat halaman dibuka ── */
+const pageHero = document.querySelector('.page-hero');
+if (pageHero) {
+    pageHero.style.opacity = '0';
+    pageHero.style.transform = 'translateY(20px)';
+    pageHero.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            pageHero.style.opacity = '1';
+            pageHero.style.transform = 'translateY(0)';
+        }, 80);
+    });
+}
+
+/* ── Scroll reveal untuk content-card dan sidebar-widget ── */
+const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            e.target.style.opacity = '1';
+            e.target.style.transform = 'translateY(0)';
+            revealObs.unobserve(e.target);
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.content-card, .sidebar-widget').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(24px)';
+    el.style.transitionDelay = `${i * 0.08}s`;
+    revealObs.observe(el);
+});
+
         /* ── 5. Hamburger Toggle ── */
 const navToggle = document.getElementById('navToggle');
 const navBar = document.querySelector('.nav-bar');
