@@ -884,7 +884,7 @@ if (window.innerWidth <= 768) {
 
         /* Titik pusat — glowing core */
 const coreGrd = ctx.createRadialGradient(0, 0, 0, 0, 0, 100);  /* ← 28 → 80 */
-coreGrd.addColorStop(0, 'rgba(245,197,24,0.50)');              /* ← opacity naik */
+coreGrd.addColorStop(0, 'rgba(245,197,24,0.100)');              /* ← opacity naik */
 coreGrd.addColorStop(1, 'rgba(245,197,24,0)');
 ctx.beginPath();
 ctx.arc(0, 0, 80, 0, Math.PI * 2);                            /* ← 28 → 80 */
@@ -893,7 +893,7 @@ ctx.fill();
 
 ctx.beginPath();
 ctx.arc(0, 0, 15, 0, Math.PI * 2);                            /* ← 3 → 8 */
-ctx.fillStyle = 'rgba(245,197,24,0.15)';                       /* ← opacity naik */
+ctx.fillStyle = 'rgba(245,197,24,0.25)';                       /* ← opacity naik */
 ctx.fill();
 
         /* Setiap bintang */
