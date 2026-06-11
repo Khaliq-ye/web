@@ -1006,10 +1006,13 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 }
 @media (max-width: 768px) {
     #orbit-canvas {
-        display: block;
-        width: 100%;
-        opacity: 0.3;
+        position: absolute;
         top: 0;
-        aspect-ratio: 1 / 1;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: auto;      /* ← hapus height fixed */
+        opacity: 0.3;
+        aspect-ratio: unset; /* ← hapus aspect-ratio */
     }
 }
