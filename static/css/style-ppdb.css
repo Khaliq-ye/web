@@ -517,9 +517,21 @@ html, body {
     .split-right { padding: 36px 20px 52px; }
     .input-grid  { grid-template-columns: 1fr; }
     .input-group.full-width { grid-column: 1; }
-    .form-footer { flex-direction: column; align-items: stretch; }
-    .btn-primary { justify-content: center; }
-    .btn-link    { justify-content: center; }
+    .form-footer { 
+        flex-direction: column; 
+        align-items: center;
+        text-align: center;
+        margin-right: 0;
+        gap: 14px;
+    }
+    .btn-primary { 
+        justify-content: center;
+        width: 100%;
+    }
+    .btn-link { 
+        justify-content: center;
+        width: 100%;
+    }
     .form-section { padding: 18px 16px; }
     .split-headline h1 { font-size: 2.6rem; }
 }
