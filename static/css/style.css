@@ -183,7 +183,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
 /* ─── HERO ────────────────────────────────────────────── */
 .hero {
-    padding:60px 0 80px;
+    padding:36px 0 48px;
     background:var(--coal-black);
     min-height:auto;
     display:flex; align-items:flex-start;
@@ -268,11 +268,14 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     display:flex; align-items:center; gap:16px; flex-wrap:wrap;
     animation:heroFadeIn 0.7s 0.25s ease both;
 }
+/* SESUDAH */
 .hero-image-container {
     display:flex; justify-content:center; align-items:flex-start;
     position:relative;
-    max-height: 500px;
+    max-height: 520px;
     overflow: visible;
+    padding-top: 20px;      /* ← ruang atas untuk frame animasi naik */
+    padding-bottom: 20px;   /* ← ruang bawah agar tidak terpotong */
 }
 .hero-img-fluid {
     width:100%; max-width:400px; height:auto;
