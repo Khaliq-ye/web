@@ -551,21 +551,38 @@ def dashboard_wali(request):
     total_tagihan_lunas = 0
     total_tagihan_belum = 0
 
+    def get_predikat(angka):
+        if angka >= 90: return 'A'
+        elif angka >= 80: return 'B'
+        elif angka >= 70: return 'C'
+        elif angka >= 60: return 'D'
+        else: return 'E'
+
     if siswa_terkait:
         nilai_perilaku_wali = hitung_nilai_perilaku_siswa(siswa_terkait)
-        daftar_nilai = NilaiRapor.objects.filter(
+
+        nilai_rapor_qs = NilaiRapor.objects.filter(
             siswa=siswa_terkait
         ).select_related('mata_pelajaran').order_by('mata_pelajaran__nama')
-        total_mapel = daftar_nilai.count()
+        total_mapel = nilai_rapor_qs.count()
 
-        if total_mapel > 0:
-            angka_list = [
-                hitung_nilai_akhir(
-                    n.nilai_tugas, n.nilai_uts, n.nilai_uas,
-                    nilai_perilaku_wali
-                )
-                for n in daftar_nilai
-            ]
+        angka_list = []
+        for n in nilai_rapor_qs:
+            akhir = hitung_nilai_akhir(
+                n.nilai_tugas, n.nilai_uts, n.nilai_uas, nilai_perilaku_wali
+            )
+            angka_list.append(akhir)
+            daftar_nilai.append({
+                'mata_pelajaran': n.mata_pelajaran,
+                'nilai_tugas': n.nilai_tugas,
+                'nilai_uts': n.nilai_uts,
+                'nilai_uas': n.nilai_uas,
+                'nilai_angka': akhir,
+                'predikat': get_predikat(akhir),
+                'keterangan': n.keterangan or '—',
+            })
+
+        if angka_list:
             rata_nilai = round(sum(angka_list) / len(angka_list), 1)
 
         semua_presensi = Presensi.objects.filter(

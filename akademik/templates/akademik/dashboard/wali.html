@@ -477,7 +477,8 @@
               <td>{{ nilai.nilai_uts }}</td>
               <td>{{ nilai.nilai_uas }}</td>
               <td><span class="badge-nilai">{{ nilai.nilai_angka }}</span></td>
-            </tr>
+<td><span class="badge-predikat">{{ nilai.predikat|default:"—" }}</span></td>
+</tr>
             {% empty %}
             <tr class="empty-row"><td colspan="6">Belum ada data nilai.</td></tr>
             {% endfor %}
