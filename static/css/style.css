@@ -183,10 +183,10 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
 /* ─── HERO ────────────────────────────────────────────── */
 .hero {
-    padding:80px 0 100px;
+    padding:60px 0 80px;
     background:var(--coal-black);
     min-height:auto;
-    display:flex; align-items:center;
+    display:flex; align-items:flex-start;
     position:relative; overflow:visible;
     contain: layout style;
 }
@@ -230,7 +230,8 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 }
 .hero-grid {
     display:grid; grid-template-columns:1.2fr 0.8fr;
-    gap:60px; align-items:center; position:relative; z-index:2;
+    gap:60px; align-items:flex-start; position:relative; z-index:2;
+    padding-top:20px;
 }
 .badge {
     display:inline-flex; align-items:center; gap:8px;
