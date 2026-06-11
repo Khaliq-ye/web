@@ -821,7 +821,7 @@ function initSize() {
     W  = c.width  = Math.round(hero.offsetWidth * (isMobile ? 1 : 0.5));
     H  = c.height = isMobile ? W : Math.round(hero.offsetHeight);
     CX = W * 0.5;
-    CY = isMobile ? H * 0.25 : H * 0.5;
+    CY = isMobile ? H * 0.42 : H * 0.5;
 }
     initSize();
     window.addEventListener('resize', () => {
@@ -883,29 +883,16 @@ function initSize() {
         /* Titik pusat — glowing core */
 /* Titik pusat — glowing core */
 const coreGrd = ctx.createRadialGradient(0, 0, 0, 0, 0, 100);
-coreGrd.addColorStop(0, 'rgba(245,197,24,0.10)');
-coreGrd.addColorStop(0.4, 'rgba(232,86,26,0.06)');
+coreGrd.addColorStop(0, 'rgba(245,197,24,0.08)');
 coreGrd.addColorStop(1, 'rgba(245,197,24,0)');
 ctx.beginPath();
 ctx.arc(0, 0, 100, 0, Math.PI * 2);
 ctx.fillStyle = coreGrd;
 ctx.fill();
 
-/* Cincin dalam */
-ctx.beginPath();
-ctx.arc(0, 0, 18, 0, Math.PI * 2);
-ctx.strokeStyle = 'rgba(245,197,24,0.25)';
-ctx.lineWidth = 1.5;
-ctx.stroke();
-
-/* Bola inti */
-const ballGrd = ctx.createRadialGradient(-4, -4, 0, 0, 0, 15);
-ballGrd.addColorStop(0, 'rgba(255,255,255,0.95)');
-ballGrd.addColorStop(0.3, 'rgba(245,197,24,1.0)');
-ballGrd.addColorStop(1, 'rgba(200,16,46,0.8)');
 ctx.beginPath();
 ctx.arc(0, 0, 15, 0, Math.PI * 2);
-ctx.fillStyle = ballGrd;
+ctx.fillStyle = 'rgba(245,197,24,1.0)';
 ctx.fill();
 
         /* Setiap bintang */
