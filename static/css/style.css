@@ -183,9 +183,9 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
 
 /* ─── HERO ────────────────────────────────────────────── */
 .hero {
-    padding:110px 0 90px;
+    padding:80px 0 70px;
     background:var(--coal-black);
-    min-height:92vh;
+    min-height:auto;
     display:flex; align-items:center;
     position:relative; overflow:hidden;
     contain: layout style;
@@ -277,6 +277,7 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     position:relative; z-index:2;
     animation: floatImg 4s ease-in-out infinite;
     will-change: transform;
+    overflow: visible;
 }
 @keyframes floatImg {
     0%,100% { transform: translateY(0px); }
@@ -873,7 +874,11 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     .hero-text p { margin-left:auto; margin-right:auto; }
     .cta-group { justify-content:center; }
     .hero-image-container { grid-row:1; }
-    .hero-img-fluid { max-width:340px; }
+    .hero-img-fluid { 
+    max-width:300px;
+    margin-top: 0;
+    overflow: visible;
+}
     .stats-grid { grid-template-columns:repeat(2,1fr); }
     .footer-grid { grid-template-columns:1fr; gap:40px; }
     .welcome-grid,.ppdb-banner-grid,.academic-grid { grid-template-columns:1fr; gap:45px; }
@@ -989,4 +994,12 @@ h1,h2,h3,h4,h5,h6 { font-family:var(--font-body); font-weight:700; line-height:1
     opacity: 0.6;
     will-change: transform;
     transform: translateZ(0);
+}
+@media (max-width: 768px) {
+    #orbit-canvas {
+        display: block;
+        width: 100%;
+        opacity: 0.3;
+        top: 0;
+    }
 }

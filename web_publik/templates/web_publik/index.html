@@ -803,7 +803,12 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
     'use strict';
 
     const c = document.getElementById('orbit-canvas');
-    if (!c || window.innerWidth <= 768) { if (c) c.style.display = 'none'; return; }
+if (!c) return;
+if (window.innerWidth <= 768) {
+    c.style.opacity = '0.25';
+    c.style.width = '100%';
+    c.style.height = '100%';
+}
 
     const ctx = c.getContext('2d', { alpha: true });
     let W, H, CX, CY;
@@ -813,12 +818,13 @@ document.querySelectorAll('.nav-menu a').forEach(link => {
 
     let resizeTimer;
     function initSize() {
-        const hero = c.parentElement;
-        W  = c.width  = Math.round(hero.offsetWidth * 0.5);
-        H  = c.height = Math.round(hero.offsetHeight);
-        CX = W * 0.5;
-        CY = H * 0.5;
-    }
+    const hero = c.parentElement;
+    const isMobile = window.innerWidth <= 768;
+    W  = c.width  = Math.round(hero.offsetWidth * (isMobile ? 1 : 0.5));
+    H  = c.height = Math.round(hero.offsetHeight);
+    CX = W * 0.5;
+    CY = H * 0.5;
+}
     initSize();
     window.addEventListener('resize', () => {
         clearTimeout(resizeTimer);
