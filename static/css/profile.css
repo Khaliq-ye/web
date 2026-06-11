@@ -99,10 +99,7 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
 
 /* ============================================================
    1. PAGE HERO
-   OPTIMASI: hapus gridSlide & heroAmbientDrift (berat).
-   Ganti dengan gradient statis + 1 animasi ringan pada judul.
 ============================================================ */
-/* DENGAN INI: */
 .page-hero {
     position: relative;
     padding: 0;
@@ -117,7 +114,6 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     justify-content: center;
 }
 
-/* Ambient background — statis, tidak animasi */
 .page-hero::before {
     content: '';
     position: absolute; inset: 0;
@@ -129,43 +125,39 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     z-index: 0;
 }
 
-/* Grid overlay DIHAPUS — diganti garis statis ringan */
 .page-hero-grid-overlay {
     position: absolute; inset: 0;
     background-image:
         linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
     background-size: 56px 56px;
-    /* Tidak ada animasi — statis saja */
     pointer-events: none;
     z-index: 0;
 }
 
-/* Fire line bottom — statis gradient, tidak perlu scroll animation */
 .page-hero::after {
     content: '';
     position: absolute; bottom: 0; left: 0; right: 0;
     height: 3px;
     background: var(--gradient-fire);
-    background-size: 300% 100%;
-    animation: firebar 3s linear infinite;
     pointer-events: none;
     z-index: 0;
 }
-/* DENGAN INI: */
+
 .page-hero-inner {
     position: relative;
     z-index: 2;
     pointer-events: auto;
     width: 100%;
     padding: 0 24px;
-    margin: auto;           /* ← dorong ke tengah vertikal */
+    margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
 }
+
 .page-hero-label {
     display: inline-flex; align-items: center; gap: 8px;
     background: rgba(245,197,24,0.1);
@@ -174,8 +166,7 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     padding: 7px 20px; border-radius: 50px;
     font-size: 0.76rem; font-weight: 700;
     letter-spacing: 0.15em; text-transform: uppercase;
-    margin-bottom: 12px;   /* ← dikecilkan dari 20px */
-    margin-top: 0;         /* ← pastikan tidak ada jarak atas */
+    margin: 0;
 }
 
 .page-hero h1 {
@@ -183,8 +174,7 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     font-size: clamp(2.4rem, 5vw, 3.6rem);
     font-weight: 400; letter-spacing: 1.5px;
     color: var(--white); line-height: 1.05;
-    margin-bottom: 18px;
-    /* Hanya 1 animasi masuk, tidak infinite */
+    margin-bottom: 8px;
     animation: heroTitleIn 0.6s ease both;
 }
 @keyframes heroTitleIn {
@@ -202,8 +192,6 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     animation: textShimmer 4s linear infinite;
 }
 
-
-
 .breadcrumb {
     display: inline-flex; align-items: center; gap: 10px;
     font-size: 0.86rem;
@@ -213,12 +201,9 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
 .breadcrumb i { color: rgba(255,255,255,0.18); font-size: 0.68rem; }
 .breadcrumb .current-page { color: var(--fire-gold); font-weight: 700; }
 
-/* ORBs — filter:blur dihapus, diganti opacity fade sederhana
-   blur() sangat mahal di GPU, terutama untuk elemen beranimasi */
 .orb-hero-1, .orb-hero-2, .orb-hero-3 {
     position: absolute; border-radius: 50%;
     pointer-events: none; z-index: 0;
-    /* Tidak ada filter:blur, tidak ada animasi */
 }
 .orb-hero-1 {
     width: 400px; height: 400px;
@@ -236,7 +221,6 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     top: 30%; right: 6%;
 }
 
-/* Deco text — statis, tidak float */
 .page-hero-deco-text {
     position: absolute; bottom: -40px; right: -2%;
     font-family: var(--font-display);
@@ -245,7 +229,6 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     -webkit-text-stroke: 1px rgba(255,255,255,0.04);
     pointer-events: none; user-select: none;
     z-index: 0; letter-spacing: -6px;
-    /* decoTextFloat dihapus */
 }
 .page-hero-stripe {
     position: absolute; top:0; right:0; width:42%; height:100%;
@@ -253,7 +236,6 @@ h1,h2,h3,h4,h5,h6 { font-family: var(--font-body); font-weight: 700; line-height
     clip-path: polygon(18% 0%,100% 0%,100% 100%,0% 100%);
     z-index: 0; pointer-events: none;
 }
-
 /* ============================================================
    2. SUB-PAGE LAYOUT
 ============================================================ */
