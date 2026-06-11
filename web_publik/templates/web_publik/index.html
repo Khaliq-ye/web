@@ -816,12 +816,12 @@ if (window.innerWidth <= 768) {
     let isVisible = true;
     let isTabActive = true;
 
-    let resizeTimer;
-    function initSize() {
+let resizeTimer;
+function initSize() {
     const hero = c.parentElement;
     const isMobile = window.innerWidth <= 768;
     W  = c.width  = Math.round(hero.offsetWidth * (isMobile ? 1 : 0.5));
-    H  = c.height = Math.round(hero.offsetHeight);
+    H  = c.height = isMobile ? W : Math.round(hero.offsetHeight);
     CX = W * 0.5;
     CY = isMobile ? H * 0.25 : H * 0.5;
 }
@@ -893,7 +893,7 @@ ctx.fill();
 
 ctx.beginPath();
 ctx.arc(0, 0, 15, 0, Math.PI * 2);                            /* ← 3 → 8 */
-ctx.fillStyle = 'rgba(245,197,24,0.25)';                       /* ← opacity naik */
+ctx.fillStyle = 'rgba(245,197,24,1.0)';                       /* ← opacity naik */
 ctx.fill();
 
         /* Setiap bintang */
