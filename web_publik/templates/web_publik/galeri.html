@@ -417,15 +417,14 @@ const revealObs = new IntersectionObserver(entries => {
             revealObs.unobserve(e.target);
         }
     });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: 0, rootMargin: '0px 0px 0px 0px' });
 
 document.querySelectorAll('.content-card, .sidebar-widget').forEach((el, i) => {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
-    el.style.transitionDelay = `${i * 0.08}s`;
+    el.style.transitionDelay = `${i * 0.06}s`;
     revealObs.observe(el);
 });
-
     const navToggle = document.getElementById('navToggle');
     const navBar = document.querySelector('.nav-bar');
     if (navToggle && navBar) {
