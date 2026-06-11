@@ -457,16 +457,6 @@ document.querySelectorAll('.content-card, .sidebar-widget').forEach((el, i) => {
         });
     }, 5000);
 
-    const cards = document.querySelectorAll('.galeri-card');
-    cards.forEach((card, i) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(28px)';
-        setTimeout(() => {
-            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, 75 * i);
-    });
 });
 
 function filterGaleri(event, category) {
