@@ -881,17 +881,31 @@ function initSize() {
         });
 
         /* Titik pusat — glowing core */
-const coreGrd = ctx.createRadialGradient(0, 0, 0, 0, 0, 100);  /* ← 28 → 80 */
-coreGrd.addColorStop(0, 'rgba(245,197,24,0.100)');              /* ← opacity naik */
+/* Titik pusat — glowing core */
+const coreGrd = ctx.createRadialGradient(0, 0, 0, 0, 0, 100);
+coreGrd.addColorStop(0, 'rgba(245,197,24,0.10)');
+coreGrd.addColorStop(0.4, 'rgba(232,86,26,0.06)');
 coreGrd.addColorStop(1, 'rgba(245,197,24,0)');
 ctx.beginPath();
-ctx.arc(0, 0, 80, 0, Math.PI * 2);                            /* ← 28 → 80 */
+ctx.arc(0, 0, 100, 0, Math.PI * 2);
 ctx.fillStyle = coreGrd;
 ctx.fill();
 
+/* Cincin dalam */
 ctx.beginPath();
-ctx.arc(0, 0, 15, 0, Math.PI * 2);                            /* ← 3 → 8 */
-ctx.fillStyle = 'rgba(245,197,24,1.0)';                       /* ← opacity naik */
+ctx.arc(0, 0, 18, 0, Math.PI * 2);
+ctx.strokeStyle = 'rgba(245,197,24,0.25)';
+ctx.lineWidth = 1.5;
+ctx.stroke();
+
+/* Bola inti */
+const ballGrd = ctx.createRadialGradient(-4, -4, 0, 0, 0, 15);
+ballGrd.addColorStop(0, 'rgba(255,255,255,0.95)');
+ballGrd.addColorStop(0.3, 'rgba(245,197,24,1.0)');
+ballGrd.addColorStop(1, 'rgba(200,16,46,0.8)');
+ctx.beginPath();
+ctx.arc(0, 0, 15, 0, Math.PI * 2);
+ctx.fillStyle = ballGrd;
 ctx.fill();
 
         /* Setiap bintang */
