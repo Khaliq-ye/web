@@ -881,15 +881,16 @@ function initSize() {
         });
 
         /* Titik pusat — glowing core */
-/* Titik pusat — glowing core */
-const coreGrd = ctx.createRadialGradient(0, 0, 0, 0, 0, 100);
-coreGrd.addColorStop(0, 'rgba(245,197,24,0.08)');
+/* Glow luar — seperti bintang orbit */
+const coreGrd = ctx.createRadialGradient(0, 0, 0, 0, 0, 60);
+coreGrd.addColorStop(0, 'rgba(245,197,24,0.7)');
 coreGrd.addColorStop(1, 'rgba(245,197,24,0)');
 ctx.beginPath();
-ctx.arc(0, 0, 100, 0, Math.PI * 2);
+ctx.arc(0, 0, 60, 0, Math.PI * 2);
 ctx.fillStyle = coreGrd;
 ctx.fill();
 
+/* Titik inti padat */
 ctx.beginPath();
 ctx.arc(0, 0, 15, 0, Math.PI * 2);
 ctx.fillStyle = 'rgba(245,197,24,1.0)';
